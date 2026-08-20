@@ -556,7 +556,7 @@ export default function CellovateStore() {
                     <ChevronRight size={15} strokeWidth={2.5} />
                   </button>
                   <p className="text-center text-[10px] text-white/25 pt-1">
-                    Demo checkout — BTCPay/Coinbase Commerce not yet connected
+                    Secure crypto payment via NOWPayments
                   </p>
                 </div>
               </>

@@ -1,11 +1,27 @@
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
-import { PRODUCTS, getVariant } from "../lib/products";
+import { PRODUCTS, getDefaultVariant, getVariant } from "../lib/products";
 
 const CartContext = createContext(null);
 
 // Cart lines are keyed by "<productId>::<variantKey>" so Pen and Vial of the
 // same product are tracked as separate line items.
 const lineKey = (id, variantKey) => `${id}::${variantKey}`;
+
+// Carts saved before variants existed are keyed by bare product id. Fold any
+// of those into the default-variant line so nothing is double-counted or lost.
+function migrateLegacyCart(rawCart) {
+  const migrated = {};
+  for (const [key, qty] of Object.entries(rawCart || {})) {
+    let normalizedKey = key;
+    if (!key.includes("::")) {
+      const product = PRODUCTS.find((p) => p.id === key);
+      if (!product) continue;
+      normalizedKey = lineKey(key, getDefaultVariant(product).key);
+    }
+    migrated[normalizedKey] = (migrated[normalizedKey] || 0) + qty;
+  }
+  return migrated;
+}
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState({});
@@ -20,7 +36,7 @@ export function CartProvider({ children }) {
   useEffect(() => {
     try {
       const saved = window.localStorage.getItem("cellovate-cart");
-      if (saved) setCart(JSON.parse(saved));
+      if (saved) setCart(migrateLegacyCart(JSON.parse(saved)));
     } catch {
       // ignore corrupt/local storage errors
     }

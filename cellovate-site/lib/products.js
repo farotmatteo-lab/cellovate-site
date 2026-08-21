@@ -8,7 +8,10 @@ export const PRODUCTS = [
     fullName: "RETATRUTIDE 20mg",
     code: "RT-20MG",
     dose: "20mg / vial",
-    price: 189,
+    variants: [
+      { key: "pen", label: "Pen", price: 129.99 },
+      { key: "vial", label: "Vial", price: 119.99 },
+    ],
     purity: "99.2%",
     desc: "Triple agonist (GLP-1 / GIP / Glucagon). Third-party tested.",
     images: ["https://cdn.shopify.com/s/files/1/0981/3976/7073/files/pens-retratrutide-20-mg-cellovate.png?v=1779082442", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/vial-retatrutide-20-mg-cellovate_f75a4259-2822-448a-9462-2f0bb068aed6.png?v=1776614015", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/reta.png?v=1783569904"],
@@ -21,7 +24,10 @@ export const PRODUCTS = [
     fullName: "MOTS-C 10mg",
     code: "MC-10MG",
     dose: "10mg / vial",
-    price: 79,
+    variants: [
+      { key: "pen", label: "Pen", price: 89.99 },
+      { key: "vial", label: "Vial", price: 79.99 },
+    ],
     purity: "99.4%",
     desc: "Mitochondrial-derived peptide, metabolic research.",
     images: ["https://cdn.shopify.com/s/files/1/0981/3976/7073/files/mots-c-pens-10-mg-cellovate.png?v=1779082164", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/vial-mots-c-10-mg-cellovate_d8a8a94f-03b4-479b-a937-9bfb725e8090.png?v=1776614217", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/motsc.png?v=1783569970"],
@@ -34,7 +40,10 @@ export const PRODUCTS = [
     fullName: "CJC-1295 Without DAC 5mg + Ipamorelin 5mg",
     code: "CJ-5MG",
     dose: "5mg blend / vial",
-    price: 69,
+    variants: [
+      { key: "pen", label: "Pen", price: 129.99 },
+      { key: "vial", label: "Vial", price: 119.99 },
+    ],
     purity: "99.1%",
     desc: "GHRH / GHRP blend, growth hormone secretion research.",
     images: ["https://cdn.shopify.com/s/files/1/0981/3976/7073/files/pen-cjc-1295-ipamorelin-cellovate-peptides.png?v=1779283945", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/vial-cjc-1295-ipamorelin-10mg-cellovate_4a54424e-e6d7-4a4c-ba5d-ebb2163622f4.png?v=1776614115", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/CJC.png?v=1783569675"],
@@ -47,7 +56,10 @@ export const PRODUCTS = [
     fullName: "GLOW 70mg (BPC-157 10mg + TB500 10mg + GHK-CU 50mg)",
     code: "GL-70MG",
     dose: "70mg blend / vial",
-    price: 99,
+    variants: [
+      { key: "pen", label: "Pen", price: 89.99 },
+      { key: "vial", label: "Vial", price: 79.99 },
+    ],
     purity: "99.0%",
     desc: "GHK-Cu / BPC-157 / TB-500 combination for tissue research.",
     images: ["https://cdn.shopify.com/s/files/1/0981/3976/7073/files/pens-glow-70-mg-cellovate.png?v=1779082265", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/vial-glow-bp157-TB500-ghk-cu-70-mgcellovate_01ef9c17-dd15-4faa-b161-4c4a7f3e70ec.png?v=1776614030", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/glow.png?v=1783569862"],
@@ -61,7 +73,10 @@ export const PRODUCTS = [
     fullName: "TESAMORELIN 10mg",
     code: "TS-10MG",
     dose: "10mg / vial",
-    price: 89,
+    variants: [
+      { key: "pen", label: "Pen", price: 79.95 },
+      { key: "vial", label: "Vial", price: 69.95 },
+    ],
     purity: "99.3%",
     desc: "GHRH analog, visceral fat research.",
     images: ["https://cdn.shopify.com/s/files/1/0981/3976/7073/files/pen-tesamorelin-10-mg-cellovate-peptides.png?v=1779284121", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/tesamorelin-peptide-10-mg-cellovate-vial.png?v=1776845551", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/tesamorelin-peptide-10-mg-cellovate-vial-box-10.png?v=1776845556"],
@@ -74,7 +89,10 @@ export const PRODUCTS = [
     fullName: "EPITHALON 10mg",
     code: "EP-10MG",
     dose: "10mg / vial",
-    price: 59,
+    variants: [
+      { key: "pen", label: "Pen", price: 109.99 },
+      { key: "vial", label: "Vial", price: 99.99 },
+    ],
     purity: "99.5%",
     desc: "Tetrapeptide, telomerase activity research.",
     images: ["https://cdn.shopify.com/s/files/1/0981/3976/7073/files/epithalon-pens-10-mg-cellovate.png?v=1779082525", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/epithalon-10-mg-peptide-vial-ceelovate.png?v=1776843959", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/epi10.png?v=1783568414"],
@@ -87,7 +105,10 @@ export const PRODUCTS = [
     fullName: "GHK-CU 50mg",
     code: "GH-50MG",
     dose: "50mg / vial",
-    price: 49,
+    variants: [
+      { key: "pen", label: "Pen", price: 94.99 },
+      { key: "vial", label: "Vial", price: 84.99 },
+    ],
     purity: "99.2%",
     desc: "Copper peptide, dermal and wound-healing research.",
     images: ["https://cdn.shopify.com/s/files/1/0981/3976/7073/files/pens-ghk-cu-50-mg-cellovate_401b6119-3402-466b-8481-eb4e58b7e292.png?v=1779081513", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/GHK-CU-50-mg-peptide-cellovate-box-10.png?v=1776843703", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/ghk.png?v=1783569561"],
@@ -100,7 +121,10 @@ export const PRODUCTS = [
     fullName: "NAD+ 1000mg",
     code: "ND-1000MG",
     dose: "1000mg / vial",
-    price: 109,
+    variants: [
+      { key: "pen", label: "Pen", price: 109.99 },
+      { key: "vial", label: "Vial", price: 99.99 },
+    ],
     purity: "99.0%",
     desc: "Coenzyme research, cellular metabolism.",
     images: ["https://cdn.shopify.com/s/files/1/0981/3976/7073/files/pens-nad_-1000-mg-cellovate.png?v=1779081766", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/nad_-1000-mg-cellovate-peptide.png?v=1776614319", "https://cdn.shopify.com/s/files/1/0981/3976/7073/files/nad.png?v=1783569820"],
@@ -114,4 +138,17 @@ export const VISIBLE_PRODUCTS = PRODUCTS.filter((p) => !p.draft);
 
 export function getProductByHandle(handle) {
   return PRODUCTS.find((p) => p.handle === handle);
+}
+
+// Default variant shown before the shopper picks one (matches the default
+// variant on Shopify — Pen, the first-position option on every product).
+export function getDefaultVariant(product) {
+  return product.variants[0];
+}
+
+export function getVariant(product, variantKey) {
+  return (
+    product.variants.find((v) => v.key === variantKey) ||
+    getDefaultVariant(product)
+  );
 }

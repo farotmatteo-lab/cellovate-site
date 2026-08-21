@@ -316,10 +316,14 @@ export default function CartDrawer() {
               <>
                 <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
                   {lines.map((l) => (
-                    <div key={l.id} className="flex items-center justify-between">
+                    <div key={l.lineId} className="flex items-center justify-between">
                       <div className="min-w-0 pr-3">
                         <p className="text-[13px] font-medium leading-tight">
                           {l.name}
+                          <span className="text-white/35 font-normal">
+                            {" "}
+                            — {l.variant.label}
+                          </span>
                         </p>
                         <p className="text-[11px] text-white/35 font-mono mt-0.5">
                           {l.qty} × ${l.price}
@@ -327,7 +331,7 @@ export default function CartDrawer() {
                       </div>
                       <div className="flex items-center gap-2 bg-white/10 rounded-full px-1 py-1 shrink-0">
                         <button
-                          onClick={() => removeFromCart(l.id)}
+                          onClick={() => removeFromCart(l.id, l.variant.key)}
                           className="w-6 h-6 rounded-full flex items-center justify-center active:scale-90 transition"
                         >
                           <Minus size={12} strokeWidth={2.5} />
@@ -336,7 +340,7 @@ export default function CartDrawer() {
                           {l.qty}
                         </span>
                         <button
-                          onClick={() => addToCart(l.id)}
+                          onClick={() => addToCart(l.id, l.variant.key)}
                           className="w-6 h-6 rounded-full bg-[#0039CC] flex items-center justify-center active:scale-90 transition"
                         >
                           <Plus size={12} strokeWidth={2.5} />

@@ -1,8 +1,104 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Plus, Minus, ShoppingBag } from "lucide-react";
-import { VISIBLE_PRODUCTS } from "../lib/products";
+import { VISIBLE_PRODUCTS, getDefaultVariant, getVariant } from "../lib/products";
 import { useCart } from "../context/CartContext";
+
+function ProductCard({ p, cart, addToCart, removeFromCart }) {
+  const [variantKey, setVariantKey] = useState(getDefaultVariant(p).key);
+  const variant = getVariant(p, variantKey);
+  const qty = cart[`${p.id}::${variantKey}`] || 0;
+
+  return (
+    <div className="bg-[#131313] border border-white/8 rounded-2xl p-4 flex flex-col">
+      <Link
+        href={`/shop/${p.handle}`}
+        className="aspect-[4/3] rounded-xl bg-[#1C1C1C] mb-3 flex items-center justify-center relative overflow-hidden"
+      >
+        {p.images?.[0] && (
+          <img
+            src={p.images[0]}
+            alt={p.name}
+            loading="lazy"
+            className="w-full h-full object-cover"
+          />
+        )}
+        <span className="absolute bottom-2 right-2 text-[8px] font-mono text-white/60 bg-black/50 backdrop-blur px-1.5 py-0.5 rounded tracking-wider">
+          {p.code}
+        </span>
+      </Link>
+
+      <div className="flex items-start justify-between gap-2">
+        <Link href={`/shop/${p.handle}`}>
+          <h3 className="font-display text-[14px] leading-tight hover:text-[#0039CC] transition">
+            {p.name}
+          </h3>
+        </Link>
+        <span className="font-mono text-[13px] text-[#0039CC] font-semibold shrink-0">
+          ${variant.price}
+        </span>
+      </div>
+      <p className="text-[11px] text-white/35 font-mono mt-1">
+        {p.dose} · {p.purity} purity
+      </p>
+      <p className="text-[11.5px] text-white/45 mt-2 leading-snug flex-1">
+        {p.desc}
+      </p>
+
+      {/* Variant selector */}
+      <div className="flex gap-1.5 mt-3">
+        {p.variants.map((v) => (
+          <button
+            key={v.key}
+            onClick={() => setVariantKey(v.key)}
+            className={`flex-1 text-[10.5px] font-mono py-1.5 rounded-lg border transition ${
+              v.key === variantKey
+                ? "border-[#0039CC] bg-[#0039CC]/10 text-white"
+                : "border-white/10 text-white/40 hover:text-white/60"
+            }`}
+          >
+            {v.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/6">
+        <Link
+          href={`/shop/${p.handle}`}
+          className="text-[10px] text-white/25 font-mono hover:text-[#0039CC] transition"
+        >
+          COA available
+        </Link>
+        {qty === 0 ? (
+          <button
+            onClick={() => addToCart(p.id, variantKey)}
+            className="w-8 h-8 rounded-full bg-white text-[#0A0A0A] flex items-center justify-center active:scale-90 transition"
+          >
+            <Plus size={15} strokeWidth={2.5} />
+          </button>
+        ) : (
+          <div className="flex items-center gap-2 bg-white/10 rounded-full px-1 py-1">
+            <button
+              onClick={() => removeFromCart(p.id, variantKey)}
+              className="w-6 h-6 rounded-full flex items-center justify-center active:scale-90 transition"
+            >
+              <Minus size={12} strokeWidth={2.5} />
+            </button>
+            <span className="font-mono text-[12px] w-4 text-center tabular-nums">
+              {qty}
+            </span>
+            <button
+              onClick={() => addToCart(p.id, variantKey)}
+              className="w-6 h-6 rounded-full bg-[#0039CC] flex items-center justify-center active:scale-90 transition"
+            >
+              <Plus size={12} strokeWidth={2.5} />
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function CellovateStore() {
   const { cart, addToCart, removeFromCart, itemCount, setCartOpen } =
@@ -45,84 +141,15 @@ export default function CellovateStore() {
       {/* Catalog */}
       <main className="max-w-5xl mx-auto px-5 pt-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {VISIBLE_PRODUCTS.map((p) => {
-            const qty = cart[p.id] || 0;
-            return (
-              <div
-                key={p.id}
-                className="bg-[#131313] border border-white/8 rounded-2xl p-4 flex flex-col"
-              >
-                <Link
-                  href={`/shop/${p.handle}`}
-                  className="aspect-[4/3] rounded-xl bg-[#1C1C1C] mb-3 flex items-center justify-center relative overflow-hidden"
-                >
-                  {p.images?.[0] && (
-                    <img
-                      src={p.images[0]}
-                      alt={p.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                  <span className="absolute bottom-2 right-2 text-[8px] font-mono text-white/60 bg-black/50 backdrop-blur px-1.5 py-0.5 rounded tracking-wider">
-                    {p.code}
-                  </span>
-                </Link>
-
-                <div className="flex items-start justify-between gap-2">
-                  <Link href={`/shop/${p.handle}`}>
-                    <h3 className="font-display text-[14px] leading-tight hover:text-[#0039CC] transition">
-                      {p.name}
-                    </h3>
-                  </Link>
-                  <span className="font-mono text-[13px] text-[#0039CC] font-semibold shrink-0">
-                    ${p.price}
-                  </span>
-                </div>
-                <p className="text-[11px] text-white/35 font-mono mt-1">
-                  {p.dose} · {p.purity} purity
-                </p>
-                <p className="text-[11.5px] text-white/45 mt-2 leading-snug flex-1">
-                  {p.desc}
-                </p>
-
-                <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/6">
-                  <Link
-                    href={`/shop/${p.handle}`}
-                    className="text-[10px] text-white/25 font-mono hover:text-[#0039CC] transition"
-                  >
-                    COA available
-                  </Link>
-                  {qty === 0 ? (
-                    <button
-                      onClick={() => addToCart(p.id)}
-                      className="w-8 h-8 rounded-full bg-white text-[#0A0A0A] flex items-center justify-center active:scale-90 transition"
-                    >
-                      <Plus size={15} strokeWidth={2.5} />
-                    </button>
-                  ) : (
-                    <div className="flex items-center gap-2 bg-white/10 rounded-full px-1 py-1">
-                      <button
-                        onClick={() => removeFromCart(p.id)}
-                        className="w-6 h-6 rounded-full flex items-center justify-center active:scale-90 transition"
-                      >
-                        <Minus size={12} strokeWidth={2.5} />
-                      </button>
-                      <span className="font-mono text-[12px] w-4 text-center tabular-nums">
-                        {qty}
-                      </span>
-                      <button
-                        onClick={() => addToCart(p.id)}
-                        className="w-6 h-6 rounded-full bg-[#0039CC] flex items-center justify-center active:scale-90 transition"
-                      >
-                        <Plus size={12} strokeWidth={2.5} />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+          {VISIBLE_PRODUCTS.map((p) => (
+            <ProductCard
+              key={p.id}
+              p={p}
+              cart={cart}
+              addToCart={addToCart}
+              removeFromCart={removeFromCart}
+            />
+          ))}
         </div>
       </main>
     </div>

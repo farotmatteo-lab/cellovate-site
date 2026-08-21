@@ -9,7 +9,12 @@ import {
   ShieldCheck,
   FlaskConical,
 } from "lucide-react";
-import { VISIBLE_PRODUCTS, getProductByHandle } from "../../lib/products";
+import {
+  VISIBLE_PRODUCTS,
+  getProductByHandle,
+  getDefaultVariant,
+  getVariant,
+} from "../../lib/products";
 import { useCart } from "../../context/CartContext";
 
 export async function getStaticPaths() {
@@ -29,7 +34,9 @@ export default function ProductPage({ product }) {
   const { cart, addToCart, removeFromCart, itemCount, setCartOpen } =
     useCart();
   const [activeImage, setActiveImage] = useState(0);
-  const qty = cart[product.id] || 0;
+  const [variantKey, setVariantKey] = useState(getDefaultVariant(product).key);
+  const variant = getVariant(product, variantKey);
+  const qty = cart[`${product.id}::${variantKey}`] || 0;
 
   const related = VISIBLE_PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
 
@@ -136,16 +143,38 @@ export default function ProductPage({ product }) {
                 {product.desc}
               </p>
 
-              <div className="flex items-baseline gap-2 mb-6">
+              <div className="flex items-baseline gap-2 mb-4">
                 <span className="font-mono text-3xl font-bold text-[#0039CC]">
-                  ${product.price}
+                  ${variant.price}
                 </span>
-                <span className="text-[12px] text-white/30">/ vial</span>
+                <span className="text-[12px] text-white/30">
+                  / {variant.label.toLowerCase()}
+                </span>
+              </div>
+
+              {/* Variant selector */}
+              <div className="flex gap-2 mb-6">
+                {product.variants.map((v) => (
+                  <button
+                    key={v.key}
+                    onClick={() => setVariantKey(v.key)}
+                    className={`flex-1 sm:flex-none sm:px-6 text-[12.5px] font-medium py-2.5 rounded-full border transition ${
+                      v.key === variantKey
+                        ? "border-[#0039CC] bg-[#0039CC]/10 text-white"
+                        : "border-white/15 text-white/40 hover:text-white/60"
+                    }`}
+                  >
+                    {v.label}
+                    <span className="ml-1.5 font-mono text-[11px] opacity-70">
+                      ${v.price}
+                    </span>
+                  </button>
+                ))}
               </div>
 
               {qty === 0 ? (
                 <button
-                  onClick={() => addToCart(product.id)}
+                  onClick={() => addToCart(product.id, variantKey)}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white text-[#0A0A0A] rounded-full px-8 py-3.5 text-[13px] font-semibold hover:bg-white/90 active:scale-[0.98] transition"
                 >
                   <Plus size={15} strokeWidth={2.5} />
@@ -154,7 +183,7 @@ export default function ProductPage({ product }) {
               ) : (
                 <div className="flex items-center gap-3 bg-white/10 rounded-full px-2 py-2 w-fit">
                   <button
-                    onClick={() => removeFromCart(product.id)}
+                    onClick={() => removeFromCart(product.id, variantKey)}
                     className="w-9 h-9 rounded-full flex items-center justify-center active:scale-90 transition"
                   >
                     <Minus size={14} strokeWidth={2.5} />
@@ -163,7 +192,7 @@ export default function ProductPage({ product }) {
                     {qty}
                   </span>
                   <button
-                    onClick={() => addToCart(product.id)}
+                    onClick={() => addToCart(product.id, variantKey)}
                     className="w-9 h-9 rounded-full bg-[#0039CC] flex items-center justify-center active:scale-90 transition"
                   >
                     <Plus size={14} strokeWidth={2.5} />
@@ -227,7 +256,7 @@ export default function ProductPage({ product }) {
                         {p.name}
                       </h3>
                       <span className="font-mono text-[12px] text-[#0039CC] font-semibold shrink-0">
-                        ${p.price}
+                        ${getDefaultVariant(p).price}
                       </span>
                     </div>
                   </Link>

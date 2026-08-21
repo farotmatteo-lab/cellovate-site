@@ -22,8 +22,8 @@ export default function BlogIndex() {
         `}</style>
 
         <header className="max-w-3xl mx-auto px-5 pt-8 flex items-center justify-between">
-          <Link href="/" className="font-display text-lg tracking-tight">
-            CELLO<span className="text-[#0039CC]">VATE</span>
+          <Link href="/" className="block">
+            <img src="/logo.png" alt="Cellovate" className="h-7 w-auto" />
           </Link>
           <Link
             href="/shop"

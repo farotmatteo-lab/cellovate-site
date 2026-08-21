@@ -58,8 +58,8 @@ export default function ProductPage({ product }) {
         {/* Header */}
         <header className="sticky top-0 z-30 bg-[#0A0A0A]/95 backdrop-blur border-b border-white/8">
           <div className="max-w-5xl mx-auto px-5 pt-5 pb-4 flex items-center justify-between">
-            <Link href="/" className="font-display text-lg tracking-tight leading-none">
-              CELLO<span className="text-[#0039CC]">VATE</span>
+            <Link href="/" className="block">
+              <img src="/logo.png" alt="Cellovate" className="h-7 w-auto" />
             </Link>
             <button
               onClick={() => setCartOpen(true)}

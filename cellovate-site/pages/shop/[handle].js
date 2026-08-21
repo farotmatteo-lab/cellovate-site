@@ -98,7 +98,7 @@ export default function ProductPage({ product }) {
                   <img
                     src={product.images[activeImage]}
                     alt={product.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                 )}
                 <span className="absolute bottom-3 right-3 text-[9px] font-mono text-white/60 bg-black/50 backdrop-blur px-2 py-1 rounded tracking-wider">
@@ -120,7 +120,7 @@ export default function ProductPage({ product }) {
                       <img
                         src={img}
                         alt={`${product.name} view ${i + 1}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                       />
                     </button>
                   ))}

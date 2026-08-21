@@ -9,19 +9,19 @@ import {
   ShieldCheck,
   FlaskConical,
 } from "lucide-react";
-import { PRODUCTS, getProductByHandle } from "../../lib/products";
+import { VISIBLE_PRODUCTS, getProductByHandle } from "../../lib/products";
 import { useCart } from "../../context/CartContext";
 
 export async function getStaticPaths() {
   return {
-    paths: PRODUCTS.map((p) => ({ params: { handle: p.handle } })),
+    paths: VISIBLE_PRODUCTS.map((p) => ({ params: { handle: p.handle } })),
     fallback: false,
   };
 }
 
 export async function getStaticProps({ params }) {
   const product = getProductByHandle(params.handle);
-  if (!product) return { notFound: true };
+  if (!product || product.draft) return { notFound: true };
   return { props: { product } };
 }
 
@@ -31,7 +31,7 @@ export default function ProductPage({ product }) {
   const [activeImage, setActiveImage] = useState(0);
   const qty = cart[product.id] || 0;
 
-  const related = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
+  const related = VISIBLE_PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
 
   return (
     <>

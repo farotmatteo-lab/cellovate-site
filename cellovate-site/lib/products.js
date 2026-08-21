@@ -57,8 +57,8 @@ export const PRODUCTS = [
     code: "GL-70MG",
     dose: "70mg blend / vial",
     variants: [
-      { key: "pen", label: "Pen", price: 89.99 },
-      { key: "vial", label: "Vial", price: 79.99 },
+      { key: "pen", label: "Pen", price: 109.99 },
+      { key: "vial", label: "Vial", price: 99.99 },
     ],
     purity: "99.0%",
     desc: "GHK-Cu / BPC-157 / TB-500 combination for tissue research.",

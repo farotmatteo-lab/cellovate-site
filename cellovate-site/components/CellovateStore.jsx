@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Plus, Minus, ShoppingBag } from "lucide-react";
-import { PRODUCTS } from "../lib/products";
+import { VISIBLE_PRODUCTS } from "../lib/products";
 import { useCart } from "../context/CartContext";
 
 export default function CellovateStore() {
@@ -45,7 +45,7 @@ export default function CellovateStore() {
       {/* Catalog */}
       <main className="max-w-5xl mx-auto px-5 pt-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {PRODUCTS.map((p) => {
+          {VISIBLE_PRODUCTS.map((p) => {
             const qty = cart[p.id] || 0;
             return (
               <div

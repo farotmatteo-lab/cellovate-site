@@ -1,7 +1,11 @@
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
-import { PRODUCTS } from "../lib/products";
+import { PRODUCTS, getVariant } from "../lib/products";
 
 const CartContext = createContext(null);
+
+// Cart lines are keyed by "<productId>::<variantKey>" so Pen and Vial of the
+// same product are tracked as separate line items.
+const lineKey = (id, variantKey) => `${id}::${variantKey}`;
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState({});
@@ -33,26 +37,39 @@ export function CartProvider({ children }) {
     }
   }, [cart, hydrated]);
 
-  const addToCart = (id) =>
-    setCart((c) => ({ ...c, [id]: (c[id] || 0) + 1 }));
+  const addToCart = (id, variantKey) => {
+    const key = lineKey(id, variantKey);
+    setCart((c) => ({ ...c, [key]: (c[key] || 0) + 1 }));
+  };
 
-  const removeFromCart = (id) =>
+  const removeFromCart = (id, variantKey) => {
+    const key = lineKey(id, variantKey);
     setCart((c) => {
       const next = { ...c };
-      if (!next[id]) return next;
-      next[id] -= 1;
-      if (next[id] <= 0) delete next[id];
+      if (!next[key]) return next;
+      next[key] -= 1;
+      if (next[key] <= 0) delete next[key];
       return next;
     });
+  };
 
   const clearCart = () => setCart({});
 
   const lines = useMemo(
     () =>
       Object.entries(cart)
-        .map(([id, qty]) => {
+        .map(([key, qty]) => {
+          const [id, variantKey] = key.split("::");
           const product = PRODUCTS.find((p) => p.id === id);
-          return product ? { ...product, qty } : null;
+          if (!product) return null;
+          const variant = getVariant(product, variantKey);
+          return {
+            ...product,
+            variant,
+            lineId: key,
+            qty,
+            price: variant.price,
+          };
         })
         .filter(Boolean),
     [cart]

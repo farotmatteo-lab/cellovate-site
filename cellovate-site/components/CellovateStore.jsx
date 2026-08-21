@@ -21,12 +21,7 @@ export default function CellovateStore() {
       <header className="sticky top-0 z-30 bg-[#0A0A0A]/95 backdrop-blur border-b border-white/8">
         <div className="max-w-5xl mx-auto px-5 pt-5 pb-4 flex items-center justify-between">
           <Link href="/" className="block">
-            <div className="font-display text-lg tracking-tight leading-none">
-              CELLO<span className="text-[#0039CC]">VATE</span>
-            </div>
-            <div className="text-[9px] uppercase tracking-[0.2em] text-white/35 mt-1">
-              Advanced Peptide Systems
-            </div>
+            <img src="/logo.png" alt="Cellovate Advanced Peptide Systems" className="h-8 w-auto" />
           </Link>
           <button
             onClick={() => setCartOpen(true)}
@@ -42,7 +37,7 @@ export default function CellovateStore() {
         </div>
         <div className="max-w-5xl mx-auto px-5 pb-3">
           <p className="text-[10px] tracking-[0.1em] text-[#0039CC]/80 font-mono uppercase">
-            For research use only â not for human consumption
+            For research use only — not for human consumption
           </p>
         </div>
       </header>
@@ -85,7 +80,7 @@ export default function CellovateStore() {
                   </span>
                 </div>
                 <p className="text-[11px] text-white/35 font-mono mt-1">
-                  {p.dose} Â· {p.purity} purity
+                  {p.dose} · {p.purity} purity
                 </p>
                 <p className="text-[11.5px] text-white/45 mt-2 leading-snug flex-1">
                   {p.desc}

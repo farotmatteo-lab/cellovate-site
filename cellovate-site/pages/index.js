@@ -22,9 +22,7 @@ export default function Home() {
         `}</style>
 
         <header className="max-w-5xl mx-auto px-5 pt-8 flex items-center justify-between">
-          <div className="font-display text-lg tracking-tight">
-            CELLO<span className="text-[#0039CC]">VATE</span>
-          </div>
+          <img src="/logo.png" alt="Cellovate" className="h-7 w-auto" />
           <Link
             href="/shop"
             className="text-[12px] font-medium border border-white/15 rounded-full px-4 py-2 hover:border-[#0039CC] transition"

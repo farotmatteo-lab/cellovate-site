@@ -39,8 +39,8 @@ export default function Home() {
             Research-grade peptides, verified before they reach you.
           </h1>
           <p className="text-white/50 text-[15px] max-w-lg mt-5 leading-relaxed">
-            Every batch is tested by an independent laboratory for purity
-            and identity. Supplied strictly for laboratory research — not for
+            Every batch is analysed by Janoshik Analytical for purity and
+            identity. Supplied strictly for laboratory research — not for
             human consumption.
           </p>
           <Link
@@ -59,8 +59,9 @@ export default function Home() {
               Third-party tested
             </h3>
             <p className="text-[13px] text-white/40 leading-relaxed">
-              Every batch is verified by an independent laboratory —
-              purity and identity confirmed by HPLC before it ships.
+              Every batch is analysed by Janoshik Analytical, an independent
+              laboratory — purity and identity confirmed by HPLC before it
+              ships.
             </p>
           </div>
           <div className="bg-[#131313] border border-white/8 rounded-2xl p-6">

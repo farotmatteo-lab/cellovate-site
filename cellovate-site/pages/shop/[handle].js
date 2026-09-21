@@ -250,7 +250,10 @@ export default function ProductPage({ product }) {
                   <ShieldCheck size={16} className="text-[#0039CC] mb-2" />
                   <p className="text-[11.5px] text-black/50 leading-snug">
                     Purity and identity verified by Janoshik Analytical on
-                    every batch
+                    every batch —{" "}
+                    <Link href="/quality" className="text-[#0039CC] hover:underline">
+                      quality standards
+                    </Link>
                   </p>
                 </div>
                 <div className="bg-white border border-black/8 rounded-xl p-4">

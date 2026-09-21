@@ -14,6 +14,9 @@ import {
   getProductByHandle,
   getDefaultVariant,
   getVariant,
+  getDoses,
+  getFormats,
+  getLowestPrice,
 } from "../../lib/products";
 import { useCart } from "../../context/CartContext";
 
@@ -37,6 +40,16 @@ export default function ProductPage({ product }) {
   const [variantKey, setVariantKey] = useState(getDefaultVariant(product).key);
   const variant = getVariant(product, variantKey);
   const qty = cart[`${product.id}::${variantKey}`] || 0;
+  const doses = getDoses(product);
+  const formats = getFormats(product, variant.dose);
+
+  // Switching dosage keeps the format (Vial / Pen) already selected.
+  const selectDose = (dose) => {
+    const match =
+      getFormats(product, dose).find((v) => v.format === variant.format) ||
+      getFormats(product, dose)[0];
+    setVariantKey(match.key);
+  };
 
   const related = VISIBLE_PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
 
@@ -94,13 +107,15 @@ export default function ProductPage({ product }) {
             {/* Gallery */}
             <div>
               <div className="aspect-square rounded-2xl bg-[#131313] border border-white/8 overflow-hidden flex items-center justify-center relative">
-                {product.images?.[activeImage] && (
-                  <img
-                    src={product.images[activeImage]}
-                    alt={product.name}
-                    className="w-full h-full object-contain"
-                  />
-                )}
+                <img
+                  src={
+                    product.images?.[activeImage] || "/product-placeholder.svg"
+                  }
+                  alt={product.name}
+                  className={`w-full h-full object-contain ${
+                    product.images?.length ? "" : "p-16 opacity-70"
+                  }`}
+                />
                 <span className="absolute bottom-3 right-3 text-[9px] font-mono text-white/60 bg-black/50 backdrop-blur px-2 py-1 rounded tracking-wider">
                   {product.code}
                 </span>
@@ -137,7 +152,8 @@ export default function ProductPage({ product }) {
                 {product.name}
               </h1>
               <p className="text-[12px] text-white/35 font-mono mb-4">
-                {product.dose} · {product.purity} purity
+                {product.dose} ·{" "}
+                {product.purity ? `${product.purity} purity` : "COA on request"}
               </p>
               <p className="text-white/50 text-[14px] leading-relaxed mb-5">
                 {product.desc}
@@ -148,28 +164,57 @@ export default function ProductPage({ product }) {
                   ${variant.price}
                 </span>
                 <span className="text-[12px] text-white/30">
-                  / {variant.label.toLowerCase()}
+                  / {variant.dose} {variant.format.toLowerCase()}
                 </span>
               </div>
 
-              {/* Variant selector */}
-              <div className="flex gap-2 mb-6">
-                {product.variants.map((v) => (
-                  <button
-                    key={v.key}
-                    onClick={() => setVariantKey(v.key)}
-                    className={`flex-1 sm:flex-none sm:px-6 text-[12.5px] font-medium py-2.5 rounded-full border transition ${
-                      v.key === variantKey
-                        ? "border-[#0039CC] bg-[#0039CC]/10 text-white"
-                        : "border-white/15 text-white/40 hover:text-white/60"
-                    }`}
-                  >
-                    {v.label}
-                    <span className="ml-1.5 font-mono text-[11px] opacity-70">
-                      ${v.price}
-                    </span>
-                  </button>
-                ))}
+              {/* Dosage selector */}
+              {doses.length > 1 && (
+                <div className="mb-4">
+                  <p className="text-[10px] uppercase tracking-[0.15em] text-white/30 font-mono mb-2">
+                    Dosage
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {doses.map((d) => (
+                      <button
+                        key={d}
+                        onClick={() => selectDose(d)}
+                        className={`sm:px-6 px-4 text-[12.5px] font-medium py-2.5 rounded-full border transition ${
+                          d === variant.dose
+                            ? "border-[#0039CC] bg-[#0039CC]/10 text-white"
+                            : "border-white/15 text-white/40 hover:text-white/60"
+                        }`}
+                      >
+                        {d}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Format selector */}
+              <div className="mb-6">
+                <p className="text-[10px] uppercase tracking-[0.15em] text-white/30 font-mono mb-2">
+                  Format
+                </p>
+                <div className="flex gap-2">
+                  {formats.map((v) => (
+                    <button
+                      key={v.key}
+                      onClick={() => setVariantKey(v.key)}
+                      className={`flex-1 sm:flex-none sm:px-6 text-[12.5px] font-medium py-2.5 rounded-full border transition ${
+                        v.key === variantKey
+                          ? "border-[#0039CC] bg-[#0039CC]/10 text-white"
+                          : "border-white/15 text-white/40 hover:text-white/60"
+                      }`}
+                    >
+                      {v.format}
+                      <span className="ml-1.5 font-mono text-[11px] opacity-70">
+                        ${v.price}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {qty === 0 ? (
@@ -242,21 +287,23 @@ export default function ProductPage({ product }) {
                     className="bg-[#131313] border border-white/8 rounded-2xl p-4 flex flex-col hover:border-white/20 transition"
                   >
                     <div className="aspect-[4/3] rounded-xl bg-[#1C1C1C] mb-3 overflow-hidden">
-                      {p.images?.[0] && (
-                        <img
-                          src={p.images[0]}
-                          alt={p.name}
-                          loading="lazy"
-                          className="w-full h-full object-cover"
-                        />
-                      )}
+                      <img
+                        src={p.images?.[0] || "/product-placeholder.svg"}
+                        alt={p.name}
+                        loading="lazy"
+                        className={`w-full h-full ${
+                          p.images?.[0]
+                            ? "object-cover"
+                            : "object-contain p-6 opacity-70"
+                        }`}
+                      />
                     </div>
                     <div className="flex items-start justify-between gap-2">
                       <h3 className="font-display text-[13px] leading-tight">
                         {p.name}
                       </h3>
                       <span className="font-mono text-[12px] text-[#0039CC] font-semibold shrink-0">
-                        ${getDefaultVariant(p).price}
+                        from ${getLowestPrice(p)}
                       </span>
                     </div>
                   </Link>

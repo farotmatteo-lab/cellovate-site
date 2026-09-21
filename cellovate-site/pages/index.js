@@ -9,7 +9,7 @@ export default function Home() {
         <title>Cellovate Advanced Peptides</title>
         <meta
           name="description"
-          content="Research-grade peptides, third-party tested. For research use only."
+          content="Research-grade peptides supplied for laboratory use. Not for human consumption."
         />
       </Head>
 
@@ -36,11 +36,12 @@ export default function Home() {
             For research use only
           </p>
           <h1 className="font-display text-4xl sm:text-5xl leading-[1.1] max-w-2xl">
-            Research-grade peptides, verified before they reach you.
+            Research-grade peptides, prepared to a single standard.
           </h1>
           <p className="text-white/50 text-[15px] max-w-lg mt-5 leading-relaxed">
-            Every batch is third-party tested for purity. Certificates of
-            analysis available on request. Not for human consumption.
+            Lyophilized compounds from one controlled source, sealed and
+            shipped discreetly. Supplied strictly for laboratory research —
+            not for human consumption.
           </p>
           <Link
             href="/shop"
@@ -55,11 +56,11 @@ export default function Home() {
           <div className="bg-[#131313] border border-white/8 rounded-2xl p-6">
             <ShieldCheck size={20} className="text-[#0039CC] mb-3" />
             <h3 className="font-display text-[15px] mb-1.5">
-              Third-party tested
+              One controlled source
             </h3>
             <p className="text-[13px] text-white/40 leading-relaxed">
-              Independent lab verification on every product line, including
-              Janoshik Analytical and Central Lab Thailand.
+              Every compound comes from the same manufacturing partner,
+              prepared the same way from one batch to the next.
             </p>
           </div>
           <div className="bg-[#131313] border border-white/8 rounded-2xl p-6">

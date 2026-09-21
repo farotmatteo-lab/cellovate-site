@@ -13,7 +13,7 @@ export default function Home() {
         />
       </Head>
 
-      <main className="min-h-screen bg-[#0A0A0A] text-white font-sans">
+      <main className="min-h-screen bg-[#FAFAFA] text-[#0A0A0A] font-sans">
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
           .font-display { font-family: 'Space Grotesk', sans-serif; }
@@ -22,10 +22,10 @@ export default function Home() {
         `}</style>
 
         <header className="max-w-5xl mx-auto px-5 pt-8 flex items-center justify-between">
-          <img src="/logo.png" alt="Cellovate" className="h-7 w-auto" />
+          <img src="/logo.png" alt="Cellovate" className="h-7 w-auto bg-[#0A0A0A] rounded-md px-2 py-1" />
           <Link
             href="/shop"
-            className="text-[12px] font-medium border border-white/15 rounded-full px-4 py-2 hover:border-[#0039CC] transition"
+            className="text-[12px] font-medium border border-black/15 rounded-full px-4 py-2 hover:border-[#0039CC] transition"
           >
             Shop
           </Link>
@@ -38,14 +38,14 @@ export default function Home() {
           <h1 className="font-display text-4xl sm:text-5xl leading-[1.1] max-w-2xl">
             Research-grade peptides, verified before they reach you.
           </h1>
-          <p className="text-white/50 text-[15px] max-w-lg mt-5 leading-relaxed">
+          <p className="text-black/50 text-[15px] max-w-lg mt-5 leading-relaxed">
             Every batch is analysed by Janoshik Analytical for purity and
             identity. Supplied strictly for laboratory research — not for
             human consumption.
           </p>
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 mt-8 bg-white text-[#0A0A0A] rounded-full px-6 py-3 text-[13px] font-semibold hover:bg-white/90 transition"
+            className="inline-flex items-center gap-2 mt-8 bg-[#FAFAFA] text-[#0A0A0A] rounded-full px-6 py-3 text-[13px] font-semibold hover:bg-[#FAFAFA]/85 transition"
           >
             Browse the catalog
             <ArrowRight size={15} />
@@ -53,30 +53,30 @@ export default function Home() {
         </section>
 
         <section className="max-w-5xl mx-auto px-5 pb-24 grid sm:grid-cols-2 gap-4">
-          <div className="bg-[#131313] border border-white/8 rounded-2xl p-6">
+          <div className="bg-white border border-black/8 rounded-2xl p-6">
             <ShieldCheck size={20} className="text-[#0039CC] mb-3" />
             <h3 className="font-display text-[15px] mb-1.5">
               Third-party tested
             </h3>
-            <p className="text-[13px] text-white/40 leading-relaxed">
+            <p className="text-[13px] text-black/40 leading-relaxed">
               Every batch is analysed by Janoshik Analytical, an independent
               laboratory — purity and identity confirmed by HPLC before it
               ships.
             </p>
           </div>
-          <div className="bg-[#131313] border border-white/8 rounded-2xl p-6">
+          <div className="bg-white border border-black/8 rounded-2xl p-6">
             <FlaskConical size={20} className="text-[#0039CC] mb-3" />
             <h3 className="font-display text-[15px] mb-1.5">
               Research use only
             </h3>
-            <p className="text-[13px] text-white/40 leading-relaxed">
+            <p className="text-[13px] text-black/40 leading-relaxed">
               All products are sold strictly for laboratory research
               purposes, not for human or veterinary use.
             </p>
           </div>
         </section>
 
-        <footer className="max-w-5xl mx-auto px-5 py-8 border-t border-white/8 text-[11px] text-white/25 font-mono">
+        <footer className="max-w-5xl mx-auto px-5 py-8 border-t border-black/8 text-[11px] text-black/25 font-mono">
           © {new Date().getFullYear()} Cellovate Advanced Peptides — For
           research use only.
         </footer>

@@ -26,10 +26,10 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
   };
 
   return (
-    <div className="bg-[#131313] border border-white/8 rounded-2xl p-4 flex flex-col">
+    <div className="bg-white border border-black/8 rounded-2xl p-4 flex flex-col">
       <Link
         href={`/shop/${p.handle}`}
-        className="aspect-[4/3] rounded-xl bg-[#1C1C1C] mb-3 flex items-center justify-center relative overflow-hidden"
+        className="aspect-[4/3] rounded-xl bg-[#EFEFF2] mb-3 flex items-center justify-center relative overflow-hidden"
       >
         <img
           src={p.images?.[0] || "/product-placeholder.svg"}
@@ -39,7 +39,7 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
             p.images?.[0] ? "object-cover" : "object-contain p-6 opacity-70"
           }`}
         />
-        <span className="absolute bottom-2 right-2 text-[8px] font-mono text-white/60 bg-black/50 backdrop-blur px-1.5 py-0.5 rounded tracking-wider">
+        <span className="absolute bottom-2 right-2 text-[8px] font-mono text-black/60 bg-white/70 backdrop-blur px-1.5 py-0.5 rounded tracking-wider">
           {p.code}
         </span>
       </Link>
@@ -54,10 +54,10 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
           ${variant.price}
         </span>
       </div>
-      <p className="text-[11px] text-white/35 font-mono mt-1">
+      <p className="text-[11px] text-black/35 font-mono mt-1">
         {p.dose} · {p.purity ? `${p.purity} purity` : "HPLC verified"}
       </p>
-      <p className="text-[11.5px] text-white/45 mt-2 leading-snug flex-1">
+      <p className="text-[11.5px] text-black/45 mt-2 leading-snug flex-1">
         {p.desc}
       </p>
 
@@ -70,8 +70,8 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
               onClick={() => selectDose(d)}
               className={`flex-1 min-w-[56px] text-[10.5px] font-mono py-1.5 rounded-lg border transition ${
                 d === variant.dose
-                  ? "border-[#0039CC] bg-[#0039CC]/10 text-white"
-                  : "border-white/10 text-white/40 hover:text-white/60"
+                  ? "border-[#0039CC] bg-[#0039CC]/10 text-[#0A0A0A]"
+                  : "border-black/10 text-black/40 hover:text-black/60"
               }`}
             >
               {d}
@@ -88,8 +88,8 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
             onClick={() => setVariantKey(v.key)}
             className={`flex-1 text-[10.5px] font-mono py-1.5 rounded-lg border transition ${
               v.key === variantKey
-                ? "border-[#0039CC] bg-[#0039CC]/10 text-white"
-                : "border-white/10 text-white/40 hover:text-white/60"
+                ? "border-[#0039CC] bg-[#0039CC]/10 text-[#0A0A0A]"
+                : "border-black/10 text-black/40 hover:text-black/60"
             }`}
           >
             {v.format}
@@ -97,22 +97,22 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
         ))}
       </div>
 
-      <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/6">
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-black/6">
         <Link
           href={`/shop/${p.handle}`}
-          className="text-[10px] text-white/25 font-mono hover:text-[#0039CC] transition"
+          className="text-[10px] text-black/25 font-mono hover:text-[#0039CC] transition"
         >
           Third-party tested
         </Link>
         {qty === 0 ? (
           <button
             onClick={() => addToCart(p.id, variantKey)}
-            className="w-8 h-8 rounded-full bg-white text-[#0A0A0A] flex items-center justify-center active:scale-90 transition"
+            className="w-8 h-8 rounded-full bg-[#FAFAFA] text-[#0A0A0A] flex items-center justify-center active:scale-90 transition"
           >
             <Plus size={15} strokeWidth={2.5} />
           </button>
         ) : (
-          <div className="flex items-center gap-2 bg-white/10 rounded-full px-1 py-1">
+          <div className="flex items-center gap-2 bg-black/5 rounded-full px-1 py-1">
             <button
               onClick={() => removeFromCart(p.id, variantKey)}
               className="w-6 h-6 rounded-full flex items-center justify-center active:scale-90 transition"
@@ -140,7 +140,7 @@ export default function CellovateStore() {
     useCart();
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white font-sans pb-24">
+    <div className="min-h-screen bg-[#FAFAFA] text-[#0A0A0A] font-sans pb-24">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
         .font-display { font-family: 'Space Grotesk', sans-serif; }
@@ -149,14 +149,14 @@ export default function CellovateStore() {
       `}</style>
 
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-[#0A0A0A]/95 backdrop-blur border-b border-white/8">
+      <header className="sticky top-0 z-30 bg-[#FAFAFA]/95 backdrop-blur border-b border-black/8">
         <div className="max-w-5xl mx-auto px-5 pt-5 pb-4 flex items-center justify-between">
           <Link href="/" className="block">
-            <img src="/logo.png" alt="Cellovate Advanced Peptide Systems" className="h-8 w-auto" />
+            <img src="/logo.png" alt="Cellovate Advanced Peptide Systems" className="h-8 w-auto bg-[#0A0A0A] rounded-md px-2 py-1" />
           </Link>
           <button
             onClick={() => setCartOpen(true)}
-            className="relative w-10 h-10 rounded-full border border-white/15 flex items-center justify-center active:scale-95 transition"
+            className="relative w-10 h-10 rounded-full border border-black/15 flex items-center justify-center active:scale-95 transition"
           >
             <ShoppingBag size={16} strokeWidth={1.75} />
             {itemCount > 0 && (

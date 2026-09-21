@@ -111,15 +111,15 @@ function CheckoutPanel({ total, orderId, onBack, onDone }) {
 
   return (
     <div className="flex-1 flex flex-col">
-      <div className="flex items-center gap-3 px-5 pt-5 pb-4 border-b border-white/8">
+      <div className="flex items-center gap-3 px-5 pt-5 pb-4 border-b border-black/8">
         <button
           onClick={onBack}
-          className="w-8 h-8 rounded-full border border-white/15 flex items-center justify-center shrink-0"
+          className="w-8 h-8 rounded-full border border-black/15 flex items-center justify-center shrink-0"
         >
           <ArrowLeft size={15} />
         </button>
         <div>
-          <p className="text-[10px] uppercase tracking-[0.15em] text-white/35">
+          <p className="text-[10px] uppercase tracking-[0.15em] text-black/35">
             Order
           </p>
           <p className="font-mono text-[13px]">{orderId}</p>
@@ -139,7 +139,7 @@ function CheckoutPanel({ total, orderId, onBack, onDone }) {
           <p className="font-display text-[15px] tracking-tight">
             PAYMENT CONFIRMED
           </p>
-          <p className="text-[12px] text-white/40 mt-2">
+          <p className="text-[12px] text-black/40 mt-2">
             Order confirmation sent by email. Ships within 24h.
           </p>
         </div>
@@ -153,8 +153,8 @@ function CheckoutPanel({ total, orderId, onBack, onDone }) {
                 disabled={loading}
                 className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl border text-[12px] font-medium transition disabled:opacity-40 ${
                   coin === c.id
-                    ? "border-[#0039CC] bg-[#0039CC]/10 text-white"
-                    : "border-white/10 text-white/40"
+                    ? "border-[#0039CC] bg-[#0039CC]/10 text-[#0A0A0A]"
+                    : "border-black/10 text-black/40"
                 }`}
               >
                 <Bitcoin size={13} />
@@ -164,7 +164,7 @@ function CheckoutPanel({ total, orderId, onBack, onDone }) {
           </div>
 
           {error ? (
-            <div className="bg-[#131313] border border-red-500/20 rounded-2xl p-5 text-center">
+            <div className="bg-white border border-red-500/20 rounded-2xl p-5 text-center">
               <p className="text-[12px] text-red-400/90 leading-snug">
                 {error}
               </p>
@@ -176,14 +176,14 @@ function CheckoutPanel({ total, orderId, onBack, onDone }) {
               </button>
             </div>
           ) : loading || !payment ? (
-            <div className="bg-[#131313] border border-white/8 rounded-2xl p-10 flex flex-col items-center">
-              <div className="w-6 h-6 border-2 border-white/15 border-t-[#0039CC] rounded-full animate-spin mb-3" />
-              <p className="text-[12px] text-white/40">
+            <div className="bg-white border border-black/8 rounded-2xl p-10 flex flex-col items-center">
+              <div className="w-6 h-6 border-2 border-black/15 border-t-[#0039CC] rounded-full animate-spin mb-3" />
+              <p className="text-[12px] text-black/40">
                 Creating your invoice…
               </p>
             </div>
           ) : (
-            <div className="bg-[#131313] border border-white/8 rounded-2xl p-5 flex flex-col items-center">
+            <div className="bg-white border border-black/8 rounded-2xl p-5 flex flex-col items-center">
               <div className="w-[168px] h-[168px] bg-white rounded-lg overflow-hidden mb-4">
                 <img
                   src={qrUrl}
@@ -192,23 +192,23 @@ function CheckoutPanel({ total, orderId, onBack, onDone }) {
                 />
               </div>
 
-              <p className="text-[10px] uppercase tracking-[0.15em] text-white/35 mb-1">
+              <p className="text-[10px] uppercase tracking-[0.15em] text-black/35 mb-1">
                 {payment.status === "waiting"
                   ? "Amount due"
                   : `Status: ${payment.status}`}
               </p>
-              <p className="font-mono text-[22px] font-semibold text-white">
+              <p className="font-mono text-[22px] font-semibold text-[#0A0A0A]">
                 {payment.payAmount}{" "}
-                <span className="text-[13px] text-white/40">
+                <span className="text-[13px] text-black/40">
                   {activeCoin.symbol}
                 </span>
               </p>
-              <p className="text-[11px] text-white/30 font-mono mt-0.5">
+              <p className="text-[11px] text-black/30 font-mono mt-0.5">
                 ≈ ${total.toFixed(2)} USD
               </p>
 
               <div className="w-full mt-5">
-                <p className="text-[10px] uppercase tracking-[0.15em] text-white/35 mb-1.5">
+                <p className="text-[10px] uppercase tracking-[0.15em] text-black/35 mb-1.5">
                   {activeCoin.label} address
                 </p>
                 <button
@@ -217,22 +217,22 @@ function CheckoutPanel({ total, orderId, onBack, onDone }) {
                     setCopied(true);
                     setTimeout(() => setCopied(false), 1500);
                   }}
-                  className="w-full flex items-center justify-between gap-2 bg-[#0A0A0A] border border-white/10 rounded-xl px-3 py-2.5"
+                  className="w-full flex items-center justify-between gap-2 bg-[#FAFAFA] border border-black/10 rounded-xl px-3 py-2.5"
                 >
-                  <span className="font-mono text-[11px] text-white/70 truncate">
+                  <span className="font-mono text-[11px] text-black/70 truncate">
                     {payment.payAddress}
                   </span>
                   {copied ? (
                     <Check size={13} className="text-[#0039CC] shrink-0" />
                   ) : (
-                    <Copy size={13} className="text-white/40 shrink-0" />
+                    <Copy size={13} className="text-black/40 shrink-0" />
                   )}
                 </button>
               </div>
             </div>
           )}
 
-          <div className="flex items-start gap-2 mt-4 text-[11px] text-white/30 leading-snug">
+          <div className="flex items-start gap-2 mt-4 text-[11px] text-black/30 leading-snug">
             <ShieldCheck size={14} className="shrink-0 mt-0.5 text-[#0039CC]" />
             Payment processed via NOWPayments — non-custodial, no card data
             ever collected. Status updates automatically once the network
@@ -264,7 +264,7 @@ export default function CartDrawer() {
       {itemCount > 0 && !cartOpen && (
         <button
           onClick={() => setCartOpen(true)}
-          className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md bg-[#0039CC] rounded-2xl px-5 py-3.5 flex items-center justify-between shadow-lg shadow-black/40 active:scale-[0.98] transition z-30"
+          className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md bg-[#0039CC] rounded-2xl px-5 py-3.5 flex items-center justify-between shadow-lg shadow-black/15 active:scale-[0.98] transition z-30"
         >
           <span className="text-[13px] font-semibold">
             View cart · {itemCount} item{itemCount > 1 ? "s" : ""}
@@ -284,13 +284,13 @@ export default function CartDrawer() {
               setCheckout(false);
             }}
           />
-          <div className="relative w-full max-w-md bg-[#0F0F0F] rounded-t-3xl border-t border-white/10 max-h-[85vh] flex flex-col">
+          <div className="relative w-full max-w-md bg-white rounded-t-3xl border-t border-black/10 max-h-[85vh] flex flex-col">
             {!checkout && (
-              <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-white/8">
+              <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-black/8">
                 <h2 className="font-display text-[15px]">YOUR CART</h2>
                 <button
                   onClick={() => setCartOpen(false)}
-                  className="w-8 h-8 rounded-full border border-white/15 flex items-center justify-center"
+                  className="w-8 h-8 rounded-full border border-black/15 flex items-center justify-center"
                 >
                   <X size={15} />
                 </button>
@@ -309,7 +309,7 @@ export default function CartDrawer() {
                 }}
               />
             ) : lines.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center py-16 text-white/30 text-[13px]">
+              <div className="flex-1 flex flex-col items-center justify-center py-16 text-black/30 text-[13px]">
                 Cart is empty.
               </div>
             ) : (
@@ -320,16 +320,16 @@ export default function CartDrawer() {
                       <div className="min-w-0 pr-3">
                         <p className="text-[13px] font-medium leading-tight">
                           {l.name}
-                          <span className="text-white/35 font-normal">
+                          <span className="text-black/35 font-normal">
                             {" "}
                             — {l.variant.label}
                           </span>
                         </p>
-                        <p className="text-[11px] text-white/35 font-mono mt-0.5">
+                        <p className="text-[11px] text-black/35 font-mono mt-0.5">
                           {l.qty} × ${l.price}
                         </p>
                       </div>
-                      <div className="flex items-center gap-2 bg-white/10 rounded-full px-1 py-1 shrink-0">
+                      <div className="flex items-center gap-2 bg-black/5 rounded-full px-1 py-1 shrink-0">
                         <button
                           onClick={() => removeFromCart(l.id, l.variant.key)}
                           className="w-6 h-6 rounded-full flex items-center justify-center active:scale-90 transition"
@@ -350,7 +350,7 @@ export default function CartDrawer() {
                   ))}
                 </div>
 
-                <div className="px-5 py-4 border-t border-white/8 space-y-1.5">
+                <div className="px-5 py-4 border-t border-black/8 space-y-1.5">
                   <div className="flex items-center justify-between pt-1">
                     <span className="font-display text-[13px]">TOTAL</span>
                     <span className="font-mono text-[16px] font-bold text-[#0039CC]">
@@ -359,12 +359,12 @@ export default function CartDrawer() {
                   </div>
                   <button
                     onClick={() => setCheckout(true)}
-                    className="w-full mt-3 bg-white text-[#0A0A0A] rounded-xl py-3.5 font-semibold text-[13px] flex items-center justify-center gap-1.5 active:scale-[0.98] transition"
+                    className="w-full mt-3 bg-[#0A0A0A] text-white rounded-xl py-3.5 font-semibold text-[13px] flex items-center justify-center gap-1.5 active:scale-[0.98] transition"
                   >
                     Pay with crypto
                     <ChevronRight size={15} strokeWidth={2.5} />
                   </button>
-                  <p className="text-center text-[10px] text-white/25 pt-1">
+                  <p className="text-center text-[10px] text-black/25 pt-1">
                     Secure crypto payment via NOWPayments
                   </p>
                 </div>

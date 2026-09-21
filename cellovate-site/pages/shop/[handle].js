@@ -249,8 +249,8 @@ export default function ProductPage({ product }) {
                 <div className="bg-[#131313] border border-white/8 rounded-xl p-4">
                   <ShieldCheck size={16} className="text-[#0039CC] mb-2" />
                   <p className="text-[11.5px] text-white/50 leading-snug">
-                    Purity and identity verified by an independent
-                    laboratory on every batch
+                    Purity and identity verified by Janoshik Analytical on
+                    every batch
                   </p>
                 </div>
                 <div className="bg-[#131313] border border-white/8 rounded-xl p-4">

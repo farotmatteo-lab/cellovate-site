@@ -1,13 +1,29 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Plus, Minus, ShoppingBag } from "lucide-react";
-import { VISIBLE_PRODUCTS, getDefaultVariant, getVariant } from "../lib/products";
+import {
+  VISIBLE_PRODUCTS,
+  getDefaultVariant,
+  getVariant,
+  getDoses,
+  getFormats,
+} from "../lib/products";
 import { useCart } from "../context/CartContext";
 
 function ProductCard({ p, cart, addToCart, removeFromCart }) {
   const [variantKey, setVariantKey] = useState(getDefaultVariant(p).key);
   const variant = getVariant(p, variantKey);
   const qty = cart[`${p.id}::${variantKey}`] || 0;
+  const doses = getDoses(p);
+  const formats = getFormats(p, variant.dose);
+
+  // Keep the chosen format when the shopper switches dosage.
+  const selectDose = (dose) => {
+    const match =
+      getFormats(p, dose).find((v) => v.format === variant.format) ||
+      getFormats(p, dose)[0];
+    setVariantKey(match.key);
+  };
 
   return (
     <div className="bg-[#131313] border border-white/8 rounded-2xl p-4 flex flex-col">
@@ -15,14 +31,14 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
         href={`/shop/${p.handle}`}
         className="aspect-[4/3] rounded-xl bg-[#1C1C1C] mb-3 flex items-center justify-center relative overflow-hidden"
       >
-        {p.images?.[0] && (
-          <img
-            src={p.images[0]}
-            alt={p.name}
-            loading="lazy"
-            className="w-full h-full object-cover"
-          />
-        )}
+        <img
+          src={p.images?.[0] || "/product-placeholder.svg"}
+          alt={p.name}
+          loading="lazy"
+          className={`w-full h-full ${
+            p.images?.[0] ? "object-cover" : "object-contain p-6 opacity-70"
+          }`}
+        />
         <span className="absolute bottom-2 right-2 text-[8px] font-mono text-white/60 bg-black/50 backdrop-blur px-1.5 py-0.5 rounded tracking-wider">
           {p.code}
         </span>
@@ -39,15 +55,34 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
         </span>
       </div>
       <p className="text-[11px] text-white/35 font-mono mt-1">
-        {p.dose} · {p.purity} purity
+        {p.dose} · {p.purity ? `${p.purity} purity` : "COA on request"}
       </p>
       <p className="text-[11.5px] text-white/45 mt-2 leading-snug flex-1">
         {p.desc}
       </p>
 
-      {/* Variant selector */}
-      <div className="flex gap-1.5 mt-3">
-        {p.variants.map((v) => (
+      {/* Dosage selector — hidden when a product has a single dosage */}
+      {doses.length > 1 && (
+        <div className="flex flex-wrap gap-1.5 mt-3">
+          {doses.map((d) => (
+            <button
+              key={d}
+              onClick={() => selectDose(d)}
+              className={`flex-1 min-w-[56px] text-[10.5px] font-mono py-1.5 rounded-lg border transition ${
+                d === variant.dose
+                  ? "border-[#0039CC] bg-[#0039CC]/10 text-white"
+                  : "border-white/10 text-white/40 hover:text-white/60"
+              }`}
+            >
+              {d}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Format selector */}
+      <div className="flex gap-1.5 mt-2">
+        {formats.map((v) => (
           <button
             key={v.key}
             onClick={() => setVariantKey(v.key)}
@@ -57,7 +92,7 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
                 : "border-white/10 text-white/40 hover:text-white/60"
             }`}
           >
-            {v.label}
+            {v.format}
           </button>
         ))}
       </div>

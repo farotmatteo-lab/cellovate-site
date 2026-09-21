@@ -23,12 +23,20 @@ export default function Home() {
 
         <header className="max-w-5xl mx-auto px-5 pt-8 flex items-center justify-between">
           <img src="/logo.png" alt="Cellovate" className="h-7 w-auto bg-[#0A0A0A] rounded-md px-2 py-1" />
-          <Link
-            href="/shop"
-            className="text-[12px] font-medium border border-black/15 rounded-full px-4 py-2 hover:border-[#0039CC] transition"
-          >
-            Shop
-          </Link>
+          <nav className="flex items-center gap-2">
+            <Link
+              href="/quality"
+              className="text-[12px] font-medium text-black/50 hover:text-[#0039CC] px-3 py-2 transition"
+            >
+              Quality
+            </Link>
+            <Link
+              href="/shop"
+              className="text-[12px] font-medium border border-black/15 rounded-full px-4 py-2 hover:border-[#0039CC] transition"
+            >
+              Shop
+            </Link>
+          </nav>
         </header>
 
         <section className="max-w-5xl mx-auto px-5 pt-24 pb-20">
@@ -45,7 +53,7 @@ export default function Home() {
           </p>
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 mt-8 bg-[#FAFAFA] text-[#0A0A0A] rounded-full px-6 py-3 text-[13px] font-semibold hover:bg-[#FAFAFA]/85 transition"
+            className="inline-flex items-center gap-2 mt-8 bg-[#0A0A0A] text-white rounded-full px-6 py-3 text-[13px] font-semibold hover:bg-[#0A0A0A]/85 transition"
           >
             Browse the catalog
             <ArrowRight size={15} />
@@ -61,7 +69,10 @@ export default function Home() {
             <p className="text-[13px] text-black/40 leading-relaxed">
               Every batch is analysed by Janoshik Analytical, an independent
               laboratory — purity and identity confirmed by HPLC before it
-              ships.
+              ships.{" "}
+              <Link href="/quality" className="text-[#0039CC] hover:underline">
+                How we verify
+              </Link>
             </p>
           </div>
           <div className="bg-white border border-black/8 rounded-2xl p-6">

@@ -21,14 +21,16 @@ export const POSTS = [
 <li>Comparative receptor-binding studies against dual GLP-1/GIP agonists</li>
 </ul>
 <hr>
-<p><strong>Product standards</strong></p>
-<p>CELLOVATE applies the same internal standards across every compound:</p><ul>
-<li>Consistent preparation from batch to batch</li>
+<p><strong>Purity &amp; quality standards</strong></p>
+<p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
+<li>High-purity peptide structure (≥99% HPLC)</li>
+<li>Independent third-party verification, batch by batch</li>
+<li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
 <hr>
 <p><strong>Storage &amp; handling</strong></p>
-<p>Retatrutide is supplied as a lyophilized powder. Once reconstituted for laboratory use, the sample should be stored between 2 and 8°C and used within the timeframe indicated for the compound.</p>
+<p>Retatrutide is supplied as a lyophilized powder. Once reconstituted for laboratory use, the sample should be stored between 2 and 8°C and used within the timeframe indicated on the supplied certificate of analysis.</p>
 <hr>
 <p><strong>Research use only</strong></p>
 <p>Retatrutide is offered strictly as a research reagent for in-vitro and laboratory studies conducted by qualified professionals. It is not a drug, supplement, or cosmetic, and is not intended for human or animal use.</p>
@@ -57,14 +59,16 @@ export const POSTS = [
 <li>Studies on sleep architecture linked to the GH axis</li>
 </ul>
 <hr>
-<p><strong>Product standards</strong></p>
-<p>CELLOVATE applies the same internal standards across every compound:</p><ul>
-<li>Consistent preparation from batch to batch</li>
+<p><strong>Purity &amp; quality standards</strong></p>
+<p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
+<li>High-purity peptide structure (≥99% HPLC)</li>
+<li>Independent third-party verification, batch by batch</li>
+<li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
 <hr>
 <p><strong>Storage &amp; handling</strong></p>
-<p>This blend is supplied in lyophilized form. Once reconstituted, it should be stored between 2 and 8°C and used within the timeframe indicated for the compound.</p>
+<p>This blend is supplied in lyophilized form. Once reconstituted, it should be stored between 2 and 8°C and used within the timeframe indicated on the supplied certificate of analysis.</p>
 <hr>
 <p><strong>Research use only</strong></p>
 <p>CJC-1295 + Ipamorelin is offered strictly as a research reagent for in-vitro and laboratory studies conducted by qualified professionals. It is not a drug, supplement, or cosmetic, and is not intended for human or animal use.</p>
@@ -93,14 +97,16 @@ export const POSTS = [
 <li>Models of aging-related mitochondrial decline</li>
 </ul>
 <hr>
-<p><strong>Product standards</strong></p>
-<p>CELLOVATE applies the same internal standards across every compound:</p><ul>
-<li>Consistent preparation from batch to batch</li>
+<p><strong>Purity &amp; quality standards</strong></p>
+<p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
+<li>High-purity peptide structure (≥99% HPLC)</li>
+<li>Independent third-party verification, batch by batch</li>
+<li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
 <hr>
 <p><strong>Storage &amp; handling</strong></p>
-<p>MOTS-C is supplied as a lyophilized powder. Once reconstituted, it should be stored between 2 and 8°C and used within the timeframe indicated for the compound.</p>
+<p>MOTS-C is supplied as a lyophilized powder. Once reconstituted, it should be stored between 2 and 8°C and used within the timeframe indicated on the supplied certificate of analysis.</p>
 <hr>
 <p><strong>Research use only</strong></p>
 <p>MOTS-C is offered strictly as a research reagent for in-vitro and laboratory studies conducted by qualified professionals. It is not a drug, supplement, or cosmetic, and is not intended for human or animal use.</p>
@@ -128,14 +134,16 @@ export const POSTS = [
 <li>Hair follicle biology</li>
 </ul>
 <hr>
-<p><strong>Product standards</strong></p>
-<p>CELLOVATE applies the same internal standards across every compound:</p><ul>
-<li>Consistent preparation from batch to batch</li>
+<p><strong>Purity &amp; quality standards</strong></p>
+<p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
+<li>High-purity peptide structure (≥99% HPLC)</li>
+<li>Independent third-party verification, batch by batch</li>
+<li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
 <hr>
 <p><strong>Storage &amp; handling</strong></p>
-<p>GHK-Cu is supplied as a lyophilized powder. Once reconstituted, it should be stored between 2 and 8°C and used within the timeframe indicated for the compound.</p>
+<p>GHK-Cu is supplied as a lyophilized powder. Once reconstituted, it should be stored between 2 and 8°C and used within the timeframe indicated on the supplied certificate of analysis.</p>
 <hr>
 <p><strong>Research use only</strong></p>
 <p>GHK-Cu is offered strictly as a research reagent for in-vitro and laboratory studies conducted by qualified professionals. It is not a drug, supplement, or cosmetic, and is not intended for human or animal use.</p>
@@ -163,15 +171,16 @@ export const POSTS = [
 <li>Interaction between peptide signaling and cellular remodeling</li>
 </ul>
 <hr>
-<p><strong>Product standards</strong></p>
-<p>CELLOVATE applies the same internal standards across every compound:</p><ul>
+<p><strong>Purity &amp; quality standards</strong></p>
+<p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
 <li>High-purity peptide structure (≥99% HPLC) for each component</li>
-<li>Consistent preparation from batch to batch</li>
+<li>Independent third-party verification, batch by batch</li>
+<li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
 <hr>
 <p><strong>Storage &amp; handling</strong></p>
-<p>GLOW is supplied in lyophilized form. Once reconstituted, it should be stored between 2 and 8°C and used within the timeframe indicated for the compound.</p>
+<p>GLOW is supplied in lyophilized form. Once reconstituted, it should be stored between 2 and 8°C and used within the timeframe indicated on the supplied certificate of analysis.</p>
 <hr>
 <p><strong>Research use only</strong></p>
 <p>GLOW is offered strictly as a research reagent for in-vitro and laboratory studies conducted by qualified professionals. It is not a drug, supplement, or cosmetic, and is not intended for human or animal use.</p>
@@ -198,15 +207,16 @@ export const POSTS = [
 <li>DNA repair models via PARPs</li>
 </ul>
 <hr>
-<p><strong>Product standards</strong></p>
-<p>CELLOVATE applies the same internal standards across every compound:</p><ul>
+<p><strong>Purity &amp; quality standards</strong></p>
+<p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
 <li>High-purity structure (≥99% HPLC)</li>
-<li>Consistent preparation from batch to batch</li>
+<li>Independent third-party verification, batch by batch</li>
+<li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
 <hr>
 <p><strong>Storage &amp; handling</strong></p>
-<p>NAD+ is supplied as a lyophilized powder. Once reconstituted, it should be stored between 2 and 8°C and used within the timeframe indicated for the compound.</p>
+<p>NAD+ is supplied as a lyophilized powder. Once reconstituted, it should be stored between 2 and 8°C and used within the timeframe indicated on the supplied certificate of analysis.</p>
 <hr>
 <p><strong>Research use only</strong></p>
 <p>NAD+ is offered strictly as a research reagent for in-vitro and laboratory studies conducted by qualified professionals. It is not a drug, supplement, or cosmetic, and is not intended for human or animal use.</p>
@@ -233,14 +243,16 @@ export const POSTS = [
 <li>Neuroendocrine studies linked to the pineal gland</li>
 </ul>
 <hr>
-<p><strong>Product standards</strong></p>
-<p>CELLOVATE applies the same internal standards across every compound:</p><ul>
-<li>Consistent preparation from batch to batch</li>
+<p><strong>Purity &amp; quality standards</strong></p>
+<p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
+<li>High-purity peptide structure (≥99% HPLC)</li>
+<li>Independent third-party verification, batch by batch</li>
+<li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
 <hr>
 <p><strong>Storage &amp; handling</strong></p>
-<p>Epithalon is supplied as a lyophilized powder. Once reconstituted, it should be stored between 2 and 8°C and used within the timeframe indicated for the compound.</p>
+<p>Epithalon is supplied as a lyophilized powder. Once reconstituted, it should be stored between 2 and 8°C and used within the timeframe indicated on the supplied certificate of analysis.</p>
 <hr>
 <p><strong>Research use only</strong></p>
 <p>Epithalon is offered strictly as a research reagent for in-vitro and laboratory studies conducted by qualified professionals. It is not a drug, supplement, or cosmetic, and is not intended for human or animal use.</p>
@@ -268,14 +280,16 @@ export const POSTS = [
 <li>Metabolic research models</li>
 </ul>
 <hr>
-<p><strong>Product standards</strong></p>
-<p>CELLOVATE applies the same internal standards across every compound:</p><ul>
-<li>Consistent preparation from batch to batch</li>
+<p><strong>Purity &amp; quality standards</strong></p>
+<p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
+<li>High-purity peptide structure (≥99% HPLC)</li>
+<li>Independent third-party verification, batch by batch</li>
+<li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
 <hr>
 <p><strong>Storage &amp; handling</strong></p>
-<p>Tesamorelin is supplied as a lyophilized powder. Once reconstituted, it should be stored between 2 and 8°C and used within the timeframe indicated for the compound.</p>
+<p>Tesamorelin is supplied as a lyophilized powder. Once reconstituted, it should be stored between 2 and 8°C and used within the timeframe indicated on the supplied certificate of analysis.</p>
 <hr>
 <p><strong>Research use only</strong></p>
 <p>Tesamorelin is offered strictly as a research reagent for in-vitro and laboratory studies conducted by qualified professionals. It is not a drug, supplement, or cosmetic, and is not intended for human or animal use.</p>
@@ -305,10 +319,11 @@ export const POSTS = [
 <p><strong>How researchers choose</strong></p>
 <p>The choice between the two depends above all on the research question being asked: protocols focused on body composition and adipose tissue have historically relied on Tesamorelin, while protocols focused on GH pulsatility and recovery often favor the CJC-1295 + Ipamorelin combination. Both require identical storage and reconstitution (lyophilized powder, storage at 2–8°C after reconstitution).</p>
 <hr>
-<p><strong>Product standards</strong></p>
+<p><strong>Purity &amp; quality standards</strong></p>
 <p>CELLOVATE applies the same internal standards to both compounds:</p><ul>
+<li>High-purity peptide structure (≥99% HPLC)</li>
 <li>Testing and verification by our in-house laboratory</li>
-<li>Consistent preparation from batch to batch</li>
+<li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
 <hr>
@@ -323,8 +338,8 @@ export const POSTS = [
     title:
       "How to Read an HPLC Report: A Methodological Guide for Peptide Research",
     summary:
-      "Purity, chromatogram, mass spectrometry: here's how to interpret the key elements of a product specification (COA) for a research peptide.",
-    body: `<p>A product specification (COA) accompanies every batch from a serious research peptide supplier. But knowing how to read one is another matter. This guide details the elements that make up an HPLC report and how to interpret them.</p>
+      "Purity, chromatogram, mass spectrometry: here's how to interpret the key elements of a certificate of analysis (COA) for a research peptide.",
+    body: `<p>A certificate of analysis (COA) accompanies every batch from a serious research peptide supplier. But knowing how to read one is another matter. This guide details the elements that make up an HPLC report and how to interpret them.</p>
 <hr>
 <p><strong>The chromatogram</strong></p>
 <p>The chromatogram is the graphical representation of the separation of the sample's compounds via high-performance liquid chromatography (HPLC). A single sharp, well-defined peak at a stable retention time indicates a homogeneous substance. Multiple secondary peaks or a broad, poorly defined peak suggest the presence of impurities or synthesis byproducts.</p>

@@ -24,7 +24,7 @@ export const POSTS = [
 <p><strong>Purity &amp; quality standards</strong></p>
 <p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
 <li>High-purity peptide structure (≥99% HPLC)</li>
-<li>Independent third-party verification, batch by batch</li>
+<li>Independent verification by Janoshik Analytical, batch by batch</li>
 <li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
@@ -62,7 +62,7 @@ export const POSTS = [
 <p><strong>Purity &amp; quality standards</strong></p>
 <p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
 <li>High-purity peptide structure (≥99% HPLC)</li>
-<li>Independent third-party verification, batch by batch</li>
+<li>Independent verification by Janoshik Analytical, batch by batch</li>
 <li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
@@ -100,7 +100,7 @@ export const POSTS = [
 <p><strong>Purity &amp; quality standards</strong></p>
 <p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
 <li>High-purity peptide structure (≥99% HPLC)</li>
-<li>Independent third-party verification, batch by batch</li>
+<li>Independent verification by Janoshik Analytical, batch by batch</li>
 <li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
@@ -137,7 +137,7 @@ export const POSTS = [
 <p><strong>Purity &amp; quality standards</strong></p>
 <p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
 <li>High-purity peptide structure (≥99% HPLC)</li>
-<li>Independent third-party verification, batch by batch</li>
+<li>Independent verification by Janoshik Analytical, batch by batch</li>
 <li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
@@ -174,7 +174,7 @@ export const POSTS = [
 <p><strong>Purity &amp; quality standards</strong></p>
 <p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
 <li>High-purity peptide structure (≥99% HPLC) for each component</li>
-<li>Independent third-party verification, batch by batch</li>
+<li>Independent verification by Janoshik Analytical, batch by batch</li>
 <li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
@@ -210,7 +210,7 @@ export const POSTS = [
 <p><strong>Purity &amp; quality standards</strong></p>
 <p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
 <li>High-purity structure (≥99% HPLC)</li>
-<li>Independent third-party verification, batch by batch</li>
+<li>Independent verification by Janoshik Analytical, batch by batch</li>
 <li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
@@ -246,7 +246,7 @@ export const POSTS = [
 <p><strong>Purity &amp; quality standards</strong></p>
 <p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
 <li>High-purity peptide structure (≥99% HPLC)</li>
-<li>Independent third-party verification, batch by batch</li>
+<li>Independent verification by Janoshik Analytical, batch by batch</li>
 <li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
@@ -283,7 +283,7 @@ export const POSTS = [
 <p><strong>Purity &amp; quality standards</strong></p>
 <p>CELLOVATE applies strict internal standards to ensure consistency and reliability:</p><ul>
 <li>High-purity peptide structure (≥99% HPLC)</li>
-<li>Independent third-party verification, batch by batch</li>
+<li>Independent verification by Janoshik Analytical, batch by batch</li>
 <li>Batch-to-batch consistency</li>
 <li>Lyophilized form, nitrogen-sealed for stability</li>
 </ul>
@@ -338,8 +338,8 @@ export const POSTS = [
     title:
       "How to Read an HPLC Report: A Methodological Guide for Peptide Research",
     summary:
-      "Purity, chromatogram, mass spectrometry: here's how to interpret the key elements of a certificate of analysis (COA) for a research peptide.",
-    body: `<p>A certificate of analysis (COA) accompanies every batch from a serious research peptide supplier. But knowing how to read one is another matter. This guide details the elements that make up an HPLC report and how to interpret them.</p>
+      "Purity, chromatogram, mass spectrometry: how peptide analysis works, what our Janoshik reports cover, and why we keep the documents themselves off the internet.",
+    body: `<p>Every Cellovate batch is analysed by Janoshik Analytical, an independent laboratory, before it leaves the facility. Knowing how those results are built — and why we do not circulate the reports themselves — is what this guide covers.</p>
 <hr>
 <p><strong>The chromatogram</strong></p>
 <p>The chromatogram is the graphical representation of the separation of the sample's compounds via high-performance liquid chromatography (HPLC). A single sharp, well-defined peak at a stable retention time indicates a homogeneous substance. Multiple secondary peaks or a broad, poorly defined peak suggest the presence of impurities or synthesis byproducts.</p>
@@ -370,8 +370,12 @@ export const POSTS = [
 <li>Precise numerical results, not just a "conforms" statement</li>
 </ul>
 <hr>
+<p><strong>Why Cellovate does not publish its reports</strong></p>
+<p>A certificate of analysis is a PDF, and a PDF travels. Reports issued to legitimate suppliers are routinely lifted, rebranded, and attached to unrelated material by sellers who never tested anything. Publishing ours would hand those sellers a credential for products we did not make — and would make our own batch numbers impossible to distinguish from counterfeits carrying the same document.</p>
+<p>So the analysis happens on every batch, at Janoshik Analytical, and the results stay internal. What we publish instead is what the analysis governs: the compound, the dosage, and the batch that ships to you.</p>
+<hr>
 <p><strong>Research use only</strong></p>
-<p>This article is provided for methodological purposes regarding the interpretation of certificates of analysis in a laboratory research context. It does not constitute a guarantee of compliance for any particular batch or supplier.</p>`,
+<p>This article is provided for methodological purposes regarding the interpretation of analytical results in a laboratory research context. It does not constitute a guarantee of compliance for any particular batch or supplier.</p>`,
   },
 ];
 

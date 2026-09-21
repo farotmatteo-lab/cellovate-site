@@ -8,7 +8,7 @@ export default function ShopPage() {
         <title>Shop | Cellovate Advanced Peptides</title>
         <meta
           name="description"
-          content="Research-grade peptides. Third-party tested. For research use only."
+          content="Research-grade peptides supplied for laboratory use. Not for human consumption."
         />
       </Head>
       <CellovateStore />

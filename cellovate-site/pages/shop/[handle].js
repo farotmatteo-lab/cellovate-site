@@ -152,8 +152,8 @@ export default function ProductPage({ product }) {
                 {product.name}
               </h1>
               <p className="text-[12px] text-white/35 font-mono mb-4">
-                {product.dose} ·{" "}
-                {product.purity ? `${product.purity} purity` : "COA on request"}
+                {product.dose}
+                {product.purity ? ` · ${product.purity} purity` : ""}
               </p>
               <p className="text-white/50 text-[14px] leading-relaxed mb-5">
                 {product.desc}
@@ -249,7 +249,8 @@ export default function ProductPage({ product }) {
                 <div className="bg-[#131313] border border-white/8 rounded-xl p-4">
                   <ShieldCheck size={16} className="text-[#0039CC] mb-2" />
                   <p className="text-[11.5px] text-white/50 leading-snug">
-                    Third-party tested — COA available on request
+                    Lyophilized powder, sealed vials and pens, discreet
+                    packaging
                   </p>
                 </div>
                 <div className="bg-[#131313] border border-white/8 rounded-xl p-4">

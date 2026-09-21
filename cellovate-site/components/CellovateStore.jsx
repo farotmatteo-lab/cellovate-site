@@ -55,8 +55,7 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
         </span>
       </div>
       <p className="text-[11px] text-white/35 font-mono mt-1">
-        {p.dose}
-        {p.purity ? ` · ${p.purity} purity` : ""}
+        {p.dose} · {p.purity ? `${p.purity} purity` : "HPLC verified"}
       </p>
       <p className="text-[11.5px] text-white/45 mt-2 leading-snug flex-1">
         {p.desc}
@@ -103,7 +102,7 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
           href={`/shop/${p.handle}`}
           className="text-[10px] text-white/25 font-mono hover:text-[#0039CC] transition"
         >
-          Research use only
+          Third-party tested
         </Link>
         {qty === 0 ? (
           <button

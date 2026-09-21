@@ -9,7 +9,7 @@ export default function Home() {
         <title>Cellovate Advanced Peptides</title>
         <meta
           name="description"
-          content="Research-grade peptides supplied for laboratory use. Not for human consumption."
+          content="Research-grade peptides, third-party tested. For research use only."
         />
       </Head>
 
@@ -36,12 +36,12 @@ export default function Home() {
             For research use only
           </p>
           <h1 className="font-display text-4xl sm:text-5xl leading-[1.1] max-w-2xl">
-            Research-grade peptides, prepared to a single standard.
+            Research-grade peptides, verified before they reach you.
           </h1>
           <p className="text-white/50 text-[15px] max-w-lg mt-5 leading-relaxed">
-            Lyophilized compounds from one controlled source, sealed and
-            shipped discreetly. Supplied strictly for laboratory research —
-            not for human consumption.
+            Every batch is tested by an independent laboratory for purity
+            and identity. Supplied strictly for laboratory research — not for
+            human consumption.
           </p>
           <Link
             href="/shop"
@@ -56,11 +56,11 @@ export default function Home() {
           <div className="bg-[#131313] border border-white/8 rounded-2xl p-6">
             <ShieldCheck size={20} className="text-[#0039CC] mb-3" />
             <h3 className="font-display text-[15px] mb-1.5">
-              One controlled source
+              Third-party tested
             </h3>
             <p className="text-[13px] text-white/40 leading-relaxed">
-              Every compound comes from the same manufacturing partner,
-              prepared the same way from one batch to the next.
+              Every batch is verified by an independent laboratory —
+              purity and identity confirmed by HPLC before it ships.
             </p>
           </div>
           <div className="bg-[#131313] border border-white/8 rounded-2xl p-6">

@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Product image coming soon">
-  <rect width="400" height="300" fill="#131313"/>
+  <rect width="400" height="300" fill="#EFEFF2"/>
   <g fill="none" stroke="#0039CC" stroke-width="2">
     <circle cx="200" cy="132" r="18"/>
     <ellipse cx="200" cy="132" rx="54" ry="20"/>
     <ellipse cx="200" cy="132" rx="54" ry="20" transform="rotate(60 200 132)"/>
     <ellipse cx="200" cy="132" rx="54" ry="20" transform="rotate(120 200 132)"/>
   </g>
-  <text x="200" y="208" text-anchor="middle" fill="#FFFFFF" fill-opacity="0.55"
+  <text x="200" y="208" text-anchor="middle" fill="#0A0A0A" fill-opacity="0.5"
         font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="13" letter-spacing="2">CELLOVATE</text>
-  <text x="200" y="230" text-anchor="middle" fill="#FFFFFF" fill-opacity="0.3"
+  <text x="200" y="230" text-anchor="middle" fill="#0A0A0A" fill-opacity="0.3"
         font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="10" letter-spacing="2">IMAGE COMING SOON</text>
 </svg>

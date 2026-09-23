@@ -35,8 +35,25 @@ function sortObject(obj) {
   return obj;
 }
 
-async function sendOwnerNotification(payment) {
-  if (!process.env.ZOHO_SMTP_USER || !process.env.ZOHO_SMTP_PASS) {
+function smtpConfig() {
+  const user = String(process.env.ZOHO_SMTP_USER || "").trim();
+  const pass = String(process.env.ZOHO_SMTP_PASS || "").trim();
+  const owner =
+    String(process.env.OWNER_NOTIFICATION_EMAIL || "").trim() || user;
+  return { user, pass, owner };
+}
+
+// create-payment stores the customer email at the end of order_description.
+function customerEmailFrom(payment) {
+  const match = String(payment.order_description || "").match(
+    /\|\s*([^\s|@]+@[^\s|@]+\.[^\s|@]+)\s*$/
+  );
+  return match ? match[1] : null;
+}
+
+async function sendConfirmationEmails(payment) {
+  const { user, pass, owner } = smtpConfig();
+  if (!user || !pass) {
     console.warn("Zoho SMTP not configured — skipping email notification.");
     return;
   }
@@ -45,26 +62,44 @@ async function sendOwnerNotification(payment) {
     host: "smtp.zoho.com",
     port: 465,
     secure: true,
-    auth: {
-      user: process.env.ZOHO_SMTP_USER,
-      pass: process.env.ZOHO_SMTP_PASS,
-    },
+    auth: { user, pass },
   });
 
+  const reference = payment.order_id || payment.payment_id;
+  const customerEmail = customerEmailFrom(payment);
+
   await transporter.sendMail({
-    from: process.env.ZOHO_SMTP_USER,
-    to: process.env.OWNER_NOTIFICATION_EMAIL || process.env.ZOHO_SMTP_USER,
-    subject: `New Cellovate order confirmed — ${payment.order_id || payment.payment_id}`,
-    text: `A payment has been confirmed.
+    from: user,
+    to: owner,
+    replyTo: customerEmail || undefined,
+    subject: `Payment confirmed — ship order ${reference}`,
+    text: `A payment has been confirmed. The shipping address was emailed when
+the order was placed (subject "New order awaiting payment — ${reference}").
 
 Order ID: ${payment.order_id || "n/a"}
 Payment ID: ${payment.payment_id}
+Customer: ${customerEmail || "n/a"}
 Amount: ${payment.price_amount} ${payment.price_currency}
-Paid in: ${payment.pay_amount} ${payment.pay_currency}
-Status: ${payment.payment_status}
-
-Log in to NOWPayments for full details and to arrange shipping.`,
+Paid in: ${payment.actually_paid || payment.pay_amount} ${payment.pay_currency}
+Status: ${payment.payment_status}`,
   });
+
+  if (customerEmail) {
+    try {
+      await transporter.sendMail({
+        from: user,
+        to: customerEmail,
+        subject: `Payment received — Cellovate order ${reference}`,
+        text: `Your crypto payment for order ${reference} has been confirmed.
+
+We are now preparing your order and will email you again once it ships.
+
+Cellovate Advanced Peptides — for research use only, not for human consumption.`,
+      });
+    } catch (err) {
+      console.error("Customer payment confirmation failed", err);
+    }
+  }
 }
 
 export default async function handler(req, res) {
@@ -74,7 +109,7 @@ export default async function handler(req, res) {
 
   const rawBody = await readRawBody(req);
   const signature = req.headers["x-nowpayments-sig"];
-  const ipnSecret = process.env.NOWPAYMENTS_IPN_SECRET;
+  const ipnSecret = String(process.env.NOWPAYMENTS_IPN_SECRET || "").trim();
 
   if (!ipnSecret) {
     console.error("NOWPAYMENTS_IPN_SECRET is not set.");
@@ -94,7 +129,12 @@ export default async function handler(req, res) {
     .update(sortedPayload)
     .digest("hex");
 
-  if (!signature || signature !== expectedSig) {
+  const sigOk =
+    typeof signature === "string" &&
+    signature.length === expectedSig.length &&
+    crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSig));
+
+  if (!sigOk) {
     console.warn("NOWPayments webhook: signature mismatch.");
     return res.status(401).json({ error: "Invalid signature" });
   }
@@ -102,9 +142,11 @@ export default async function handler(req, res) {
   // Signature verified — safe to trust the payload from here on.
   const status = payload.payment_status;
 
-  if (status === "finished" || status === "confirmed") {
+  // NOWPayments sends "confirmed" and then "finished" for the same payment;
+  // email once, on "finished", so each order produces a single notification.
+  if (status === "finished") {
     try {
-      await sendOwnerNotification(payload);
+      await sendConfirmationEmails(payload);
     } catch (err) {
       console.error("Failed to send owner notification email:", err);
       // Don't fail the webhook response over email issues — NOWPayments

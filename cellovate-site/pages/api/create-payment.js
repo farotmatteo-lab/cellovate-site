@@ -86,6 +86,16 @@ Cellovate Advanced Peptides — for research use only, not for human consumption
   });
 }
 
+// NOWPayments posts payment status updates here. Use the www host: the bare
+// domain redirects, and a redirected POST loses its body.
+const DEFAULT_IPN_URL =
+  "https://www.cellovateadvancedpeptides.com/api/nowpayments-webhook";
+
+function ipnCallbackUrl() {
+  const fromEnv = String(process.env.NOWPAYMENTS_IPN_URL || "").trim();
+  return /^https:\/\/\S+$/.test(fromEnv) ? fromEnv : DEFAULT_IPN_URL;
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -119,9 +129,12 @@ export default async function handler(req, res) {
         price_currency: "usd",
         pay_currency: currency,
         order_id: orderId || `CEL-${Date.now()}`,
-        order_description: "Cellovate Advanced Peptides order",
-        // Optional: set this once you have the IPN endpoint deployed
-        // ipn_callback_url: process.env.NOWPAYMENTS_IPN_URL,
+        // The webhook reads the customer email back from here to send the
+        // "payment confirmed" email (there is no database to look it up).
+        order_description: `Cellovate Advanced Peptides order | ${String(
+          customer.email
+        ).trim()}`,
+        ipn_callback_url: ipnCallbackUrl(),
       }),
     });
 

@@ -7,6 +7,7 @@
 import nodemailer from "nodemailer";
 import { PRODUCTS, getVariant } from "../../lib/products";
 import { getPromo, getDiscount } from "../../lib/promos";
+import { validateCustomer, formatAddress } from "../../lib/countries";
 
 function buildOrder(items, promo) {
   const lines = [];
@@ -36,20 +37,22 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { orderId, code, items, email, name, address } = req.body || {};
+  const { orderId, code, items, customer } = req.body || {};
 
   const promo = getPromo(code);
   if (!promo) {
     return res.status(400).json({ error: "Invalid promo code." });
   }
 
-  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-    return res.status(400).json({ error: "A valid email address is required." });
+  const check = validateCustomer(customer);
+  if (!check.ok) {
+    return res.status(400).json({
+      error: `Missing or invalid shipping details: ${check.missing.join(", ")}.`,
+    });
   }
 
-  if (!address || String(address).trim().length < 10) {
-    return res.status(400).json({ error: "A shipping address is required." });
-  }
+  const email = String(customer.email).trim();
+  const address = formatAddress(customer);
 
   const order = buildOrder(items, promo);
 
@@ -76,10 +79,10 @@ Subtotal: $${order.subtotal.toFixed(2)}
 Discount: -$${order.discount.toFixed(2)}
 Total paid: $0.00
 
-Customer: ${name || "n/a"}
 Email: ${email}
 Shipping address:
-${address}`;
+${address}
+${customer.notes ? `\nOrder notes:\n${customer.notes}` : ""}`;
 
   if (!process.env.ZOHO_SMTP_USER || !process.env.ZOHO_SMTP_PASS) {
     // The order is valid but cannot be emailed — say so rather than pretending.

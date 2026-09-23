@@ -32,11 +32,11 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
         className="aspect-[4/3] rounded-xl bg-[#EFEFF2] mb-3 flex items-center justify-center relative overflow-hidden"
       >
         <img
-          src={p.images?.[0] || "/product-placeholder.svg"}
-          alt={p.name}
+          src={variant.image || "/product-placeholder.svg"}
+          alt={variant.imageAlt}
           loading="lazy"
           className={`w-full h-full ${
-            p.images?.[0] ? "object-cover" : "object-contain p-6 opacity-70"
+            variant.image ? "object-cover" : "object-contain p-6 opacity-70"
           }`}
         />
         <span className="absolute bottom-2 right-2 text-[8px] font-mono text-black/60 bg-white/70 backdrop-blur px-1.5 py-0.5 rounded tracking-wider">

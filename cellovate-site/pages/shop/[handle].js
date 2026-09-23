@@ -276,13 +276,13 @@ export default function ProductPage({ product }) {
                       <Plus size={16} strokeWidth={2.5} />
                     </button>
                   </div>
-                  <button
-                    onClick={() => setCartOpen(true)}
+                  <Link
+                    href="/checkout"
                     className="flex-1 inline-flex items-center justify-center gap-2 bg-[#0A0A0A] hover:bg-black text-white rounded-2xl py-3.5 text-[14px] font-semibold active:scale-[0.98] transition"
                   >
                     <ShoppingBag size={16} strokeWidth={2.25} />
-                    View cart &amp; checkout
-                  </button>
+                    Checkout
+                  </Link>
                 </div>
               )}
 

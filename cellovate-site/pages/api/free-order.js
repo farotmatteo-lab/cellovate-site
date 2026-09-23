@@ -84,7 +84,15 @@ Shipping address:
 ${address}
 ${customer.notes ? `\nOrder notes:\n${customer.notes}` : ""}`;
 
-  if (!process.env.ZOHO_SMTP_USER || !process.env.ZOHO_SMTP_PASS) {
+  // Trim every value pulled from env: a stray space or newline pasted into
+  // Vercel's dashboard silently breaks nodemailer's "No recipients defined"
+  // check even though the variable "looks" set.
+  const smtpUser = String(process.env.ZOHO_SMTP_USER || "").trim();
+  const smtpPass = String(process.env.ZOHO_SMTP_PASS || "").trim();
+  const ownerEmail =
+    String(process.env.OWNER_NOTIFICATION_EMAIL || "").trim() || smtpUser;
+
+  if (!smtpUser || !smtpPass) {
     // The order is valid but cannot be emailed — say so rather than pretending.
     console.error("Zoho SMTP not configured — free order not emailed.", summary);
     return res.status(500).json({
@@ -98,22 +106,32 @@ ${customer.notes ? `\nOrder notes:\n${customer.notes}` : ""}`;
     port: 465,
     secure: true,
     auth: {
-      user: process.env.ZOHO_SMTP_USER,
-      pass: process.env.ZOHO_SMTP_PASS,
+      user: smtpUser,
+      pass: smtpPass,
     },
   });
 
+  // The owner notification is the one that matters for fulfillment — fail
+  // loudly if it doesn't go out. A failed customer confirmation is logged
+  // but must not lose an otherwise-valid order.
   try {
     await transporter.sendMail({
-      from: process.env.ZOHO_SMTP_USER,
-      to: process.env.OWNER_NOTIFICATION_EMAIL || process.env.ZOHO_SMTP_USER,
+      from: smtpUser,
+      to: ownerEmail,
       replyTo: email,
       subject: `Free order (${promo.code}) — ${reference}`,
       text: summary,
     });
+  } catch (err) {
+    console.error("Free order owner notification failed", ownerEmail, err);
+    return res
+      .status(500)
+      .json({ error: "Order could not be recorded. Please contact us." });
+  }
 
+  try {
     await transporter.sendMail({
-      from: process.env.ZOHO_SMTP_USER,
+      from: smtpUser,
       to: email,
       subject: `Your Cellovate order ${reference}`,
       text: `Thank you — your order has been received.
@@ -130,10 +148,7 @@ We will email you again once your order ships.
 Cellovate Advanced Peptides — for research use only, not for human consumption.`,
     });
   } catch (err) {
-    console.error("Free order email failed", err);
-    return res
-      .status(500)
-      .json({ error: "Order could not be recorded. Please contact us." });
+    console.error("Free order customer confirmation failed", email, err);
   }
 
   return res.status(200).json({ ok: true, orderId: reference });

@@ -12,7 +12,15 @@ import { validateCustomer, formatAddress } from "../../lib/countries";
 // Emails the shipping details as soon as a payment is created, so an order is
 // never left with a payment on NOWPayments and no address on our side.
 async function emailOrderDetails({ orderId, customer, items, amount, payment }) {
-  if (!process.env.ZOHO_SMTP_USER || !process.env.ZOHO_SMTP_PASS) {
+  // Trim every value pulled from env: a stray space or newline pasted into
+  // Vercel's dashboard silently breaks nodemailer's "No recipients defined"
+  // check even though the variable "looks" set.
+  const smtpUser = String(process.env.ZOHO_SMTP_USER || "").trim();
+  const smtpPass = String(process.env.ZOHO_SMTP_PASS || "").trim();
+  const ownerEmail =
+    String(process.env.OWNER_NOTIFICATION_EMAIL || "").trim() || smtpUser;
+
+  if (!smtpUser || !smtpPass) {
     console.warn("Zoho SMTP not configured — order details not emailed.");
     return;
   }
@@ -34,8 +42,8 @@ async function emailOrderDetails({ orderId, customer, items, amount, payment }) 
     port: 465,
     secure: true,
     auth: {
-      user: process.env.ZOHO_SMTP_USER,
-      pass: process.env.ZOHO_SMTP_PASS,
+      user: smtpUser,
+      pass: smtpPass,
     },
   });
 
@@ -52,15 +60,15 @@ ${formatAddress(customer)}
 ${customer.notes ? `\nOrder notes:\n${customer.notes}` : ""}`;
 
   await transporter.sendMail({
-    from: process.env.ZOHO_SMTP_USER,
-    to: process.env.OWNER_NOTIFICATION_EMAIL || process.env.ZOHO_SMTP_USER,
+    from: smtpUser,
+    to: ownerEmail,
     replyTo: customer.email,
     subject: `New order awaiting payment — ${orderId}`,
     text: summary,
   });
 
   await transporter.sendMail({
-    from: process.env.ZOHO_SMTP_USER,
+    from: smtpUser,
     to: customer.email,
     subject: `Your Cellovate order ${orderId}`,
     text: `Thank you — we have received your order.

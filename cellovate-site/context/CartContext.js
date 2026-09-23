@@ -32,9 +32,9 @@ export function CartProvider({ children }) {
   const [hydrated, setHydrated] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkout, setCheckout] = useState(false);
-  const [orderId] = useState(
-    () => `CEL-${Math.floor(100000 + Math.random() * 900000)}`
-  );
+  const makeOrderId = () =>
+    `CEL-${Math.floor(100000 + Math.random() * 900000)}`;
+  const [orderId, setOrderId] = useState(makeOrderId);
 
   // Load any previously saved cart once, client-side only.
   useEffect(() => {
@@ -77,8 +77,10 @@ export function CartProvider({ children }) {
     });
   };
 
+  // Also starts a fresh order reference for the next purchase.
   const clearCart = () => {
     setCart({});
+    setOrderId(makeOrderId());
     setPromoCode(null);
     setPromoError(null);
   };
@@ -146,6 +148,7 @@ export function CartProvider({ children }) {
     applyPromo,
     removePromo,
     orderId,
+    hydrated,
     cartOpen,
     setCartOpen,
     checkout,

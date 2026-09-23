@@ -244,11 +244,131 @@ function CheckoutPanel({ total, orderId, onBack, onDone }) {
   );
 }
 
+
+function FreeOrderPanel({ lines, promo, orderId, onBack, onDone }) {
+  const [form, setForm] = useState({ name: "", email: "", address: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [done, setDone] = useState(false);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/free-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId,
+          code: promo?.code,
+          items: lines.map((l) => ({
+            id: l.id,
+            variantKey: l.variant.key,
+            qty: l.qty,
+          })),
+          ...form,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Order failed");
+      setDone(true);
+      setTimeout(onDone, 2600);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (done) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center px-5 py-16 text-center">
+        <div className="w-14 h-14 rounded-full bg-[#0039CC] flex items-center justify-center mb-4">
+          <Check size={24} strokeWidth={3} className="text-white" />
+        </div>
+        <p className="font-display text-[15px] mb-1">Order received</p>
+        <p className="text-[12.5px] text-black/45 max-w-xs">
+          Reference {orderId}. A confirmation has been sent to your email.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={submit} className="flex-1 overflow-y-auto px-5 pt-5 pb-6">
+      <button
+        type="button"
+        onClick={onBack}
+        className="inline-flex items-center gap-1.5 text-[12px] text-black/40 hover:text-black/70 mb-4"
+      >
+        <ArrowLeft size={13} /> Back to cart
+      </button>
+
+      <h2 className="font-display text-[15px] mb-1">Shipping details</h2>
+      <p className="text-[12px] text-black/45 mb-4">
+        Code {promo?.code} applied — nothing to pay. We only need where to send
+        it.
+      </p>
+
+      <label className="block text-[11px] font-mono uppercase tracking-wider text-black/40 mb-1">
+        Full name
+      </label>
+      <input
+        value={form.name}
+        onChange={(e) => setForm({ ...form, name: e.target.value })}
+        className="w-full mb-3 bg-[#FAFAFA] border border-black/10 rounded-xl px-3 py-2.5 text-[13px]"
+        required
+      />
+
+      <label className="block text-[11px] font-mono uppercase tracking-wider text-black/40 mb-1">
+        Email
+      </label>
+      <input
+        type="email"
+        value={form.email}
+        onChange={(e) => setForm({ ...form, email: e.target.value })}
+        className="w-full mb-3 bg-[#FAFAFA] border border-black/10 rounded-xl px-3 py-2.5 text-[13px]"
+        required
+      />
+
+      <label className="block text-[11px] font-mono uppercase tracking-wider text-black/40 mb-1">
+        Shipping address
+      </label>
+      <textarea
+        rows={4}
+        value={form.address}
+        onChange={(e) => setForm({ ...form, address: e.target.value })}
+        className="w-full mb-4 bg-[#FAFAFA] border border-black/10 rounded-xl px-3 py-2.5 text-[13px]"
+        required
+      />
+
+      {error && (
+        <p className="text-[12px] text-red-600 mb-3">{error}</p>
+      )}
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-[#0A0A0A] text-white rounded-xl py-3.5 font-semibold text-[13px] disabled:opacity-50"
+      >
+        {loading ? "Placing order…" : "Place order — $0.00"}
+      </button>
+    </form>
+  );
+}
+
 export default function CartDrawer() {
   const {
     lines,
     itemCount,
+    subtotal,
+    discount,
     total,
+    promo,
+    promoError,
+    applyPromo,
+    removePromo,
     orderId,
     addToCart,
     removeFromCart,
@@ -258,6 +378,8 @@ export default function CartDrawer() {
     checkout,
     setCheckout,
   } = useCart();
+  const [codeInput, setCodeInput] = useState("");
+  const freeOrder = total === 0 && lines.length > 0;
 
   return (
     <>
@@ -297,7 +419,19 @@ export default function CartDrawer() {
               </div>
             )}
 
-            {checkout ? (
+            {checkout && freeOrder ? (
+              <FreeOrderPanel
+                lines={lines}
+                promo={promo}
+                orderId={orderId}
+                onBack={() => setCheckout(false)}
+                onDone={() => {
+                  clearCart();
+                  setCheckout(false);
+                  setCartOpen(false);
+                }}
+              />
+            ) : checkout ? (
               <CheckoutPanel
                 total={total}
                 orderId={orderId}
@@ -351,6 +485,58 @@ export default function CartDrawer() {
                 </div>
 
                 <div className="px-5 py-4 border-t border-black/8 space-y-1.5">
+                  {promo ? (
+                    <div className="flex items-center justify-between text-[12px] mb-1">
+                      <span className="text-black/45">
+                        Code{" "}
+                        <span className="font-mono text-[#0039CC]">
+                          {promo.code}
+                        </span>{" "}
+                        applied
+                      </span>
+                      <button
+                        onClick={removePromo}
+                        className="text-black/35 hover:text-black/60 underline"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2 mb-2">
+                      <input
+                        value={codeInput}
+                        onChange={(e) => setCodeInput(e.target.value)}
+                        placeholder="Promo code"
+                        className="flex-1 bg-[#FAFAFA] border border-black/10 rounded-xl px-3 py-2 text-[12.5px] uppercase"
+                      />
+                      <button
+                        onClick={() => {
+                          if (applyPromo(codeInput)) setCodeInput("");
+                        }}
+                        className="px-4 rounded-xl border border-black/15 text-[12.5px] font-medium hover:border-[#0039CC] transition"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  )}
+                  {promoError && (
+                    <p className="text-[11.5px] text-red-600">{promoError}</p>
+                  )}
+
+                  <div className="flex items-center justify-between text-[12px] text-black/45">
+                    <span>Subtotal</span>
+                    <span className="font-mono">${subtotal.toFixed(2)}</span>
+                  </div>
+                  {discount > 0 && (
+                    <div className="flex items-center justify-between text-[12px] text-[#0039CC]">
+                      <span>Discount</span>
+                      <span className="font-mono">-${discount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between text-[12px] text-black/45">
+                    <span>Shipping</span>
+                    <span className="font-mono">Free</span>
+                  </div>
                   <div className="flex items-center justify-between pt-1">
                     <span className="font-display text-[13px]">TOTAL</span>
                     <span className="font-mono text-[16px] font-bold text-[#0039CC]">
@@ -361,11 +547,13 @@ export default function CartDrawer() {
                     onClick={() => setCheckout(true)}
                     className="w-full mt-3 bg-[#0A0A0A] text-white rounded-xl py-3.5 font-semibold text-[13px] flex items-center justify-center gap-1.5 active:scale-[0.98] transition"
                   >
-                    Pay with crypto
+                    {freeOrder ? "Complete free order" : "Pay with crypto"}
                     <ChevronRight size={15} strokeWidth={2.5} />
                   </button>
                   <p className="text-center text-[10px] text-black/25 pt-1">
-                    Secure crypto payment via NOWPayments
+                    {freeOrder
+                      ? "No payment required — shipping included"
+                      : "Secure crypto payment via NOWPayments"}
                   </p>
                 </div>
               </>

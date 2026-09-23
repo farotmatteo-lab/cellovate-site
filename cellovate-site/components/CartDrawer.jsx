@@ -31,7 +31,15 @@ function useCountdown(seconds, active) {
   return { display: `${m}:${s}`, left };
 }
 
-function CheckoutPanel({ total, orderId, customer, lines, onBack, onDone }) {
+function CheckoutPanel({
+  total,
+  promoCode,
+  orderId,
+  customer,
+  lines,
+  onBack,
+  onDone,
+}) {
   const [coin, setCoin] = useState(CRYPTO_OPTIONS[0].id);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -51,6 +59,7 @@ function CheckoutPanel({ total, orderId, customer, lines, onBack, onDone }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           amount: total,
+          code: promoCode,
           orderId,
           payCurrency: nextCoin,
           customer,
@@ -368,6 +377,7 @@ export default function CartDrawer() {
     itemCount,
     subtotal,
     discount,
+    shipping,
     total,
     promo,
     promoError,
@@ -454,6 +464,7 @@ export default function CartDrawer() {
             ) : checkout ? (
               <CheckoutPanel
                 total={total}
+                promoCode={promo?.code}
                 orderId={orderId}
                 customer={customer}
                 lines={lines}
@@ -557,7 +568,9 @@ export default function CartDrawer() {
                   )}
                   <div className="flex items-center justify-between text-[12px] text-black/45">
                     <span>Shipping</span>
-                    <span className="font-mono">Free</span>
+                    <span className="font-mono">
+                      {shipping > 0 ? `$${shipping.toFixed(2)}` : "Free"}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between pt-1">
                     <span className="font-display text-[13px]">TOTAL</span>

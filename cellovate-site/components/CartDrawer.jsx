@@ -149,7 +149,7 @@ function CheckoutPanel({
 
       {paid ? (
         <div className="flex-1 flex flex-col items-center justify-center py-16 px-6 text-center">
-          <div className="w-14 h-14 rounded-full bg-[#0039CC] flex items-center justify-center mb-4">
+          <div className="w-14 h-14 rounded-full bg-[#0039CC] text-white flex items-center justify-center mb-4">
             <Check size={24} strokeWidth={3} />
           </div>
           <p className="font-display text-[15px] tracking-tight">
@@ -298,7 +298,7 @@ function FreeOrderPanel({ lines, promo, orderId, customer, onBack, onDone }) {
   if (done) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center px-5 py-16 text-center">
-        <div className="w-14 h-14 rounded-full bg-[#0039CC] flex items-center justify-center mb-4">
+        <div className="w-14 h-14 rounded-full bg-[#0039CC] text-white flex items-center justify-center mb-4">
           <Check size={24} strokeWidth={3} className="text-white" />
         </div>
         <p className="font-display text-[15px] mb-1">Order received</p>
@@ -406,7 +406,7 @@ export default function CartDrawer() {
       {itemCount > 0 && !cartOpen && (
         <button
           onClick={() => setCartOpen(true)}
-          className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md bg-[#0039CC] rounded-2xl px-5 py-3.5 flex items-center justify-between shadow-lg shadow-black/15 active:scale-[0.98] transition z-30"
+          className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md bg-[#0039CC] text-white rounded-2xl px-5 py-3.5 flex items-center justify-between shadow-lg shadow-black/15 active:scale-[0.98] transition z-30"
         >
           <span className="text-[13px] font-semibold">
             View cart · {itemCount} item{itemCount > 1 ? "s" : ""}
@@ -493,7 +493,7 @@ export default function CartDrawer() {
                           </span>
                         </p>
                         <p className="text-[11px] text-black/35 font-mono mt-0.5">
-                          {l.qty} × ${l.price}
+                          {l.qty} × ${l.price.toFixed(2)}
                         </p>
                       </div>
                       <div className="flex items-center gap-2 bg-black/5 rounded-full px-1 py-1 shrink-0">
@@ -508,7 +508,7 @@ export default function CartDrawer() {
                         </span>
                         <button
                           onClick={() => addToCart(l.id, l.variant.key)}
-                          className="w-6 h-6 rounded-full bg-[#0039CC] flex items-center justify-center active:scale-90 transition"
+                          className="w-6 h-6 rounded-full bg-[#0039CC] text-white flex items-center justify-center active:scale-90 transition"
                         >
                           <Plus size={12} strokeWidth={2.5} />
                         </button>

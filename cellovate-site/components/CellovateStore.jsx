@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Link from "next/link";
-import { Plus, Minus, ShoppingBag } from "lucide-react";
+import { Plus, Minus, ShoppingBag, Check, ArrowRight } from "lucide-react";
 import {
   VISIBLE_PRODUCTS,
   getDefaultVariant,
@@ -16,6 +16,16 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
   const qty = cart[`${p.id}::${variantKey}`] || 0;
   const doses = getDoses(p);
   const formats = getFormats(p, variant.dose);
+
+  // Brief "Added" confirmation on the button after each add.
+  const [justAdded, setJustAdded] = useState(false);
+  const timer = useRef(null);
+  const add = () => {
+    addToCart(p.id, variantKey);
+    setJustAdded(true);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setJustAdded(false), 1400);
+  };
 
   // Keep the chosen format when the shopper switches dosage.
   const selectDose = (dose) => {
@@ -51,7 +61,7 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
           </h3>
         </Link>
         <span className="font-mono text-[13px] text-[#0039CC] font-semibold shrink-0">
-          ${variant.price}
+          ${variant.price.toFixed(2)}
         </span>
       </div>
       <p className="text-[11px] text-black/35 font-mono mt-1">
@@ -68,10 +78,10 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
             <button
               key={d}
               onClick={() => selectDose(d)}
-              className={`flex-1 min-w-[56px] text-[10.5px] font-mono py-1.5 rounded-lg border transition ${
+              className={`flex-1 min-w-[56px] text-[11px] font-mono font-medium py-2 rounded-lg border transition ${
                 d === variant.dose
-                  ? "border-[#0039CC] bg-[#0039CC]/10 text-[#0A0A0A]"
-                  : "border-black/10 text-black/40 hover:text-black/60"
+                  ? "border-[#0039CC] bg-[#0039CC] text-white shadow-sm shadow-[#0039CC]/25"
+                  : "border-black/20 bg-white text-[#0A0A0A] hover:border-[#0039CC] hover:text-[#0039CC]"
               }`}
             >
               {d}
@@ -86,10 +96,10 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
           <button
             key={v.key}
             onClick={() => setVariantKey(v.key)}
-            className={`flex-1 text-[10.5px] font-mono py-1.5 rounded-lg border transition ${
+            className={`flex-1 text-[11px] font-mono font-medium py-2 rounded-lg border transition ${
               v.key === variantKey
-                ? "border-[#0039CC] bg-[#0039CC]/10 text-[#0A0A0A]"
-                : "border-black/10 text-black/40 hover:text-black/60"
+                ? "border-[#0039CC] bg-[#0039CC] text-white shadow-sm shadow-[#0039CC]/25"
+                : "border-black/20 bg-white text-[#0A0A0A] hover:border-[#0039CC] hover:text-[#0039CC]"
             }`}
           >
             {v.format}
@@ -97,39 +107,45 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
         ))}
       </div>
 
-      <div className="flex items-center justify-between mt-3 pt-3 border-t border-black/6">
-        <Link
-          href={`/shop/${p.handle}`}
-          className="text-[10px] text-black/25 font-mono hover:text-[#0039CC] transition"
-        >
-          Third-party tested
-        </Link>
+      <div className="mt-3">
         {qty === 0 ? (
           <button
-            onClick={() => addToCart(p.id, variantKey)}
-            className="w-8 h-8 rounded-full bg-[#FAFAFA] text-[#0A0A0A] flex items-center justify-center active:scale-90 transition"
+            onClick={add}
+            className="w-full inline-flex items-center justify-center gap-2 bg-[#0039CC] hover:bg-[#002FA8] text-white rounded-xl py-3 text-[13px] font-semibold shadow-md shadow-[#0039CC]/25 active:scale-[0.98] transition"
           >
-            <Plus size={15} strokeWidth={2.5} />
+            <ShoppingBag size={15} strokeWidth={2.25} />
+            Add to cart · ${variant.price.toFixed(2)}
           </button>
         ) : (
-          <div className="flex items-center gap-2 bg-black/5 rounded-full px-1 py-1">
-            <button
-              onClick={() => removeFromCart(p.id, variantKey)}
-              className="w-6 h-6 rounded-full flex items-center justify-center active:scale-90 transition"
-            >
-              <Minus size={12} strokeWidth={2.5} />
-            </button>
-            <span className="font-mono text-[12px] w-4 text-center tabular-nums">
-              {qty}
-            </span>
-            <button
-              onClick={() => addToCart(p.id, variantKey)}
-              className="w-6 h-6 rounded-full bg-[#0039CC] flex items-center justify-center active:scale-90 transition"
-            >
-              <Plus size={12} strokeWidth={2.5} />
-            </button>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between flex-1 border-2 border-[#0039CC] rounded-xl px-1.5 py-1">
+              <button
+                onClick={() => removeFromCart(p.id, variantKey)}
+                aria-label="Remove one"
+                className="w-8 h-8 rounded-lg text-[#0039CC] hover:bg-[#0039CC]/10 flex items-center justify-center active:scale-90 transition"
+              >
+                <Minus size={15} strokeWidth={2.5} />
+              </button>
+              <span className="text-[12.5px] font-semibold text-[#0039CC] tabular-nums flex items-center gap-1">
+                {justAdded && <Check size={14} strokeWidth={3} />}
+                {qty} in cart
+              </span>
+              <button
+                onClick={add}
+                aria-label="Add one"
+                className="w-8 h-8 rounded-lg bg-[#0039CC] text-white flex items-center justify-center active:scale-90 transition"
+              >
+                <Plus size={15} strokeWidth={2.5} />
+              </button>
+            </div>
           </div>
         )}
+        <Link
+          href={`/shop/${p.handle}`}
+          className="mt-2.5 flex items-center justify-center gap-1 text-[11.5px] text-black/45 hover:text-[#0039CC] transition"
+        >
+          View details <ArrowRight size={12} />
+        </Link>
       </div>
     </div>
   );
@@ -160,7 +176,7 @@ export default function CellovateStore() {
           >
             <ShoppingBag size={16} strokeWidth={1.75} />
             {itemCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-[#0039CC] text-[10px] font-semibold min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1">
+              <span className="absolute -top-1.5 -right-1.5 bg-[#0039CC] text-white text-[10px] font-semibold min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1">
                 {itemCount}
               </span>
             )}

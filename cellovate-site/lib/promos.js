@@ -10,6 +10,13 @@ export const PROMOS = {
     freeShipping: true,
     label: "Free order — 100% off, shipping included",
   },
+  // 10% off the products only; the shipping fee is still charged.
+  RND10: {
+    code: "RND10",
+    percent: 10,
+    freeShipping: false,
+    label: "10% off products",
+  },
 };
 
 export function getPromo(code) {

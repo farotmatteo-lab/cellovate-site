@@ -11,6 +11,7 @@ import {
   Bitcoin,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import CheckoutForm from "./CheckoutForm";
 
 const CRYPTO_OPTIONS = [
   { id: "btc", label: "Bitcoin", symbol: "BTC" },
@@ -30,7 +31,7 @@ function useCountdown(seconds, active) {
   return { display: `${m}:${s}`, left };
 }
 
-function CheckoutPanel({ total, orderId, onBack, onDone }) {
+function CheckoutPanel({ total, orderId, customer, lines, onBack, onDone }) {
   const [coin, setCoin] = useState(CRYPTO_OPTIONS[0].id);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -52,6 +53,12 @@ function CheckoutPanel({ total, orderId, onBack, onDone }) {
           amount: total,
           orderId,
           payCurrency: nextCoin,
+          customer,
+          items: lines.map((l) => ({
+            id: l.id,
+            variantKey: l.variant.key,
+            qty: l.qty,
+          })),
         }),
       });
       const data = await res.json();
@@ -245,14 +252,12 @@ function CheckoutPanel({ total, orderId, onBack, onDone }) {
 }
 
 
-function FreeOrderPanel({ lines, promo, orderId, onBack, onDone }) {
-  const [form, setForm] = useState({ name: "", email: "", address: "" });
+function FreeOrderPanel({ lines, promo, orderId, customer, onBack, onDone }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [done, setDone] = useState(false);
 
-  const submit = async (e) => {
-    e.preventDefault();
+  const place = async () => {
     setLoading(true);
     setError(null);
     try {
@@ -262,18 +267,18 @@ function FreeOrderPanel({ lines, promo, orderId, onBack, onDone }) {
         body: JSON.stringify({
           orderId,
           code: promo?.code,
+          customer,
           items: lines.map((l) => ({
             id: l.id,
             variantKey: l.variant.key,
             qty: l.qty,
           })),
-          ...form,
         }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Order failed");
       setDone(true);
-      setTimeout(onDone, 2600);
+      setTimeout(onDone, 2800);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -289,72 +294,71 @@ function FreeOrderPanel({ lines, promo, orderId, onBack, onDone }) {
         </div>
         <p className="font-display text-[15px] mb-1">Order received</p>
         <p className="text-[12.5px] text-black/45 max-w-xs">
-          Reference {orderId}. A confirmation has been sent to your email.
+          Reference {orderId}. A confirmation has been sent to {customer.email}.
         </p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={submit} className="flex-1 overflow-y-auto px-5 pt-5 pb-6">
+    <div className="flex-1 overflow-y-auto px-5 pt-5 pb-6">
       <button
         type="button"
         onClick={onBack}
         className="inline-flex items-center gap-1.5 text-[12px] text-black/40 hover:text-black/70 mb-4"
       >
-        <ArrowLeft size={13} /> Back to cart
+        <ArrowLeft size={13} /> Back
       </button>
 
-      <h2 className="font-display text-[15px] mb-1">Shipping details</h2>
-      <p className="text-[12px] text-black/45 mb-4">
-        Code {promo?.code} applied — nothing to pay. We only need where to send
-        it.
-      </p>
+      <h2 className="font-display text-[14px] uppercase tracking-[0.1em] mb-3">
+        Review order
+      </h2>
 
-      <label className="block text-[11px] font-mono uppercase tracking-wider text-black/40 mb-1">
-        Full name
-      </label>
-      <input
-        value={form.name}
-        onChange={(e) => setForm({ ...form, name: e.target.value })}
-        className="w-full mb-3 bg-[#FAFAFA] border border-black/10 rounded-xl px-3 py-2.5 text-[13px]"
-        required
-      />
+      <div className="space-y-1.5 mb-4">
+        {lines.map((l) => (
+          <div key={l.lineId} className="flex justify-between text-[12.5px]">
+            <span className="text-black/60">
+              {l.qty} × {l.name}{" "}
+              <span className="text-black/35">— {l.variant.label}</span>
+            </span>
+          </div>
+        ))}
+      </div>
 
-      <label className="block text-[11px] font-mono uppercase tracking-wider text-black/40 mb-1">
-        Email
-      </label>
-      <input
-        type="email"
-        value={form.email}
-        onChange={(e) => setForm({ ...form, email: e.target.value })}
-        className="w-full mb-3 bg-[#FAFAFA] border border-black/10 rounded-xl px-3 py-2.5 text-[13px]"
-        required
-      />
+      <div className="bg-[#FAFAFA] border border-black/8 rounded-xl p-3 text-[12.5px] text-black/60 whitespace-pre-line mb-4">
+        {customer.firstName} {customer.lastName}
+        {"\n"}
+        {customer.address1}
+        {customer.address2 ? `\n${customer.address2}` : ""}
+        {"\n"}
+        {customer.postalCode} {customer.city}
+        {"\n"}
+        {customer.country}
+        {"\n"}
+        {customer.email}
+      </div>
 
-      <label className="block text-[11px] font-mono uppercase tracking-wider text-black/40 mb-1">
-        Shipping address
-      </label>
-      <textarea
-        rows={4}
-        value={form.address}
-        onChange={(e) => setForm({ ...form, address: e.target.value })}
-        className="w-full mb-4 bg-[#FAFAFA] border border-black/10 rounded-xl px-3 py-2.5 text-[13px]"
-        required
-      />
+      <div className="flex items-center justify-between mb-1 text-[12px] text-black/45">
+        <span>Code {promo?.code}</span>
+        <span className="font-mono">100% off</span>
+      </div>
+      <div className="flex items-center justify-between mb-4">
+        <span className="font-display text-[13px]">TOTAL</span>
+        <span className="font-mono text-[16px] font-bold text-[#0039CC]">
+          $0.00
+        </span>
+      </div>
 
-      {error && (
-        <p className="text-[12px] text-red-600 mb-3">{error}</p>
-      )}
+      {error && <p className="text-[12px] text-red-600 mb-3">{error}</p>}
 
       <button
-        type="submit"
+        onClick={place}
         disabled={loading}
         className="w-full bg-[#0A0A0A] text-white rounded-xl py-3.5 font-semibold text-[13px] disabled:opacity-50"
       >
         {loading ? "Placing order…" : "Place order — $0.00"}
       </button>
-    </form>
+    </div>
   );
 }
 
@@ -379,7 +383,13 @@ export default function CartDrawer() {
     setCheckout,
   } = useCart();
   const [codeInput, setCodeInput] = useState("");
+  const [customer, setCustomer] = useState(null);
   const freeOrder = total === 0 && lines.length > 0;
+
+  const closeCheckout = () => {
+    setCheckout(false);
+    setCustomer(null);
+  };
 
   return (
     <>
@@ -403,7 +413,7 @@ export default function CartDrawer() {
             className="absolute inset-0 bg-black/70"
             onClick={() => {
               setCartOpen(false);
-              setCheckout(false);
+              closeCheckout();
             }}
           />
           <div className="relative w-full max-w-md bg-white rounded-t-3xl border-t border-black/10 max-h-[85vh] flex flex-col">
@@ -419,15 +429,25 @@ export default function CartDrawer() {
               </div>
             )}
 
-            {checkout && freeOrder ? (
+            {checkout && !customer ? (
+              <CheckoutForm
+                initial={customer}
+                submitLabel={
+                  freeOrder ? "Review free order" : "Continue to payment"
+                }
+                onBack={closeCheckout}
+                onSubmit={setCustomer}
+              />
+            ) : checkout && freeOrder ? (
               <FreeOrderPanel
                 lines={lines}
                 promo={promo}
                 orderId={orderId}
-                onBack={() => setCheckout(false)}
+                customer={customer}
+                onBack={() => setCustomer(null)}
                 onDone={() => {
                   clearCart();
-                  setCheckout(false);
+                  closeCheckout();
                   setCartOpen(false);
                 }}
               />
@@ -435,10 +455,12 @@ export default function CartDrawer() {
               <CheckoutPanel
                 total={total}
                 orderId={orderId}
-                onBack={() => setCheckout(false)}
+                customer={customer}
+                lines={lines}
+                onBack={() => setCustomer(null)}
                 onDone={() => {
                   clearCart();
-                  setCheckout(false);
+                  closeCheckout();
                   setCartOpen(false);
                 }}
               />
@@ -547,7 +569,7 @@ export default function CartDrawer() {
                     onClick={() => setCheckout(true)}
                     className="w-full mt-3 bg-[#0A0A0A] text-white rounded-xl py-3.5 font-semibold text-[13px] flex items-center justify-center gap-1.5 active:scale-[0.98] transition"
                   >
-                    {freeOrder ? "Complete free order" : "Pay with crypto"}
+                    {freeOrder ? "Complete free order" : "Checkout"}
                     <ChevronRight size={15} strokeWidth={2.5} />
                   </button>
                   <p className="text-center text-[10px] text-black/25 pt-1">

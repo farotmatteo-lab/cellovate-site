@@ -1,6 +1,5 @@
 // Promo codes. `percent` is the discount applied to the cart subtotal.
-// Shipping is already free on every order, so `freeShipping` only changes
-// what the checkout tells the customer.
+// `freeShipping: true` waives the flat shipping fee (see lib/pricing.js).
 //
 // A code at 100% produces a $0 total: the crypto checkout is skipped and the
 // order is placed through /api/free-order instead.

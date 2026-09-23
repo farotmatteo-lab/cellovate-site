@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { PRODUCTS, getDefaultVariant, getVariant } from "../lib/products";
+import { getPromo, getDiscount } from "../lib/promos";
 
 const CartContext = createContext(null);
 
@@ -25,6 +26,8 @@ function migrateLegacyCart(rawCart) {
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState({});
+  const [promoCode, setPromoCode] = useState(null);
+  const [promoError, setPromoError] = useState(null);
   const [hydrated, setHydrated] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkout, setCheckout] = useState(false);
@@ -37,6 +40,8 @@ export function CartProvider({ children }) {
     try {
       const saved = window.localStorage.getItem("cellovate-cart");
       if (saved) setCart(migrateLegacyCart(JSON.parse(saved)));
+      const savedPromo = window.localStorage.getItem("cellovate-promo");
+      if (savedPromo && getPromo(savedPromo)) setPromoCode(savedPromo);
     } catch {
       // ignore corrupt/local storage errors
     }
@@ -48,10 +53,12 @@ export function CartProvider({ children }) {
     if (!hydrated) return;
     try {
       window.localStorage.setItem("cellovate-cart", JSON.stringify(cart));
+      if (promoCode) window.localStorage.setItem("cellovate-promo", promoCode);
+      else window.localStorage.removeItem("cellovate-promo");
     } catch {
       // ignore
     }
-  }, [cart, hydrated]);
+  }, [cart, promoCode, hydrated]);
 
   const addToCart = (id, variantKey) => {
     const key = lineKey(id, variantKey);
@@ -69,7 +76,29 @@ export function CartProvider({ children }) {
     });
   };
 
-  const clearCart = () => setCart({});
+  const clearCart = () => {
+    setCart({});
+    setPromoCode(null);
+    setPromoError(null);
+  };
+
+  // Promo codes are validated again server-side before a free order is placed.
+  const applyPromo = (raw) => {
+    const promo = getPromo(raw);
+    if (!promo) {
+      setPromoError("This code is not valid.");
+      setPromoCode(null);
+      return false;
+    }
+    setPromoError(null);
+    setPromoCode(promo.code);
+    return true;
+  };
+
+  const removePromo = () => {
+    setPromoCode(null);
+    setPromoError(null);
+  };
 
   const lines = useMemo(
     () =>
@@ -92,7 +121,10 @@ export function CartProvider({ children }) {
   );
 
   const itemCount = lines.reduce((s, l) => s + l.qty, 0);
-  const total = lines.reduce((s, l) => s + l.price * l.qty, 0);
+  const subtotal = lines.reduce((s, l) => s + l.price * l.qty, 0);
+  const promo = getPromo(promoCode);
+  const discount = getDiscount(promo, subtotal);
+  const total = Math.max(0, Math.round((subtotal - discount) * 100) / 100);
 
   const value = {
     cart,
@@ -101,7 +133,14 @@ export function CartProvider({ children }) {
     clearCart,
     lines,
     itemCount,
+    subtotal,
+    discount,
     total,
+    promo,
+    promoCode,
+    promoError,
+    applyPromo,
+    removePromo,
     orderId,
     cartOpen,
     setCartOpen,

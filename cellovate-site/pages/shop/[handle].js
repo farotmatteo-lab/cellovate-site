@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import {
@@ -7,6 +7,7 @@ import {
   Minus,
   ShoppingBag,
   ShieldCheck,
+  Check,
   FlaskConical,
 } from "lucide-react";
 import {
@@ -62,6 +63,16 @@ export default function ProductPage({ product }) {
     setVariantKey(match.key);
   };
 
+  // Brief "Added" confirmation after each add.
+  const [justAdded, setJustAdded] = useState(false);
+  const timer = useRef(null);
+  const add = () => {
+    addToCart(product.id, variantKey);
+    setJustAdded(true);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setJustAdded(false), 1600);
+  };
+
   const related = VISIBLE_PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
 
   return (
@@ -104,7 +115,7 @@ export default function ProductPage({ product }) {
             >
               <ShoppingBag size={16} strokeWidth={1.75} />
               {itemCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-[#0039CC] text-[10px] font-semibold min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1">
+                <span className="absolute -top-1.5 -right-1.5 bg-[#0039CC] text-white text-[10px] font-semibold min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1">
                   {itemCount}
                 </span>
               )}
@@ -179,7 +190,7 @@ export default function ProductPage({ product }) {
 
               <div className="flex items-baseline gap-2 mb-4">
                 <span className="font-mono text-3xl font-bold text-[#0039CC]">
-                  ${variant.price}
+                  ${variant.price.toFixed(2)}
                 </span>
                 <span className="text-[12px] text-black/30">
                   / {variant.dose} {variant.format.toLowerCase()}
@@ -189,7 +200,7 @@ export default function ProductPage({ product }) {
               {/* Dosage selector */}
               {doses.length > 1 && (
                 <div className="mb-4">
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-black/30 font-mono mb-2">
+                  <p className="text-[10.5px] uppercase tracking-[0.15em] text-black/55 font-mono mb-2">
                     Dosage
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -199,8 +210,8 @@ export default function ProductPage({ product }) {
                         onClick={() => selectDose(d)}
                         className={`sm:px-6 px-4 text-[12.5px] font-medium py-2.5 rounded-full border transition ${
                           d === variant.dose
-                            ? "border-[#0039CC] bg-[#0039CC]/10 text-[#0A0A0A]"
-                            : "border-black/15 text-black/40 hover:text-black/60"
+                            ? "border-[#0039CC] bg-[#0039CC] text-white shadow-sm shadow-[#0039CC]/25"
+                            : "border-black/20 bg-white text-[#0A0A0A] hover:border-[#0039CC] hover:text-[#0039CC]"
                         }`}
                       >
                         {d}
@@ -212,7 +223,7 @@ export default function ProductPage({ product }) {
 
               {/* Format selector */}
               <div className="mb-6">
-                <p className="text-[10px] uppercase tracking-[0.15em] text-black/30 font-mono mb-2">
+                <p className="text-[10.5px] uppercase tracking-[0.15em] text-black/55 font-mono mb-2">
                   Format
                 </p>
                 <div className="flex gap-2">
@@ -222,13 +233,13 @@ export default function ProductPage({ product }) {
                       onClick={() => setVariantKey(v.key)}
                       className={`flex-1 sm:flex-none sm:px-6 text-[12.5px] font-medium py-2.5 rounded-full border transition ${
                         v.key === variantKey
-                          ? "border-[#0039CC] bg-[#0039CC]/10 text-[#0A0A0A]"
-                          : "border-black/15 text-black/40 hover:text-black/60"
+                          ? "border-[#0039CC] bg-[#0039CC] text-white shadow-sm shadow-[#0039CC]/25"
+                          : "border-black/20 bg-white text-[#0A0A0A] hover:border-[#0039CC] hover:text-[#0039CC]"
                       }`}
                     >
                       {v.format}
-                      <span className="ml-1.5 font-mono text-[11px] opacity-70">
-                        ${v.price}
+                      <span className="ml-1.5 font-mono text-[11px] opacity-80">
+                        ${v.price.toFixed(2)}
                       </span>
                     </button>
                   ))}
@@ -237,28 +248,40 @@ export default function ProductPage({ product }) {
 
               {qty === 0 ? (
                 <button
-                  onClick={() => addToCart(product.id, variantKey)}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#FAFAFA] text-[#0A0A0A] rounded-full px-8 py-3.5 text-[13px] font-semibold hover:bg-[#FAFAFA]/85 active:scale-[0.98] transition"
+                  onClick={add}
+                  className="w-full inline-flex items-center justify-center gap-2.5 bg-[#0039CC] hover:bg-[#002FA8] text-white rounded-2xl py-4 text-[15px] font-semibold shadow-lg shadow-[#0039CC]/30 active:scale-[0.98] transition"
                 >
-                  <Plus size={15} strokeWidth={2.5} />
-                  Add to cart
+                  <ShoppingBag size={18} strokeWidth={2.25} />
+                  Add to cart — ${variant.price.toFixed(2)}
                 </button>
               ) : (
-                <div className="flex items-center gap-3 bg-black/5 rounded-full px-2 py-2 w-fit">
+                <div className="flex flex-col sm:flex-row gap-2.5">
+                  <div className="flex items-center justify-between sm:w-48 border-2 border-[#0039CC] rounded-2xl px-2 py-1.5">
+                    <button
+                      onClick={() => removeFromCart(product.id, variantKey)}
+                      aria-label="Remove one"
+                      className="w-10 h-10 rounded-xl text-[#0039CC] hover:bg-[#0039CC]/10 flex items-center justify-center active:scale-90 transition"
+                    >
+                      <Minus size={16} strokeWidth={2.5} />
+                    </button>
+                    <span className="text-[14px] font-semibold text-[#0039CC] tabular-nums flex items-center gap-1.5">
+                      {justAdded && <Check size={15} strokeWidth={3} />}
+                      {qty} in cart
+                    </span>
+                    <button
+                      onClick={add}
+                      aria-label="Add one"
+                      className="w-10 h-10 rounded-xl bg-[#0039CC] text-white flex items-center justify-center active:scale-90 transition"
+                    >
+                      <Plus size={16} strokeWidth={2.5} />
+                    </button>
+                  </div>
                   <button
-                    onClick={() => removeFromCart(product.id, variantKey)}
-                    className="w-9 h-9 rounded-full flex items-center justify-center active:scale-90 transition"
+                    onClick={() => setCartOpen(true)}
+                    className="flex-1 inline-flex items-center justify-center gap-2 bg-[#0A0A0A] hover:bg-black text-white rounded-2xl py-3.5 text-[14px] font-semibold active:scale-[0.98] transition"
                   >
-                    <Minus size={14} strokeWidth={2.5} />
-                  </button>
-                  <span className="font-mono text-[14px] w-5 text-center tabular-nums">
-                    {qty}
-                  </span>
-                  <button
-                    onClick={() => addToCart(product.id, variantKey)}
-                    className="w-9 h-9 rounded-full bg-[#0039CC] flex items-center justify-center active:scale-90 transition"
-                  >
-                    <Plus size={14} strokeWidth={2.5} />
+                    <ShoppingBag size={16} strokeWidth={2.25} />
+                    View cart &amp; checkout
                   </button>
                 </div>
               )}
@@ -325,7 +348,7 @@ export default function ProductPage({ product }) {
                         {p.name}
                       </h3>
                       <span className="font-mono text-[12px] text-[#0039CC] font-semibold shrink-0">
-                        from ${getLowestPrice(p)}
+                        from ${getLowestPrice(p).toFixed(2)}
                       </span>
                     </div>
                   </Link>

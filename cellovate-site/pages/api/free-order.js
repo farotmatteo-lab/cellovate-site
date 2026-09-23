@@ -5,32 +5,9 @@
 // never trusted: prices come from lib/products and the discount is recomputed
 // here, so a tampered client cannot turn a paid cart into a free one.
 import nodemailer from "nodemailer";
-import { PRODUCTS, getVariant } from "../../lib/products";
-import { getPromo, getDiscount } from "../../lib/promos";
+import { getPromo } from "../../lib/promos";
+import { computeOrder, formatTotals } from "../../lib/pricing";
 import { validateCustomer, formatAddress } from "../../lib/countries";
-
-function buildOrder(items, promo) {
-  const lines = [];
-  let subtotal = 0;
-
-  for (const item of items || []) {
-    const product = PRODUCTS.find((p) => p.id === item.id);
-    if (!product || product.draft) continue;
-    const variant = getVariant(product, item.variantKey);
-    const qty = Math.max(1, Math.min(50, parseInt(item.qty, 10) || 0));
-    if (!qty) continue;
-    subtotal += variant.price * qty;
-    lines.push(
-      `${qty} × ${product.name} — ${variant.label} (${product.code}) — $${(
-        variant.price * qty
-      ).toFixed(2)}`
-    );
-  }
-
-  const discount = getDiscount(promo, subtotal);
-  const total = Math.max(0, Math.round((subtotal - discount) * 100) / 100);
-  return { lines, subtotal, discount, total };
-}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -54,7 +31,7 @@ export default async function handler(req, res) {
   const email = String(customer.email).trim();
   const address = formatAddress(customer);
 
-  const order = buildOrder(items, promo);
+  const order = computeOrder(items, promo);
 
   if (!order.lines.length) {
     return res.status(400).json({ error: "Cart is empty." });
@@ -75,9 +52,7 @@ Promo code: ${promo.code} (${promo.percent}% off${
 
 ${order.lines.join("\n")}
 
-Subtotal: $${order.subtotal.toFixed(2)}
-Discount: -$${order.discount.toFixed(2)}
-Total paid: $0.00
+${formatTotals(order)}
 
 Email: ${email}
 Shipping address:

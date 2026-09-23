@@ -1,17 +1,21 @@
 // POST /api/create-payment
-// Body: { amount: number, orderId: string, payCurrency: "btc" | "eth" | "usdttrc20" }
+// Body: { orderId, payCurrency: "btc" | "eth" | "usdttrc20", code?, customer,
+//         items: [{ id, variantKey, qty }] }
+// The amount charged is recomputed here from lib/products + shipping; any
+// `amount` sent by the browser is ignored.
 //
 // Requires the environment variable NOWPAYMENTS_API_KEY (the PRIVATE api key,
 // e.g. 1AFH...YP1R) set in your hosting provider (Vercel: Project Settings ->
 // Environment Variables). Never put this key in frontend code.
 
 import nodemailer from "nodemailer";
-import { PRODUCTS, getVariant } from "../../lib/products";
+import { getPromo } from "../../lib/promos";
+import { computeOrder, formatTotals } from "../../lib/pricing";
 import { validateCustomer, formatAddress } from "../../lib/countries";
 
 // Emails the shipping details as soon as a payment is created, so an order is
 // never left with a payment on NOWPayments and no address on our side.
-async function emailOrderDetails({ orderId, customer, items, amount, payment }) {
+async function emailOrderDetails({ orderId, customer, order, payment }) {
   // Trim every value pulled from env: a stray space or newline pasted into
   // Vercel's dashboard silently breaks nodemailer's "No recipients defined"
   // check even though the variable "looks" set.
@@ -25,18 +29,6 @@ async function emailOrderDetails({ orderId, customer, items, amount, payment }) 
     return;
   }
 
-  const lines = (items || [])
-    .map((item) => {
-      const product = PRODUCTS.find((p) => p.id === item.id);
-      if (!product) return null;
-      const variant = getVariant(product, item.variantKey);
-      const qty = Math.max(1, parseInt(item.qty, 10) || 1);
-      return `${qty} × ${product.name} — ${variant.label} (${product.code}) — $${(
-        variant.price * qty
-      ).toFixed(2)}`;
-    })
-    .filter(Boolean);
-
   const transporter = nodemailer.createTransport({
     host: "smtp.zoho.com",
     port: 465,
@@ -49,10 +41,12 @@ async function emailOrderDetails({ orderId, customer, items, amount, payment }) 
 
   const summary = `Order: ${orderId}
 Payment ID: ${payment?.payment_id || "n/a"}
-Amount due: $${Number(amount).toFixed(2)} (paid in ${payment?.pay_currency || "crypto"})
+Paid in: ${payment?.pay_currency || "crypto"}
 Status: awaiting payment
 
-${lines.join("\n")}
+${order.lines.join("\n")}
+
+${formatTotals(order)}
 
 Email: ${customer.email}
 Shipping address:
@@ -73,9 +67,9 @@ ${customer.notes ? `\nOrder notes:\n${customer.notes}` : ""}`;
     subject: `Your Cellovate order ${orderId}`,
     text: `Thank you — we have received your order.
 
-${lines.join("\n")}
+${order.lines.join("\n")}
 
-Total: $${Number(amount).toFixed(2)}
+${formatTotals(order)}
 
 Shipping to:
 ${formatAddress(customer)}
@@ -101,10 +95,21 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { amount, orderId, payCurrency, customer, items } = req.body || {};
+  const { orderId, payCurrency, customer, items, code } = req.body || {};
 
-  if (!amount || Number(amount) <= 0) {
-    return res.status(400).json({ error: "Invalid amount" });
+  const promo = code ? getPromo(code) : null;
+  if (code && !promo) {
+    return res.status(400).json({ error: "Invalid promo code." });
+  }
+
+  const order = computeOrder(items, promo);
+  if (!order.lines.length) {
+    return res.status(400).json({ error: "Cart is empty." });
+  }
+  if (order.total <= 0) {
+    return res
+      .status(400)
+      .json({ error: "This order is free — no crypto payment needed." });
   }
 
   const check = validateCustomer(customer);
@@ -125,7 +130,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        price_amount: Number(amount),
+        price_amount: order.total,
         price_currency: "usd",
         pay_currency: currency,
         order_id: orderId || `CEL-${Date.now()}`,
@@ -150,8 +155,7 @@ export default async function handler(req, res) {
       await emailOrderDetails({
         orderId: orderId || data.order_id,
         customer,
-        items,
-        amount,
+        order,
         payment: data,
       });
     } catch (mailErr) {

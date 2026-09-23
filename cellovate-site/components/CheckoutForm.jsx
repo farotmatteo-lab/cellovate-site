@@ -30,7 +30,7 @@ const LABELS = {
 function Field({ label, name, value, onChange, error, ...rest }) {
   return (
     <label className="block">
-      <span className="block text-[11px] font-mono uppercase tracking-wider text-black/40 mb-1">
+      <span className="block text-[11px] font-mono uppercase tracking-wider text-black/55 mb-1">
         {label}
       </span>
       <input
@@ -47,7 +47,13 @@ function Field({ label, name, value, onChange, error, ...rest }) {
 }
 
 // Contact + shipping details, collected before payment on every order.
-export default function CheckoutForm({ initial, onBack, onSubmit, submitLabel }) {
+export default function CheckoutForm({
+  initial,
+  onBack,
+  onSubmit,
+  submitLabel,
+  className = "flex-1 overflow-y-auto px-5 pt-5 pb-6",
+}) {
   const [form, setForm] = useState({ ...EMPTY, ...(initial || {}) });
   const [missing, setMissing] = useState([]);
 
@@ -65,14 +71,16 @@ export default function CheckoutForm({ initial, onBack, onSubmit, submitLabel })
   const err = (name) => missing.includes(name);
 
   return (
-    <form onSubmit={submit} className="flex-1 overflow-y-auto px-5 pt-5 pb-6">
-      <button
-        type="button"
-        onClick={onBack}
-        className="inline-flex items-center gap-1.5 text-[12px] text-black/40 hover:text-black/70 mb-4"
-      >
-        <ArrowLeft size={13} /> Back to cart
-      </button>
+    <form onSubmit={submit} className={className}>
+      {onBack && (
+        <button
+          type="button"
+          onClick={onBack}
+          className="inline-flex items-center gap-1.5 text-[12px] text-black/40 hover:text-black/70 mb-4"
+        >
+          <ArrowLeft size={13} /> Back to cart
+        </button>
+      )}
 
       <h2 className="font-display text-[14px] uppercase tracking-[0.1em] mb-3">
         Contact
@@ -182,7 +190,7 @@ export default function CheckoutForm({ initial, onBack, onSubmit, submitLabel })
       </div>
 
       <label className="block mt-3">
-        <span className="block text-[11px] font-mono uppercase tracking-wider text-black/40 mb-1">
+        <span className="block text-[11px] font-mono uppercase tracking-wider text-black/55 mb-1">
           {LABELS.country}
         </span>
         <select
@@ -204,7 +212,7 @@ export default function CheckoutForm({ initial, onBack, onSubmit, submitLabel })
       </label>
 
       <label className="block mt-3">
-        <span className="block text-[11px] font-mono uppercase tracking-wider text-black/40 mb-1">
+        <span className="block text-[11px] font-mono uppercase tracking-wider text-black/55 mb-1">
           Order notes (optional)
         </span>
         <textarea
@@ -224,7 +232,7 @@ export default function CheckoutForm({ initial, onBack, onSubmit, submitLabel })
 
       <button
         type="submit"
-        className="w-full mt-5 bg-[#0A0A0A] text-white rounded-xl py-3.5 font-semibold text-[13px] flex items-center justify-center gap-1.5 active:scale-[0.98] transition"
+        className="w-full mt-6 bg-[#0039CC] hover:bg-[#002FA8] text-white rounded-2xl py-4 font-semibold text-[15px] flex items-center justify-center gap-1.5 shadow-lg shadow-[#0039CC]/30 active:scale-[0.99] transition"
       >
         {submitLabel || "Continue"}
         <ChevronRight size={15} strokeWidth={2.5} />

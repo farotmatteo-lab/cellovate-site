@@ -197,6 +197,22 @@ export const PRODUCT_IMAGES = {
     "20mg-vial": {
       "src": "/images/products/retatrutide-20mg-vial-cellovate-research-peptide.webp",
       "alt": "Retatrutide 20mg vial — Cellovate research peptide"
+    },
+    "10mg-pen": {
+      "src": "/images/products/retatrutide-10mg-pen-cellovate-research-peptide.webp",
+      "alt": "Retatrutide 10mg pre-filled pen — Cellovate research peptide"
+    },
+    "40mg-pen": {
+      "src": "/images/products/retatrutide-40mg-pen-cellovate-research-peptide.webp",
+      "alt": "Retatrutide 40mg pre-filled pen — Cellovate research peptide"
+    },
+    "10mg-vial": {
+      "src": "/images/products/retatrutide-10mg-vial-cellovate-research-peptide.webp",
+      "alt": "Retatrutide 10mg vial — Cellovate research peptide"
+    },
+    "40mg-vial": {
+      "src": "/images/products/retatrutide-40mg-vial-cellovate-research-peptide.webp",
+      "alt": "Retatrutide 40mg vial — Cellovate research peptide"
     }
   },
   "motsc": {
@@ -207,6 +223,14 @@ export const PRODUCT_IMAGES = {
     "10mg-vial": {
       "src": "/images/products/mots-c-10mg-vial-cellovate-research-peptide.webp",
       "alt": "MOTS-c 10mg vial — Cellovate research peptide"
+    },
+    "40mg-pen": {
+      "src": "/images/products/mots-c-40mg-pen-cellovate-research-peptide.webp",
+      "alt": "MOTS-c 40mg pre-filled pen — Cellovate research peptide"
+    },
+    "40mg-vial": {
+      "src": "/images/products/mots-c-40mg-vial-cellovate-research-peptide.webp",
+      "alt": "MOTS-c 40mg vial — Cellovate research peptide"
     }
   },
   "cjc": {
@@ -257,6 +281,14 @@ export const PRODUCT_IMAGES = {
     "1000mg-vial": {
       "src": "/images/products/nad-plus-1000mg-vial-cellovate-research-peptide.webp",
       "alt": "NAD+ 1000mg vial — Cellovate research peptide"
+    },
+    "500mg-pen": {
+      "src": "/images/products/nad-plus-500mg-pen-cellovate-research-peptide.webp",
+      "alt": "NAD+ 500mg pre-filled pen — Cellovate research peptide"
+    },
+    "500mg-vial": {
+      "src": "/images/products/nad-plus-500mg-vial-cellovate-research-peptide.webp",
+      "alt": "NAD+ 500mg vial — Cellovate research peptide"
     }
   },
   "epi": {

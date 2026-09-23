@@ -36,9 +36,20 @@ export async function getStaticProps({ params }) {
 export default function ProductPage({ product }) {
   const { cart, addToCart, removeFromCart, itemCount, setCartOpen } =
     useCart();
-  const [activeImage, setActiveImage] = useState(0);
-  const [variantKey, setVariantKey] = useState(getDefaultVariant(product).key);
+  // null = follow the selected variant; a src = the thumbnail the shopper clicked.
+  const [pickedImage, setPickedImage] = useState(null);
+  const [variantKey, setVariantKeyRaw] = useState(
+    getDefaultVariant(product).key
+  );
+  const setVariantKey = (key) => {
+    setVariantKeyRaw(key);
+    setPickedImage(null);
+  };
   const variant = getVariant(product, variantKey);
+  const mainImage = pickedImage || variant.image;
+  const mainAlt =
+    product.variants.find((v) => v.image === mainImage)?.imageAlt ||
+    product.name;
   const qty = cart[`${product.id}::${variantKey}`] || 0;
   const doses = getDoses(product);
   const formats = getFormats(product, variant.dose);
@@ -58,6 +69,12 @@ export default function ProductPage({ product }) {
       <Head>
         <title>{product.name} | Cellovate Advanced Peptides</title>
         <meta name="description" content={product.desc} />
+        {product.images?.[0] && (
+          <meta
+            property="og:image"
+            content={`https://www.cellovateadvancedpeptides.com${product.images[0]}`}
+          />
+        )}
       </Head>
 
       <main className="min-h-screen bg-[#FAFAFA] text-[#0A0A0A] font-sans pb-24">
@@ -108,12 +125,10 @@ export default function ProductPage({ product }) {
             <div>
               <div className="aspect-square rounded-2xl bg-white border border-black/8 overflow-hidden flex items-center justify-center relative">
                 <img
-                  src={
-                    product.images?.[activeImage] || "/product-placeholder.svg"
-                  }
-                  alt={product.name}
+                  src={mainImage || "/product-placeholder.svg"}
+                  alt={mainAlt}
                   className={`w-full h-full object-contain ${
-                    product.images?.length ? "" : "p-16 opacity-70"
+                    mainImage ? "" : "p-16 opacity-70"
                   }`}
                 />
                 <span className="absolute bottom-3 right-3 text-[9px] font-mono text-black/60 bg-white/70 backdrop-blur px-2 py-1 rounded tracking-wider">
@@ -125,16 +140,19 @@ export default function ProductPage({ product }) {
                   {product.images.map((img, i) => (
                     <button
                       key={img}
-                      onClick={() => setActiveImage(i)}
+                      onClick={() => setPickedImage(img)}
                       className={`w-16 h-16 rounded-lg overflow-hidden border transition ${
-                        i === activeImage
+                        img === mainImage
                           ? "border-[#0039CC]"
                           : "border-black/10 opacity-60 hover:opacity-100"
                       }`}
                     >
                       <img
                         src={img}
-                        alt={`${product.name} view ${i + 1}`}
+                        alt={
+                          product.variants.find((v) => v.image === img)
+                            ?.imageAlt || `${product.name} view ${i + 1}`
+                        }
                         className="w-full h-full object-contain"
                       />
                     </button>
@@ -293,7 +311,7 @@ export default function ProductPage({ product }) {
                     <div className="aspect-[4/3] rounded-xl bg-[#EFEFF2] mb-3 overflow-hidden">
                       <img
                         src={p.images?.[0] || "/product-placeholder.svg"}
-                        alt={p.name}
+                        alt={p.variants[0].imageAlt}
                         loading="lazy"
                         className={`w-full h-full ${
                           p.images?.[0]

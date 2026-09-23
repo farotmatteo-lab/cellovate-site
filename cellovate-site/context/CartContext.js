@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { PRODUCTS, getDefaultVariant, getVariant } from "../lib/products";
 import { getPromo, getDiscount } from "../lib/promos";
+import { getShipping } from "../lib/pricing";
 
 const CartContext = createContext(null);
 
@@ -124,7 +125,9 @@ export function CartProvider({ children }) {
   const subtotal = lines.reduce((s, l) => s + l.price * l.qty, 0);
   const promo = getPromo(promoCode);
   const discount = getDiscount(promo, subtotal);
-  const total = Math.max(0, Math.round((subtotal - discount) * 100) / 100);
+  const shipping = getShipping(promo, itemCount);
+  const total =
+    Math.round((Math.max(0, subtotal - discount) + shipping) * 100) / 100;
 
   const value = {
     cart,
@@ -135,6 +138,7 @@ export function CartProvider({ children }) {
     itemCount,
     subtotal,
     discount,
+    shipping,
     total,
     promo,
     promoCode,

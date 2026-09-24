@@ -1,5 +1,8 @@
 import "../styles/globals.css";
+import { useEffect } from "react";
 import Script from "next/script";
+import { useRouter } from "next/router";
+import { pageViewed } from "../lib/omnisendClient";
 import { CartProvider } from "../context/CartContext";
 import CartDrawer from "../components/CartDrawer";
 
@@ -9,6 +12,14 @@ const OMNISEND_BRAND_ID =
   process.env.NEXT_PUBLIC_OMNISEND_BRAND_ID || "6ab49f929b0f973742e4032b";
 
 export default function App({ Component, pageProps }) {
+  const router = useRouter();
+  // The snippet records the first page view; client-side navigations are
+  // reported here.
+  useEffect(() => {
+    const onRoute = () => pageViewed();
+    router.events.on("routeChangeComplete", onRoute);
+    return () => router.events.off("routeChangeComplete", onRoute);
+  }, [router.events]);
   return (
     <CartProvider>
       <Component {...pageProps} />

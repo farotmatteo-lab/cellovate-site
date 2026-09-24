@@ -18,6 +18,7 @@ import {
 import { useCart } from "../context/CartContext";
 import CheckoutForm from "../components/CheckoutForm";
 import CryptoPayment from "../components/CryptoPayment";
+import { identify } from "../lib/omnisendClient";
 
 const money = (n) => `$${Number(n || 0).toFixed(2)}`;
 
@@ -377,6 +378,9 @@ export default function CheckoutPage() {
 
   const submitInfo = (form) => {
     setCustomer(form);
+    // Lets Omnisend attach this browser's events (cart, product views) to
+    // the shopper.
+    identify(form.email);
     // Registers the contact + "started checkout" in Omnisend (abandoned
     // checkout reminders). Fire-and-forget: never blocks the purchase.
     fetch("/api/track-checkout", {

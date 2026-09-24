@@ -134,6 +134,57 @@ export async function placedOrder({ orderId, customer, items, order, paid }) {
   });
 }
 
+// Sent once the payment is confirmed (NOWPayments "finished", or a free
+// order). Drives the post-purchase, restock and win-back automations.
+export async function paidForOrder({ orderId, email, items, order }) {
+  return call("/events", {
+    eventName: "paid for order",
+    origin: "api",
+    eventVersion: "v2",
+    eventID: crypto.randomUUID(),
+    eventTime: new Date().toISOString(),
+    contact: { email: String(email).trim() },
+    properties: {
+      orderID: orderId,
+      totalPrice: order.total,
+      subTotalPrice: order.subtotal,
+      totalDiscount: order.discount,
+      shippingPrice: order.shipping,
+      createdAt: new Date().toISOString(),
+      currency: "USD",
+      paymentStatus: "paid",
+      fulfillmentStatus: "unfulfilled",
+      lineItems: lineItems(items),
+    },
+  });
+}
+
+// The cart travels inside the NOWPayments order_description so the webhook
+// can rebuild it (there is no database):
+//   "Cellovate Advanced Peptides order | i=tirz.10mg-vial.2,bpc.10mg-pen.1 | c=RND10 | email"
+export function encodeCart(items, codes) {
+  const i = (items || [])
+    .map((it) => `${it.id}.${it.variantKey}.${parseInt(it.qty, 10) || 1}`)
+    .join(",");
+  const c = (codes || []).join("+");
+  return `i=${i}${c ? ` | c=${c}` : ""}`;
+}
+
+export function decodeCart(description) {
+  const text = String(description || "");
+  const im = text.match(/\bi=([^|\s]*)/);
+  const cm = text.match(/\bc=([^|\s]*)/);
+  const items = (im ? im[1].split(",") : [])
+    .filter(Boolean)
+    .map((part) => {
+      const [id, variantKey, qty] = part.split(".");
+      return { id, variantKey, qty: parseInt(qty, 10) || 1 };
+    })
+    .filter((it) => it.id && it.variantKey);
+  const codes = cm ? cm[1].split("+").filter(Boolean) : [];
+  return { items, codes };
+}
+
 // Never let a marketing call break checkout.
 export async function safely(label, fn) {
   try {

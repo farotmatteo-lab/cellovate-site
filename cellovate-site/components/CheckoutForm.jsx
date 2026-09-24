@@ -15,6 +15,7 @@ const EMPTY = {
   country: "",
   phone: "",
   notes: "",
+  marketingOptIn: false,
 };
 
 const LABELS = {
@@ -95,6 +96,19 @@ export default function CheckoutForm({
         placeholder="you@example.com"
         autoComplete="email"
       />
+      <label className="flex items-start gap-2.5 mt-3 cursor-pointer select-none">
+        <input
+          type="checkbox"
+          checked={!!form.marketingOptIn}
+          onChange={(e) =>
+            setForm((f) => ({ ...f, marketingOptIn: e.target.checked }))
+          }
+          className="mt-0.5 w-4 h-4 accent-[#0039CC]"
+        />
+        <span className="text-[12.5px] text-black/65 leading-snug">
+          Email me with news and exclusive offers. Unsubscribe anytime.
+        </span>
+      </label>
       <div className="mt-3">
         <Field
           label="Phone (optional)"

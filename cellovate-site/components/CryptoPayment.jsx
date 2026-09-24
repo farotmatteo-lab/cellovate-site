@@ -25,7 +25,7 @@ function useCountdown(seconds, active) {
 // cart (the invoice amount is fixed once created).
 export default function CryptoPayment({
   total,
-  promoCode,
+  promoCodes,
   orderId,
   customer,
   lines,
@@ -50,7 +50,7 @@ export default function CryptoPayment({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          code: promoCode,
+          codes: promoCodes,
           orderId,
           payCurrency: coin,
           customer,

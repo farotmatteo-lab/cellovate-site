@@ -22,6 +22,7 @@ export default function CartDrawer() {
     shipping,
     total,
     promo,
+    promos,
     promoError,
     applyPromo,
     removePromo,
@@ -121,40 +122,46 @@ export default function CartDrawer() {
                 </div>
 
                 <div className="px-5 py-4 border-t border-black/8 space-y-1.5">
-                  {promo ? (
-                    <div className="flex items-center justify-between text-[12px] mb-1">
-                      <span className="text-black/45">
+                  {promos.map((p) => (
+                    <div
+                      key={p.code}
+                      className="flex items-center justify-between text-[12px]"
+                    >
+                      <span className="text-black/55">
                         Code{" "}
-                        <span className="font-mono text-[#0039CC]">
-                          {promo.code}
+                        <span className="font-mono text-[#0039CC] font-semibold">
+                          {p.code}
                         </span>{" "}
                         applied
                       </span>
                       <button
-                        onClick={removePromo}
-                        className="text-black/35 hover:text-black/60 underline"
+                        onClick={() => removePromo(p.code)}
+                        className="text-black/40 hover:text-black/70 underline"
                       >
                         Remove
                       </button>
                     </div>
-                  ) : (
-                    <div className="flex gap-2 mb-2">
-                      <input
-                        value={codeInput}
-                        onChange={(e) => setCodeInput(e.target.value)}
-                        placeholder="Promo code"
-                        className="flex-1 bg-[#FAFAFA] border border-black/10 rounded-xl px-3 py-2 text-[12.5px] uppercase"
-                      />
-                      <button
-                        onClick={() => {
-                          if (applyPromo(codeInput)) setCodeInput("");
-                        }}
-                        className="px-4 rounded-xl border border-black/15 text-[12.5px] font-medium hover:border-[#0039CC] transition"
-                      >
-                        Apply
-                      </button>
-                    </div>
-                  )}
+                  ))}
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (applyPromo(codeInput)) setCodeInput("");
+                    }}
+                    className="flex gap-2 mb-2"
+                  >
+                    <input
+                      value={codeInput}
+                      onChange={(e) => setCodeInput(e.target.value)}
+                      placeholder={promos.length ? "Add another code" : "Promo code"}
+                      className="flex-1 bg-[#FAFAFA] border border-black/10 rounded-xl px-3 py-2 text-[12.5px] uppercase"
+                    />
+                    <button
+                      type="submit"
+                      className="px-4 rounded-xl border border-black/15 text-[12.5px] font-medium hover:border-[#0039CC] transition"
+                    >
+                      Apply
+                    </button>
+                  </form>
                   {promoError && (
                     <p className="text-[11.5px] text-red-600">{promoError}</p>
                   )}

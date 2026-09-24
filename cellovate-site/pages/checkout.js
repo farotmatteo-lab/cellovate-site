@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
 import {
@@ -32,6 +33,7 @@ function OrderSummary({ locked }) {
     shipping,
     total,
     promo,
+    promos,
     promoError,
     applyPromo,
     removePromo,
@@ -92,52 +94,58 @@ function OrderSummary({ locked }) {
 
       {/* Promo code */}
       <div className="mt-6 pt-5 border-t border-black/10">
-        {promo ? (
-          <div className="flex items-center justify-between bg-[#0039CC]/8 border border-[#0039CC]/25 rounded-xl px-3 py-2.5">
-            <span className="flex items-center gap-2 text-[13px] text-[#0039CC] font-semibold">
-              <Tag size={14} />
-              {promo.code}
-              <span className="font-normal text-[#0039CC]/80">
-                — {promo.label}
-              </span>
-            </span>
-            {!locked && (
-              <button
-                type="button"
-                onClick={removePromo}
-                aria-label="Remove code"
-                className="text-[#0039CC]/70 hover:text-[#0039CC]"
+        {promos.length > 0 && (
+          <div className="space-y-2 mb-3">
+            {promos.map((p) => (
+              <div
+                key={p.code}
+                className="flex items-center justify-between bg-[#0039CC]/8 border border-[#0039CC]/25 rounded-xl px-3 py-2.5"
               >
-                <X size={15} />
-              </button>
-            )}
+                <span className="flex items-center gap-2 text-[13px] text-[#0039CC] font-semibold min-w-0">
+                  <Tag size={14} className="shrink-0" />
+                  {p.code}
+                  <span className="font-normal text-[#0039CC]/80 truncate">
+                    — {p.label}
+                  </span>
+                </span>
+                {!locked && (
+                  <button
+                    type="button"
+                    onClick={() => removePromo(p.code)}
+                    aria-label={`Remove ${p.code}`}
+                    className="text-[#0039CC]/70 hover:text-[#0039CC] shrink-0"
+                  >
+                    <X size={15} />
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
-        ) : (
-          !locked && (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (applyPromo(code)) setCode("");
-              }}
-              className="flex gap-2"
-            >
-              <input
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="Discount code"
-                className="flex-1 min-w-0 bg-white border border-black/15 rounded-xl px-3 py-2.5 text-[13px] uppercase outline-none focus:border-[#0039CC]"
-              />
-              <button
-                type="submit"
-                disabled={!code.trim()}
-                className="px-4 rounded-xl bg-[#0A0A0A] text-white text-[13px] font-semibold disabled:bg-black/15 disabled:text-black/40 transition"
-              >
-                Apply
-              </button>
-            </form>
-          )
         )}
-        {promoError && !promo && (
+        {!locked && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (applyPromo(code)) setCode("");
+            }}
+            className="flex gap-2"
+          >
+            <input
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder={promos.length ? "Add another code" : "Discount code"}
+              className="flex-1 min-w-0 bg-white border border-black/15 rounded-xl px-3 py-2.5 text-[13px] uppercase outline-none focus:border-[#0039CC]"
+            />
+            <button
+              type="submit"
+              disabled={!code.trim()}
+              className="px-4 rounded-xl bg-[#0A0A0A] text-white text-[13px] font-semibold disabled:bg-black/15 disabled:text-black/40 transition"
+            >
+              Apply
+            </button>
+          </form>
+        )}
+        {promoError && (
           <p className="text-[12px] text-red-600 mt-1.5">{promoError}</p>
         )}
       </div>
@@ -204,7 +212,7 @@ function FreeOrder({ orderId, customer, lines, promo, onDone }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           orderId,
-          code: promo?.code,
+          codes: promo?.codes,
           customer,
           items: lines.map((l) => ({
             id: l.id,
@@ -330,12 +338,32 @@ function Recap({ customer, onEdit }) {
 // ---------------------------------------------------------------------------
 export default function CheckoutPage() {
   const cart = useCart();
-  const { lines, total, promo, orderId, hydrated, clearCart } = cart;
+  const { lines, total, promo, orderId, hydrated, clearCart, restoreCart } =
+    cart;
+  const router = useRouter();
   const [customer, setCustomer] = useState(null);
   const [savedCustomer, setSavedCustomer] = useState(null);
   const [locked, setLocked] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [done, setDone] = useState(null); // snapshot shown after the order
+
+  // Abandoned-checkout links carry the cart: /checkout?cart=<base64url>.
+  useEffect(() => {
+    if (!hydrated || !router.isReady || !router.query.cart) return;
+    try {
+      const b64 = String(router.query.cart).replace(/-/g, "+").replace(/_/g, "/");
+      const data = JSON.parse(window.atob(b64));
+      const items = {};
+      for (const [id, variantKey, qty] of data.i || []) {
+        items[`${id}::${variantKey}`] = Math.max(1, parseInt(qty, 10) || 1);
+      }
+      if (Object.keys(items).length) restoreCart(items, data.c || []);
+    } catch {
+      // malformed link: keep the current cart
+    }
+    router.replace("/checkout", undefined, { shallow: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated, router.isReady, router.query.cart]);
 
   // Prefill with the details used last time on this device.
   useEffect(() => {
@@ -349,6 +377,23 @@ export default function CheckoutPage() {
 
   const submitInfo = (form) => {
     setCustomer(form);
+    // Registers the contact + "started checkout" in Omnisend (abandoned
+    // checkout reminders). Fire-and-forget: never blocks the purchase.
+    fetch("/api/track-checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        orderId,
+        customer: form,
+        codes: promo?.codes || [],
+        items: lines.map((l) => ({
+          id: l.id,
+          variantKey: l.variant.key,
+          qty: l.qty,
+        })),
+      }),
+      keepalive: true,
+    }).catch(() => {});
     try {
       window.localStorage.setItem("cellovate-customer", JSON.stringify(form));
     } catch {
@@ -501,7 +546,7 @@ export default function CheckoutPage() {
               ) : (
                 <CryptoPayment
                   total={total}
-                  promoCode={promo?.code}
+                  promoCodes={promo?.codes}
                   orderId={orderId}
                   customer={customer}
                   lines={lines}

@@ -599,7 +599,7 @@ function Shell({ children }) {
               <img
                 src="/logo.png"
                 alt="Cellovate Advanced Peptide Systems"
-                className="h-8 w-auto bg-[#0A0A0A] rounded-md px-2 py-1"
+                className="h-8 w-auto"
               />
             </Link>
             <span className="flex items-center gap-1.5 text-[12.5px] text-black/55">

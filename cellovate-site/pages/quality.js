@@ -56,7 +56,7 @@ export default function QualityPage() {
             <img
               src="/logo.png"
               alt="Cellovate"
-              className="h-7 w-auto bg-[#0A0A0A] rounded-md px-2 py-1"
+              className="h-8 w-auto"
             />
           </Link>
           <Link

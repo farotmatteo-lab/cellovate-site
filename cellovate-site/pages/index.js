@@ -22,7 +22,7 @@ export default function Home() {
         `}</style>
 
         <header className="max-w-5xl mx-auto px-5 pt-8 flex items-center justify-between">
-          <img src="/logo.png" alt="Cellovate" className="h-7 w-auto bg-[#0A0A0A] rounded-md px-2 py-1" />
+          <img src="/logo.png" alt="Cellovate" className="h-8 w-auto" />
           <nav className="flex items-center gap-2">
             <Link
               href="/quality"

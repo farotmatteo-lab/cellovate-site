@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import {
@@ -20,6 +20,7 @@ import {
   getLowestPrice,
 } from "../../lib/products";
 import { useCart } from "../../context/CartContext";
+import { viewedProduct } from "../../lib/omnisendClient";
 
 export async function getStaticPaths() {
   return {
@@ -47,6 +48,11 @@ export default function ProductPage({ product }) {
     setPickedImage(null);
   };
   const variant = getVariant(product, variantKey);
+
+  // Omnisend "viewed product" (product abandonment automation), once per product.
+  useEffect(() => {
+    viewedProduct(product, getDefaultVariant(product));
+  }, [product.id]); // eslint-disable-line react-hooks/exhaustive-deps
   const mainImage = pickedImage || variant.image;
   const mainAlt =
     product.variants.find((v) => v.image === mainImage)?.imageAlt ||

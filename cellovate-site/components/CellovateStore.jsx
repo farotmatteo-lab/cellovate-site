@@ -168,7 +168,7 @@ export default function CellovateStore() {
       <header className="sticky top-0 z-30 bg-[#FAFAFA]/95 backdrop-blur border-b border-black/8">
         <div className="max-w-5xl mx-auto px-5 pt-5 pb-4 flex items-center justify-between">
           <Link href="/" className="block">
-            <img src="/logo.png" alt="Cellovate Advanced Peptide Systems" className="h-8 w-auto bg-[#0A0A0A] rounded-md px-2 py-1" />
+            <img src="/logo.png" alt="Cellovate Advanced Peptide Systems" className="h-8 w-auto" />
           </Link>
           <button
             onClick={() => setCartOpen(true)}

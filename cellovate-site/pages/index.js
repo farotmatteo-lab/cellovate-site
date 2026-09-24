@@ -1,8 +1,34 @@
+import { useEffect, useRef } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { ShieldCheck, FlaskConical, ArrowRight } from "lucide-react";
 
 export default function Home() {
+  // React doesn't render the `muted` attribute in the server HTML, so some
+  // browsers (Safari/iOS, battery saver) refuse to autoplay. Force it here.
+  const videoRef = useRef(null);
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.defaultMuted = true;
+    v.setAttribute("muted", "");
+    v.setAttribute("playsinline", "");
+    const tryPlay = () => v.play().catch(() => {});
+    tryPlay();
+    // Retry on the first interaction if the browser still blocked it.
+    const onFirst = () => {
+      tryPlay();
+      window.removeEventListener("touchstart", onFirst);
+      window.removeEventListener("scroll", onFirst);
+    };
+    window.addEventListener("touchstart", onFirst, { passive: true });
+    window.addEventListener("scroll", onFirst, { passive: true });
+    return () => {
+      window.removeEventListener("touchstart", onFirst);
+      window.removeEventListener("scroll", onFirst);
+    };
+  }, []);
   return (
     <>
       <Head>
@@ -42,16 +68,20 @@ export default function Home() {
         {/* Full-bleed hero: looping lab video behind the headline. */}
         <section className="relative mt-8 mb-16 overflow-hidden bg-[#0A0A0A] min-h-[720px] sm:min-h-[560px] sm:h-[82vh] sm:max-h-[820px]">
           <video
-            className="absolute top-0 right-0 w-full h-[62%] sm:h-full sm:w-[80%] object-cover"
-            src="/hero.mp4"
+            ref={videoRef}
+            className="absolute top-0 right-0 w-full h-[62%] sm:h-full sm:w-[80%] object-cover pointer-events-none"
             poster="/hero-poster.jpg"
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
+            disablePictureInPicture
             aria-hidden="true"
-          />
+          >
+            <source src="/hero.mp4?v=2" type="video/mp4" />
+            <source src="/hero.webm?v=2" type="video/webm" />
+          </video>
           {/* Keeps the text readable: dark on the left (desktop), bottom (mobile). */}
           <div className="absolute inset-0 bg-[linear-gradient(to_top,#0A0A0A_40%,rgba(10,10,10,0.6)_55%,transparent_75%)] sm:bg-[linear-gradient(to_right,#0A0A0A_20%,rgba(10,10,10,0.75)_38%,rgba(10,10,10,0.15)_60%,transparent_80%)]" />
           <div className="relative min-h-[720px] sm:min-h-0 sm:h-full max-w-5xl mx-auto px-5 flex flex-col justify-end sm:justify-center pb-12 sm:pb-0">

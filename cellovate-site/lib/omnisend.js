@@ -80,9 +80,10 @@ export async function upsertContact(customer) {
     tags: ["source: checkout"],
     identifiers: [
       {
+        type: "email",
+        id: String(customer.email).trim(),
         channels: {
           email: {
-            address: String(customer.email).trim(),
             status: customer.marketingOptIn ? "subscribed" : "nonSubscribed",
             statusDate: now,
           },

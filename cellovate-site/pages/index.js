@@ -39,25 +39,49 @@ export default function Home() {
           </nav>
         </header>
 
-        <section className="max-w-5xl mx-auto px-5 pt-24 pb-20">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-[#0039CC] font-mono mb-4">
-            For research use only
-          </p>
-          <h1 className="font-display text-4xl sm:text-5xl leading-[1.1] max-w-2xl">
-            Research-grade peptides, verified before they reach you.
-          </h1>
-          <p className="text-black/50 text-[15px] max-w-lg mt-5 leading-relaxed">
-            Every batch is analysed by Janoshik Analytical for purity and
-            identity. Supplied strictly for laboratory research — not for
-            human consumption.
-          </p>
-          <Link
-            href="/shop"
-            className="inline-flex items-center gap-2 mt-8 bg-[#0A0A0A] text-white rounded-full px-6 py-3 text-[13px] font-semibold hover:bg-[#0A0A0A]/85 transition"
-          >
-            Browse the catalog
-            <ArrowRight size={15} />
-          </Link>
+        {/* Full-bleed hero: looping lab video behind the headline. */}
+        <section className="relative mt-8 mb-16 overflow-hidden bg-[#0A0A0A] min-h-[720px] sm:min-h-[560px] sm:h-[82vh] sm:max-h-[820px]">
+          <video
+            className="absolute top-0 right-0 w-full h-[62%] sm:h-full sm:w-[80%] object-cover"
+            src="/hero.mp4"
+            poster="/hero-poster.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+          />
+          {/* Keeps the text readable: dark on the left (desktop), bottom (mobile). */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_top,#0A0A0A_40%,rgba(10,10,10,0.6)_55%,transparent_75%)] sm:bg-[linear-gradient(to_right,#0A0A0A_20%,rgba(10,10,10,0.75)_38%,rgba(10,10,10,0.15)_60%,transparent_80%)]" />
+          <div className="relative min-h-[720px] sm:min-h-0 sm:h-full max-w-5xl mx-auto px-5 flex flex-col justify-end sm:justify-center pb-12 sm:pb-0">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#5B8CFF] font-mono mb-4">
+              For research use only
+            </p>
+            <h1 className="font-display text-white text-4xl sm:text-5xl leading-[1.08] max-w-[30rem]">
+              Research-grade peptides, verified before they reach you.
+            </h1>
+            <p className="text-white/70 text-[15px] max-w-[26rem] mt-5 leading-relaxed">
+              Every batch is analysed by Janoshik Analytical for purity and
+              identity. Supplied strictly for laboratory research — not for
+              human consumption.
+            </p>
+            <div className="flex flex-wrap items-center gap-3 mt-8">
+              <Link
+                href="/shop"
+                className="inline-flex items-center gap-2 bg-[#0039CC] text-white rounded-full px-6 py-3 text-[13px] font-semibold shadow-lg shadow-[#0039CC]/30 hover:bg-[#0030AD] transition"
+              >
+                Browse the catalog
+                <ArrowRight size={15} />
+              </Link>
+              <Link
+                href="/quality"
+                className="inline-flex items-center gap-2 border border-white/30 text-white rounded-full px-6 py-3 text-[13px] font-semibold hover:border-white transition"
+              >
+                How we verify
+              </Link>
+            </div>
+          </div>
         </section>
 
         <section className="max-w-5xl mx-auto px-5 pb-24 grid sm:grid-cols-2 gap-4">

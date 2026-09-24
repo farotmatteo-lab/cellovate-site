@@ -1,6 +1,11 @@
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { PRODUCTS, getDefaultVariant, getVariant } from "../lib/products";
-import { getPromo, getDiscount } from "../lib/promos";
+import {
+  getPromo,
+  getDiscount,
+  normaliseCodes,
+  combinePromos,
+} from "../lib/promos";
 import { getShipping } from "../lib/pricing";
 
 const CartContext = createContext(null);
@@ -27,7 +32,7 @@ function migrateLegacyCart(rawCart) {
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState({});
-  const [promoCode, setPromoCode] = useState(null);
+  const [promoCodes, setPromoCodes] = useState([]);
   const [promoError, setPromoError] = useState(null);
   const [hydrated, setHydrated] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
@@ -41,8 +46,17 @@ export function CartProvider({ children }) {
     try {
       const saved = window.localStorage.getItem("cellovate-cart");
       if (saved) setCart(migrateLegacyCart(JSON.parse(saved)));
+      // Saved as a JSON array; older versions stored a single code string.
       const savedPromo = window.localStorage.getItem("cellovate-promo");
-      if (savedPromo && getPromo(savedPromo)) setPromoCode(savedPromo);
+      if (savedPromo) {
+        let codes;
+        try {
+          codes = JSON.parse(savedPromo);
+        } catch {
+          codes = [savedPromo];
+        }
+        setPromoCodes(normaliseCodes(Array.isArray(codes) ? codes : [codes]));
+      }
     } catch {
       // ignore corrupt/local storage errors
     }
@@ -54,12 +68,16 @@ export function CartProvider({ children }) {
     if (!hydrated) return;
     try {
       window.localStorage.setItem("cellovate-cart", JSON.stringify(cart));
-      if (promoCode) window.localStorage.setItem("cellovate-promo", promoCode);
+      if (promoCodes.length)
+        window.localStorage.setItem(
+          "cellovate-promo",
+          JSON.stringify(promoCodes)
+        );
       else window.localStorage.removeItem("cellovate-promo");
     } catch {
       // ignore
     }
-  }, [cart, promoCode, hydrated]);
+  }, [cart, promoCodes, hydrated]);
 
   const addToCart = (id, variantKey) => {
     const key = lineKey(id, variantKey);
@@ -81,25 +99,35 @@ export function CartProvider({ children }) {
   const clearCart = () => {
     setCart({});
     setOrderId(makeOrderId());
-    setPromoCode(null);
+    setPromoCodes([]);
     setPromoError(null);
   };
 
-  // Promo codes are validated again server-side before a free order is placed.
+  // Replace the whole cart, e.g. when a shopper follows an abandoned-cart
+  // link. `items` is { "<id>::<variantKey>": qty }.
+  const restoreCart = (items, codes) => {
+    setCart(migrateLegacyCart(items));
+    setPromoCodes(normaliseCodes(codes || []));
+    setPromoError(null);
+  };
+
+  // Adds a code. The welcome code stacks with one other code; two regular
+  // codes do not — the new one replaces the old. Everything is validated
+  // again server-side before payment.
   const applyPromo = (raw) => {
     const promo = getPromo(raw);
     if (!promo) {
       setPromoError("This code is not valid.");
-      setPromoCode(null);
       return false;
     }
     setPromoError(null);
-    setPromoCode(promo.code);
+    setPromoCodes((codes) => normaliseCodes([...codes, promo.code]));
     return true;
   };
 
-  const removePromo = () => {
-    setPromoCode(null);
+  // Removes one code, or all codes when none is given.
+  const removePromo = (code) => {
+    setPromoCodes((codes) => (code ? codes.filter((c) => c !== code) : []));
     setPromoError(null);
   };
 
@@ -125,7 +153,8 @@ export function CartProvider({ children }) {
 
   const itemCount = lines.reduce((s, l) => s + l.qty, 0);
   const subtotal = lines.reduce((s, l) => s + l.price * l.qty, 0);
-  const promo = getPromo(promoCode);
+  const promo = combinePromos(promoCodes);
+  const promos = promoCodes.map(getPromo).filter(Boolean);
   const discount = getDiscount(promo, subtotal);
   const shipping = getShipping(promo, itemCount);
   const total =
@@ -143,7 +172,9 @@ export function CartProvider({ children }) {
     shipping,
     total,
     promo,
-    promoCode,
+    promos,
+    promoCodes,
+    restoreCart,
     promoError,
     applyPromo,
     removePromo,

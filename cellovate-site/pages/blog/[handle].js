@@ -39,7 +39,7 @@ export default function BlogPost({ post }) {
 
         <header className="max-w-2xl mx-auto px-5 pt-8 flex items-center justify-between">
           <Link href="/" className="block">
-            <img src="/logo.png" alt="Cellovate" className="h-7 w-auto bg-[#0A0A0A] rounded-md px-2 py-1" />
+            <img src="/logo.png" alt="Cellovate" className="h-8 w-auto" />
           </Link>
           <Link
             href="/shop"

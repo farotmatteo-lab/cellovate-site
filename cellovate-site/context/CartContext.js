@@ -7,6 +7,7 @@ import {
   combinePromos,
 } from "../lib/promos";
 import { getShipping } from "../lib/pricing";
+import { addedToCart } from "../lib/omnisendClient";
 
 const CartContext = createContext(null);
 
@@ -82,6 +83,17 @@ export function CartProvider({ children }) {
   const addToCart = (id, variantKey) => {
     const key = lineKey(id, variantKey);
     setCart((c) => ({ ...c, [key]: (c[key] || 0) + 1 }));
+    // Omnisend "added product to cart" (abandoned cart automation).
+    const next = { ...cart, [key]: (cart[key] || 0) + 1 };
+    addedToCart({
+      cartId: orderId,
+      added: { id, variantKey },
+      codes: promoCodes,
+      items: Object.entries(next).map(([k, qty]) => {
+        const [pid, vkey] = k.split("::");
+        return { id: pid, variantKey: vkey, qty };
+      }),
+    });
   };
 
   const removeFromCart = (id, variantKey) => {

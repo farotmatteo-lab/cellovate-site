@@ -5,7 +5,8 @@
 // never trusted: prices come from lib/products and the discount is recomputed
 // here, so a tampered client cannot turn a paid cart into a free one.
 import nodemailer from "nodemailer";
-import { getPromo } from "../../lib/promos";
+import { promoFromRequest } from "../../lib/promos";
+import { placedOrder, safely } from "../../lib/omnisend";
 import { computeOrder, formatTotals } from "../../lib/pricing";
 import { validateCustomer, formatAddress } from "../../lib/countries";
 
@@ -14,10 +15,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { orderId, code, items, customer } = req.body || {};
+  const { orderId, items, customer } = req.body || {};
 
-  const promo = getPromo(code);
-  if (!promo) {
+  const { promo, invalid } = promoFromRequest(req.body);
+  if (!promo || invalid.length) {
     return res.status(400).json({ error: "Invalid promo code." });
   }
 
@@ -125,6 +126,10 @@ Cellovate Advanced Peptides — for research use only, not for human consumption
   } catch (err) {
     console.error("Free order customer confirmation failed", email, err);
   }
+
+  await safely("placed order", () =>
+    placedOrder({ orderId: reference, customer, items, order, paid: true })
+  );
 
   return res.status(200).json({ ok: true, orderId: reference });
 }

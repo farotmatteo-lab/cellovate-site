@@ -9,7 +9,8 @@
 // Environment Variables). Never put this key in frontend code.
 
 import nodemailer from "nodemailer";
-import { getPromo } from "../../lib/promos";
+import { promoFromRequest } from "../../lib/promos";
+import { placedOrder, safely } from "../../lib/omnisend";
 import { computeOrder, formatTotals } from "../../lib/pricing";
 import { validateCustomer, formatAddress } from "../../lib/countries";
 
@@ -95,10 +96,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { orderId, payCurrency, customer, items, code } = req.body || {};
+  const { orderId, payCurrency, customer, items } = req.body || {};
 
-  const promo = code ? getPromo(code) : null;
-  if (code && !promo) {
+  const { promo, invalid } = promoFromRequest(req.body);
+  if (invalid.length) {
     return res.status(400).json({ error: "Invalid promo code." });
   }
 
@@ -162,6 +163,17 @@ export default async function handler(req, res) {
       // The payment exists; losing the email must not break checkout.
       console.error("Order details email failed", mailErr);
     }
+
+    // Stops Omnisend's abandoned-checkout reminders for this cart.
+    await safely("placed order", () =>
+      placedOrder({
+        orderId: orderId || data.order_id,
+        customer,
+        items,
+        order,
+        paid: false,
+      })
+    );
 
     return res.status(200).json({
       paymentId: data.payment_id,

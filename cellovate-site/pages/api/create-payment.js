@@ -10,7 +10,7 @@
 
 import nodemailer from "nodemailer";
 import { promoFromRequest } from "../../lib/promos";
-import { placedOrder, safely } from "../../lib/omnisend";
+import { placedOrder, safely, encodeCart } from "../../lib/omnisend";
 import { computeOrder, formatTotals } from "../../lib/pricing";
 import { validateCustomer, formatAddress } from "../../lib/countries";
 
@@ -137,9 +137,11 @@ export default async function handler(req, res) {
         order_id: orderId || `CEL-${Date.now()}`,
         // The webhook reads the customer email back from here to send the
         // "payment confirmed" email (there is no database to look it up).
-        order_description: `Cellovate Advanced Peptides order | ${String(
-          customer.email
-        ).trim()}`,
+        // The webhook also reads the cart back from here (see encodeCart).
+        order_description: `Cellovate Advanced Peptides order | ${encodeCart(
+          items,
+          promo?.codes
+        )} | ${String(customer.email).trim()}`,
         ipn_callback_url: ipnCallbackUrl(),
       }),
     });

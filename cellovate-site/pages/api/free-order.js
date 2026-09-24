@@ -6,7 +6,7 @@
 // here, so a tampered client cannot turn a paid cart into a free one.
 import nodemailer from "nodemailer";
 import { promoFromRequest } from "../../lib/promos";
-import { placedOrder, safely } from "../../lib/omnisend";
+import { placedOrder, paidForOrder, safely } from "../../lib/omnisend";
 import { computeOrder, formatTotals } from "../../lib/pricing";
 import { validateCustomer, formatAddress } from "../../lib/countries";
 
@@ -129,6 +129,9 @@ Cellovate Advanced Peptides — for research use only, not for human consumption
 
   await safely("placed order", () =>
     placedOrder({ orderId: reference, customer, items, order, paid: true })
+  );
+  await safely("paid for order", () =>
+    paidForOrder({ orderId: reference, email, items, order })
   );
 
   return res.status(200).json({ ok: true, orderId: reference });

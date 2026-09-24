@@ -1,5 +1,8 @@
 import crypto from "crypto";
 import nodemailer from "nodemailer";
+import { paidForOrder, decodeCart, safely } from "../../lib/omnisend";
+import { promoFromRequest } from "../../lib/promos";
+import { computeOrder } from "../../lib/pricing";
 
 // NOWPayments sends the raw JSON body plus a header `x-nowpayments-sig`
 // containing an HMAC-SHA512 signature computed over the JSON with keys
@@ -151,6 +154,22 @@ export default async function handler(req, res) {
       console.error("Failed to send owner notification email:", err);
       // Don't fail the webhook response over email issues — NOWPayments
       // will retry the IPN if we return a non-200 status.
+    }
+
+    // Omnisend post-purchase automations.
+    const email = customerEmailFrom(payload);
+    const { items, codes } = decodeCart(payload.order_description);
+    if (email && items.length) {
+      const { promo } = promoFromRequest({ codes });
+      const order = computeOrder(items, promo);
+      await safely("paid for order", () =>
+        paidForOrder({
+          orderId: payload.order_id || String(payload.payment_id),
+          email,
+          items,
+          order,
+        })
+      );
     }
   }
 

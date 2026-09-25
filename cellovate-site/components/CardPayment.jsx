@@ -137,16 +137,14 @@ export default function CardPayment({ total, promoCodes, orderId, customer, line
         <div className="rounded-xl bg-[#F4F5F8] border border-black/10 px-4 py-3 mb-4 text-[13px]">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 font-medium">
-              <CreditCard size={15} /> Amount charged
+              <CreditCard size={15} /> Total
             </span>
-            <span className="font-mono text-[16px] font-bold">
-              {money(checkout.amount, checkout.currency)}
-            </span>
+            <span className="font-mono text-[16px] font-bold">{money(total, "USD")}</span>
           </div>
           {converted && (
             <p className="text-[11.5px] text-black/50 mt-1">
-              {money(total, "USD")} converted at today's rate (1 USD = {checkout.rate.toFixed(4)}{" "}
-              {checkout.currency}). Your bank may show the amount in {checkout.currency}.
+              Processed by our payment provider as {money(checkout.amount, checkout.currency)} (today's
+              rate). Your bank converts it back to your currency.
             </p>
           )}
         </div>

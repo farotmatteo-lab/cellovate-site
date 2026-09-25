@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
-import Head from "next/head";
 import Link from "next/link";
 import { ShieldCheck, FlaskConical, ArrowRight } from "lucide-react";
+import Seo, { organizationLd, websiteLd } from "../components/Seo";
 
 export default function Home() {
   // React doesn't render the `muted` attribute in the server HTML, so some
@@ -31,13 +31,11 @@ export default function Home() {
   }, []);
   return (
     <>
-      <Head>
-        <title>Cellovate Advanced Peptides</title>
-        <meta
-          name="description"
-          content="Research-grade peptides, third-party tested. For research use only."
-        />
-      </Head>
+      <Seo
+        title="Cellovate Advanced Peptides — Research-Grade Peptides, Third-Party Tested"
+        description="Research-grade peptides verified by Janoshik Analytical (HPLC purity and identity) on every batch. Crypto and card payment, worldwide shipping. For research use only."
+        jsonLd={[organizationLd, websiteLd]}
+      />
 
       <main className="min-h-screen bg-[#FAFAFA] text-[#0A0A0A] font-sans">
         <style>{`
@@ -140,11 +138,6 @@ export default function Home() {
             </p>
           </div>
         </section>
-
-        <footer className="max-w-5xl mx-auto px-5 py-8 border-t border-black/8 text-[11px] text-black/25 font-mono">
-          © {new Date().getFullYear()} Cellovate Advanced Peptides — For
-          research use only.
-        </footer>
       </main>
     </>
   );

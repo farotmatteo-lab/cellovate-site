@@ -1,13 +1,18 @@
 import "../styles/globals.css";
 import { useEffect } from "react";
 import Script from "next/script";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { pageViewed } from "../lib/omnisendClient";
 import { CartProvider } from "../context/CartContext";
 import CartDrawer from "../components/CartDrawer";
+import { AnnouncementBar, SiteFooter } from "../components/SiteChrome";
 
 // Omnisend brand ID (public, not a secret). Set NEXT_PUBLIC_OMNISEND_BRAND_ID
 // in Vercel to override. The snippet loads signup forms and page tracking.
+// Google Search Console "HTML tag" verification code (content="..." only).
+const GSC_VERIFICATION = process.env.NEXT_PUBLIC_GSC_VERIFICATION || "";
+
 const OMNISEND_BRAND_ID =
   process.env.NEXT_PUBLIC_OMNISEND_BRAND_ID || "6ab49f929b0f973742e4032b";
 
@@ -24,7 +29,25 @@ export default function App({ Component, pageProps }) {
   const isAdminPage = router.pathname.startsWith("/admin");
   return (
     <CartProvider>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" key="viewport" />
+        <meta name="theme-color" content="#0A0A0A" key="theme-color" />
+        {GSC_VERIFICATION && (
+          <meta name="google-site-verification" content={GSC_VERIFICATION} key="gsc" />
+        )}
+      </Head>
+      {!isAdminPage && (
+        <>
+          {/* Vercel Web Analytics (enable it in Vercel -> project -> Analytics). */}
+          <Script id="vercel-analytics-init" strategy="afterInteractive">
+            {`window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };`}
+          </Script>
+          <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />
+        </>
+      )}
+      {!isAdminPage && <AnnouncementBar />}
       <Component {...pageProps} />
+      {!isAdminPage && <SiteFooter />}
       {!isAdminPage && <CartDrawer />}
       {OMNISEND_BRAND_ID && !isAdminPage && (
         <Script id="omnisend-snippet" strategy="afterInteractive">

@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -8,6 +7,7 @@ import {
   ShieldCheck,
   Lock,
 } from "lucide-react";
+import Seo, { breadcrumbLd } from "../components/Seo";
 
 const CHECKS = [
   {
@@ -35,13 +35,11 @@ const CHECKS = [
 export default function QualityPage() {
   return (
     <>
-      <Head>
-        <title>Quality Standards | Cellovate Advanced Peptides</title>
-        <meta
-          name="description"
-          content="How every Cellovate batch is verified: HPLC purity and mass spectrometry identity, analysed by Janoshik Analytical. For research use only."
-        />
-      </Head>
+      <Seo
+        title="Quality Standards | Cellovate Advanced Peptides"
+        description="How every Cellovate batch is verified: HPLC purity and mass spectrometry identity, analysed by Janoshik Analytical. For research use only."
+        jsonLd={breadcrumbLd([["Home", "/"], ["Quality", "/quality"]])}
+      />
 
       <main className="min-h-screen bg-[#FAFAFA] text-[#0A0A0A] font-sans pb-24">
         <style>{`
@@ -151,11 +149,6 @@ export default function QualityPage() {
             Browse the catalog
           </Link>
         </div>
-
-        <footer className="max-w-5xl mx-auto px-5 py-8 mt-12 border-t border-black/8 text-[11px] text-black/25 font-mono">
-          © {new Date().getFullYear()} Cellovate Advanced Peptides — For
-          research use only.
-        </footer>
       </main>
     </>
   );

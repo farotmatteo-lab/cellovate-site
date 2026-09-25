@@ -12,6 +12,7 @@
 // currency the amount is converted at the daily ECB rate and shown to the
 // shopper before paying.
 import nodemailer from "nodemailer";
+import { EMAIL_SIGNATURE } from "./business";
 import { getOrder, updateOrder, claimOnce, storeEnabled } from "./orderStore";
 import { shipUrl } from "./adminAuth";
 import { placedOrder, paidForOrder, safely } from "./omnisend";
@@ -198,7 +199,7 @@ ${order.name ? `${order.name}\n` : ""}${order.address || ""}
 
 We are now preparing your order and will email you again once it ships.
 
-Cellovate Advanced Peptides — for research use only, not for human consumption.`,
+${EMAIL_SIGNATURE}`,
         });
       } catch (err) {
         console.error("Customer card email failed", err);

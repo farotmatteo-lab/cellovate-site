@@ -1,12 +1,8 @@
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { PRODUCTS, getDefaultVariant, getVariant } from "../lib/products";
-import {
-  getPromo,
-  getDiscount,
-  normaliseCodes,
-  combinePromos,
-} from "../lib/promos";
-import { getShipping } from "../lib/pricing";
+import { getPromo, normaliseCodes, combinePromos } from "../lib/promos";
+import { computeOrder } from "../lib/pricing";
+import { getNextVolumeTier } from "../lib/upsell";
 import { addedToCart } from "../lib/omnisendClient";
 
 const CartContext = createContext(null);
@@ -35,6 +31,8 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState({});
   const [promoCodes, setPromoCodes] = useState([]);
   const [promoError, setPromoError] = useState(null);
+  // Info shown when a new code replaced one the shopper had applied.
+  const [promoNotice, setPromoNotice] = useState(null);
   const [hydrated, setHydrated] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkout, setCheckout] = useState(false);
@@ -107,6 +105,20 @@ export function CartProvider({ children }) {
     });
   };
 
+  // Size upgrade: move the whole line to another variant of the same product.
+  const swapVariant = (id, fromKey, toKey) => {
+    const from = lineKey(id, fromKey);
+    const to = lineKey(id, toKey);
+    setCart((c) => {
+      const qty = c[from] || 0;
+      if (!qty || from === to) return c;
+      const next = { ...c };
+      delete next[from];
+      next[to] = (next[to] || 0) + qty;
+      return next;
+    });
+  };
+
   // Also starts a fresh order reference for the next purchase.
   const clearCart = () => {
     setCart({});
@@ -133,7 +145,14 @@ export function CartProvider({ children }) {
       return false;
     }
     setPromoError(null);
-    setPromoCodes((codes) => normaliseCodes([...codes, promo.code]));
+    const next = normaliseCodes([...promoCodes, promo.code]);
+    const dropped = promoCodes.filter((c) => !next.includes(c));
+    setPromoNotice(
+      dropped.length
+        ? `${promo.code} replaced ${dropped.join(", ")} — discount codes can't be combined (except with one partner code).`
+        : null
+    );
+    setPromoCodes(next);
     return true;
   };
 
@@ -141,6 +160,7 @@ export function CartProvider({ children }) {
   const removePromo = (code) => {
     setPromoCodes((codes) => (code ? codes.filter((c) => c !== code) : []));
     setPromoError(null);
+    setPromoNotice(null);
   };
 
   const lines = useMemo(
@@ -163,14 +183,31 @@ export function CartProvider({ children }) {
     [cart]
   );
 
-  const itemCount = lines.reduce((s, l) => s + l.qty, 0);
-  const subtotal = lines.reduce((s, l) => s + l.price * l.qty, 0);
   const promo = combinePromos(promoCodes);
   const promos = promoCodes.map(getPromo).filter(Boolean);
-  const discount = getDiscount(promo, subtotal);
-  const shipping = getShipping(promo, itemCount);
-  const total =
-    Math.round((Math.max(0, subtotal - discount) + shipping) * 100) / 100;
+  // Same computation as the server (lib/pricing.js): volume tier vs codes,
+  // free shipping threshold.
+  const order = useMemo(
+    () =>
+      computeOrder(
+        lines.map((l) => ({ id: l.id, variantKey: l.variant.key, qty: l.qty })),
+        promo
+      ),
+    [lines, promo?.code] // eslint-disable-line react-hooks/exhaustive-deps
+  );
+  const {
+    itemCount,
+    subtotal,
+    discount,
+    discountSource,
+    discountLabel,
+    codeDiscount,
+    tier,
+    shipping,
+    total,
+    freeShippingRemaining,
+  } = order;
+  const nextTier = getNextVolumeTier(itemCount);
 
   const value = {
     cart,
@@ -187,6 +224,14 @@ export function CartProvider({ children }) {
     promos,
     promoCodes,
     restoreCart,
+    swapVariant,
+    discountSource,
+    discountLabel,
+    codeDiscount,
+    tier,
+    nextTier,
+    freeShippingRemaining,
+    promoNotice,
     promoError,
     applyPromo,
     removePromo,

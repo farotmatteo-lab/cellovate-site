@@ -11,7 +11,8 @@ import { AnnouncementBar, SiteFooter } from "../components/SiteChrome";
 // Omnisend brand ID (public, not a secret). Set NEXT_PUBLIC_OMNISEND_BRAND_ID
 // in Vercel to override. The snippet loads signup forms and page tracking.
 // Google Search Console "HTML tag" verification code (content="..." only).
-const GSC_VERIFICATION = process.env.NEXT_PUBLIC_GSC_VERIFICATION || "";
+const GSC_VERIFICATION =
+  process.env.NEXT_PUBLIC_GSC_VERIFICATION || "2yXJqfW3DHKD9zUkrofgS3tAcjQgCp4XAkJqm3_sW-A";
 
 const OMNISEND_BRAND_ID =
   process.env.NEXT_PUBLIC_OMNISEND_BRAND_ID || "6ab49f929b0f973742e4032b";

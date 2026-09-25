@@ -20,11 +20,13 @@ export default function App({ Component, pageProps }) {
     router.events.on("routeChangeComplete", onRoute);
     return () => router.events.off("routeChangeComplete", onRoute);
   }, [router.events]);
+  // Owner pages: no cart, no signup popup, no tracking.
+  const isAdminPage = router.pathname.startsWith("/admin");
   return (
     <CartProvider>
       <Component {...pageProps} />
-      <CartDrawer />
-      {OMNISEND_BRAND_ID && (
+      {!isAdminPage && <CartDrawer />}
+      {OMNISEND_BRAND_ID && !isAdminPage && (
         <Script id="omnisend-snippet" strategy="afterInteractive">
           {`window.omnisend = window.omnisend || [];
 omnisend.push(["brandID", "${OMNISEND_BRAND_ID}"]);

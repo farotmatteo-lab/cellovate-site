@@ -124,3 +124,6 @@ export async function listOrders(limit = 200) {
   const raws = await command("MGET", ...ids.map(key));
   return (raws || []).map(parse).filter(Boolean);
 }
+
+// Low-level access for other stores (reviews).
+export { command as redisCommand, send as redisSend };

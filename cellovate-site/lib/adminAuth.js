@@ -55,6 +55,27 @@ export function shipUrl(orderId, email) {
   return `${SITE_URL}/admin/ship?${q.toString()}`;
 }
 
+// Signed link sent to the customer in the shipping email: lets them review
+// the products of that order without an account.
+export function reviewToken(orderId, email) {
+  return hmac(`review|${orderId}|${normEmail(email)}`);
+}
+
+export function verifyReviewToken(orderId, email, token) {
+  if (!adminEnabled() || !orderId || !email || !token) return false;
+  return safeEqual(token, reviewToken(orderId, email));
+}
+
+export function reviewUrl(orderId, email) {
+  if (!adminEnabled() || !orderId || !email) return null;
+  const q = new URLSearchParams({
+    o: orderId,
+    e: normEmail(email),
+    t: reviewToken(orderId, email),
+  });
+  return `${SITE_URL}/review?${q.toString()}`;
+}
+
 export function checkPassword(password) {
   return adminEnabled() && safeEqual(String(password || "").trim(), secret());
 }

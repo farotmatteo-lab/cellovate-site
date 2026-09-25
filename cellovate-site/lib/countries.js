@@ -73,6 +73,8 @@ export function validateCustomer(customer) {
   const missing = REQUIRED_CUSTOMER_FIELDS.filter(
     (f) => !String(c[f] || "").trim()
   );
+  // Buyer must confirm research-only use and legal age at every checkout.
+  if (c.researchUseAck !== true) missing.push("researchUseAck");
   if (missing.length) return { ok: false, missing };
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(c.email).trim())) {
     return { ok: false, missing: ["email"] };

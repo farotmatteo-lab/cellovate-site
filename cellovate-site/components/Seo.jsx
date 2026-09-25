@@ -72,7 +72,8 @@ export function breadcrumbLd(items) {
   };
 }
 
-export function productLd(product) {
+// `reviews` = { reviews, count, average } of approved, verified reviews only.
+export function productLd(product, reviews) {
   const prices = product.variants.map((v) => v.price);
   const image = [...new Set(product.variants.map((v) => v.image).filter(Boolean))].map(abs);
   return {
@@ -93,6 +94,24 @@ export function productLd(product) {
       availability: "https://schema.org/InStock",
       url: `${SITE_URL}/shop/${product.handle}`,
     },
+    ...(reviews?.count
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: reviews.average,
+            reviewCount: reviews.count,
+            bestRating: 5,
+            worstRating: 1,
+          },
+          review: reviews.reviews.slice(0, 5).map((r) => ({
+            "@type": "Review",
+            reviewRating: { "@type": "Rating", ratingValue: r.rating, bestRating: 5 },
+            author: { "@type": "Person", name: r.name },
+            datePublished: new Date(r.createdAt).toISOString().slice(0, 10),
+            reviewBody: r.text,
+          })),
+        }
+      : {}),
   };
 }
 

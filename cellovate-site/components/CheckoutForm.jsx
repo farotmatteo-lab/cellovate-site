@@ -16,6 +16,7 @@ const EMPTY = {
   phone: "",
   notes: "",
   marketingOptIn: false,
+  researchUseAck: false,
 };
 
 const LABELS = {
@@ -26,6 +27,7 @@ const LABELS = {
   city: "City",
   postalCode: "Postal code",
   country: "Country",
+  researchUseAck: "Research use confirmation",
 };
 
 function Field({ label, name, value, onChange, error, ...rest }) {
@@ -55,7 +57,8 @@ export default function CheckoutForm({
   submitLabel,
   className = "flex-1 overflow-y-auto px-5 pt-5 pb-6",
 }) {
-  const [form, setForm] = useState({ ...EMPTY, ...(initial || {}) });
+  // The research-use confirmation is asked again on every order.
+  const [form, setForm] = useState({ ...EMPTY, ...(initial || {}), researchUseAck: false });
   const [missing, setMissing] = useState([]);
 
   const change = (e) =>
@@ -236,6 +239,27 @@ export default function CheckoutForm({
           onChange={change}
           className="w-full bg-[#FAFAFA] border border-black/10 rounded-xl px-3 py-2.5 text-[13px] outline-none focus:border-[#0039CC] transition"
         />
+      </label>
+
+      <label
+        className={`mt-4 flex items-start gap-2.5 rounded-xl border px-3 py-3 text-[12.5px] leading-snug cursor-pointer ${
+          err("researchUseAck") ? "border-red-400 bg-red-50" : "border-black/10 bg-[#FAFAFA]"
+        }`}
+      >
+        <input
+          type="checkbox"
+          checked={!!form.researchUseAck}
+          onChange={(e) => setForm((f) => ({ ...f, researchUseAck: e.target.checked }))}
+          className="mt-0.5 accent-[#0039CC]"
+        />
+        <span className="text-black/70">
+          I confirm I am 18 or older and that these products are purchased for laboratory research
+          use only — not for human or veterinary consumption. I accept the{" "}
+          <a href="/terms" target="_blank" className="text-[#0039CC] underline">
+            Terms of Sale
+          </a>
+          .
+        </span>
       </label>
 
       {missing.length > 0 && (

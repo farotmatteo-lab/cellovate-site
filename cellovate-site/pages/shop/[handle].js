@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   Check,
   FlaskConical,
+  ArrowUpRight,
 } from "lucide-react";
 import {
   VISIBLE_PRODUCTS,
@@ -21,6 +22,13 @@ import {
 } from "../../lib/products";
 import { useCart } from "../../context/CartContext";
 import { viewedProduct } from "../../lib/omnisendClient";
+import {
+  getBestValueDose,
+  getSizeUpgrade,
+  getRelatedProducts,
+  pricePerMg,
+  FREE_SHIPPING_THRESHOLD,
+} from "../../lib/upsell";
 
 export async function getStaticPaths() {
   return {
@@ -79,7 +87,19 @@ export default function ProductPage({ product }) {
     timer.current = setTimeout(() => setJustAdded(false), 1600);
   };
 
-  const related = VISIBLE_PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
+  const bestDose = getBestValueDose(product, variant.format);
+  const upgrade = getSizeUpgrade(product, variant);
+  const perMg = pricePerMg(variant);
+  const curated = getRelatedProducts(product.id, 3);
+  const related = curated.length
+    ? curated
+    : VISIBLE_PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
+  const [addedRelated, setAddedRelated] = useState(null);
+  const addRelated = (p) => {
+    addToCart(p.id, getDefaultVariant(p).key);
+    setAddedRelated(p.id);
+    setTimeout(() => setAddedRelated(null), 1600);
+  };
 
   return (
     <>
@@ -139,7 +159,7 @@ export default function ProductPage({ product }) {
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Gallery */}
-            <div>
+            <div className="min-w-0">
               <div className="aspect-square rounded-2xl bg-white border border-black/8 overflow-hidden flex items-center justify-center relative">
                 <img
                   src={mainImage || "/product-placeholder.svg"}
@@ -153,12 +173,12 @@ export default function ProductPage({ product }) {
                 </span>
               </div>
               {product.images?.length > 1 && (
-                <div className="flex gap-2 mt-3">
+                <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
                   {product.images.map((img, i) => (
                     <button
                       key={img}
                       onClick={() => setPickedImage(img)}
-                      className={`w-16 h-16 rounded-lg overflow-hidden border transition ${
+                      className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border transition ${
                         img === mainImage
                           ? "border-[#0039CC]"
                           : "border-black/10 opacity-60 hover:opacity-100"
@@ -179,7 +199,7 @@ export default function ProductPage({ product }) {
             </div>
 
             {/* Info */}
-            <div>
+            <div className="min-w-0">
               <p className="text-[10px] uppercase tracking-[0.2em] text-[#0039CC] font-mono mb-2">
                 For research use only
               </p>
@@ -201,6 +221,11 @@ export default function ProductPage({ product }) {
                 <span className="text-[12px] text-black/30">
                   / {variant.dose} {variant.format.toLowerCase()}
                 </span>
+                {perMg && doses.length > 1 && (
+                  <span className="text-[11.5px] text-black/40 font-mono ml-auto">
+                    ${perMg.toFixed(2)}/mg
+                  </span>
+                )}
               </div>
 
               {/* Dosage selector */}
@@ -209,18 +234,23 @@ export default function ProductPage({ product }) {
                   <p className="text-[10.5px] uppercase tracking-[0.15em] text-black/55 font-mono mb-2">
                     Dosage
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 pt-2">
                     {doses.map((d) => (
                       <button
                         key={d}
                         onClick={() => selectDose(d)}
-                        className={`sm:px-6 px-4 text-[12.5px] font-medium py-2.5 rounded-full border transition ${
+                        className={`relative sm:px-6 px-4 text-[12.5px] font-medium py-2.5 rounded-full border transition ${
                           d === variant.dose
                             ? "border-[#0039CC] bg-[#0039CC] text-white shadow-sm shadow-[#0039CC]/25"
                             : "border-black/20 bg-white text-[#0A0A0A] hover:border-[#0039CC] hover:text-[#0039CC]"
                         }`}
                       >
                         {d}
+                        {d === bestDose && (
+                          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#0A0A0A] text-white text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5">
+                            Best value
+                          </span>
+                        )}
                       </button>
                     ))}
                   </div>
@@ -292,6 +322,20 @@ export default function ProductPage({ product }) {
                 </div>
               )}
 
+              {upgrade && (
+                <button
+                  onClick={() => setVariantKey(upgrade.variant.key)}
+                  className="mt-3 w-full inline-flex items-center justify-center gap-1.5 text-[12.5px] font-medium text-[#0039CC] bg-[#0039CC]/[0.07] hover:bg-[#0039CC]/[0.12] rounded-xl py-2.5 transition"
+                >
+                  <ArrowUpRight size={14} />
+                  {upgrade.variant.dose} is {upgrade.saving}% cheaper per mg (+$
+                  {upgrade.extra.toFixed(2)})
+                </button>
+              )}
+              <p className="mt-3 text-center text-[11.5px] text-black/40">
+                Free shipping from ${FREE_SHIPPING_THRESHOLD} · 5% off from 3 items · 10% off from 5
+              </p>
+
               <div className="grid grid-cols-2 gap-3 mt-8">
                 <div className="bg-white border border-black/8 rounded-xl p-4">
                   <ShieldCheck size={16} className="text-[#0039CC] mb-2" />
@@ -328,36 +372,56 @@ export default function ProductPage({ product }) {
           {related.length > 0 && (
             <div className="mt-14 pt-10 border-t border-black/8">
               <h2 className="font-display text-[13px] uppercase tracking-[0.15em] text-black/40 mb-5">
-                Also researched together
+                Frequently researched together
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {related.map((p) => (
-                  <Link
+                  <div
                     key={p.id}
-                    href={`/shop/${p.handle}`}
                     className="bg-white border border-black/8 rounded-2xl p-4 flex flex-col hover:border-black/20 transition"
                   >
-                    <div className="aspect-[4/3] rounded-xl bg-[#EFEFF2] mb-3 overflow-hidden">
-                      <img
-                        src={p.images?.[0] || "/product-placeholder.svg"}
-                        alt={p.variants[0].imageAlt}
-                        loading="lazy"
-                        className={`w-full h-full ${
-                          p.images?.[0]
-                            ? "object-cover"
-                            : "object-contain p-6 opacity-70"
-                        }`}
-                      />
-                    </div>
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-display text-[13px] leading-tight">
-                        {p.name}
-                      </h3>
-                      <span className="font-mono text-[12px] text-[#0039CC] font-semibold shrink-0">
-                        from ${getLowestPrice(p).toFixed(2)}
-                      </span>
-                    </div>
-                  </Link>
+                    <Link href={`/shop/${p.handle}`} className="block">
+                      <div className="aspect-[4/3] rounded-xl bg-[#EFEFF2] mb-3 overflow-hidden">
+                        <img
+                          src={p.images?.[0] || "/product-placeholder.svg"}
+                          alt={p.variants[0].imageAlt}
+                          loading="lazy"
+                          className={`w-full h-full ${
+                            p.images?.[0]
+                              ? "object-cover"
+                              : "object-contain p-6 opacity-70"
+                          }`}
+                        />
+                      </div>
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="font-display text-[13px] leading-tight">
+                          {p.name}
+                        </h3>
+                        <span className="font-mono text-[12px] text-[#0039CC] font-semibold shrink-0">
+                          from ${getLowestPrice(p).toFixed(2)}
+                        </span>
+                      </div>
+                      <p className="text-[11.5px] text-black/40 mt-1 leading-snug">
+                        {p.desc}
+                      </p>
+                    </Link>
+                    <button
+                      onClick={() => addRelated(p)}
+                      className="mt-3 inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#0039CC] text-[#0039CC] hover:bg-[#0039CC] hover:text-white text-[12.5px] font-semibold py-2 transition"
+                    >
+                      {addedRelated === p.id ? (
+                        <>
+                          <Check size={13} strokeWidth={3} /> Added
+                        </>
+                      ) : (
+                        <>
+                          <Plus size={13} strokeWidth={2.5} /> Add{" "}
+                          {getDefaultVariant(p).label} · $
+                          {getDefaultVariant(p).price.toFixed(2)}
+                        </>
+                      )}
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>

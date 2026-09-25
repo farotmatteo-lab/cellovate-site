@@ -13,6 +13,7 @@ import { promoFromRequest } from "../../lib/promos";
 import { placedOrder, safely, encodeCart } from "../../lib/omnisend";
 import { computeOrder, formatTotals } from "../../lib/pricing";
 import { validateCustomer, formatAddress } from "../../lib/countries";
+import { saveOrder } from "../../lib/orderStore";
 
 // Emails the shipping details as soon as a payment is created, so an order is
 // never left with a payment on NOWPayments and no address on our side.
@@ -52,7 +53,9 @@ ${formatTotals(order)}
 Email: ${customer.email}
 Shipping address:
 ${formatAddress(customer)}
-${customer.notes ? `\nOrder notes:\n${customer.notes}` : ""}`;
+${customer.notes ? `\nOrder notes:\n${customer.notes}` : ""}
+
+All orders: https://www.cellovateadvancedpeptides.com/admin`;
 
   await transporter.sendMail({
     from: smtpUser,
@@ -165,6 +168,22 @@ export default async function handler(req, res) {
       // The payment exists; losing the email must not break checkout.
       console.error("Order details email failed", mailErr);
     }
+
+    // Order history for /admin (no-op until Upstash is connected).
+    await saveOrder({
+      id: orderId || data.order_id,
+      status: "awaiting_payment",
+      email: String(customer.email).trim(),
+      name: [customer.firstName, customer.lastName].filter(Boolean).join(" "),
+      address: formatAddress(customer),
+      notes: customer.notes || "",
+      lines: order.lines,
+      totals: formatTotals(order),
+      total: order.total,
+      codes: promo?.codes || [],
+      paymentId: data.payment_id,
+      payCurrency: data.pay_currency,
+    });
 
     // Stops Omnisend's abandoned-checkout reminders for this cart.
     await safely("placed order", () =>

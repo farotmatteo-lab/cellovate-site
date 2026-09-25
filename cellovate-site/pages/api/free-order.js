@@ -9,6 +9,8 @@ import { promoFromRequest } from "../../lib/promos";
 import { placedOrder, paidForOrder, safely } from "../../lib/omnisend";
 import { computeOrder, formatTotals } from "../../lib/pricing";
 import { validateCustomer, formatAddress } from "../../lib/countries";
+import { saveOrder } from "../../lib/orderStore";
+import { shipUrl } from "../../lib/adminAuth";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -46,6 +48,7 @@ export default async function handler(req, res) {
   }
 
   const reference = orderId || `CEL-${Date.now()}`;
+  const shipLink = shipUrl(reference, email);
   const summary = `Order: ${reference}
 Promo code: ${promo.code} (${promo.percent}% off${
     promo.freeShipping ? ", shipping included" : ""
@@ -58,7 +61,9 @@ ${formatTotals(order)}
 Email: ${email}
 Shipping address:
 ${address}
-${customer.notes ? `\nOrder notes:\n${customer.notes}` : ""}`;
+${customer.notes ? `\nOrder notes:\n${customer.notes}` : ""}
+${shipLink ? `\nOnce shipped, notify the customer in one click:\n${shipLink}\n` : ""}
+All orders: https://www.cellovateadvancedpeptides.com/admin`;
 
   // Trim every value pulled from env: a stray space or newline pasted into
   // Vercel's dashboard silently breaks nodemailer's "No recipients defined"
@@ -126,6 +131,21 @@ Cellovate Advanced Peptides — for research use only, not for human consumption
   } catch (err) {
     console.error("Free order customer confirmation failed", email, err);
   }
+
+  await saveOrder({
+    id: reference,
+    status: "paid",
+    paidAt: Date.now(),
+    email,
+    name: [customer.firstName, customer.lastName].filter(Boolean).join(" "),
+    address,
+    notes: customer.notes || "",
+    lines: order.lines,
+    totals: formatTotals(order),
+    total: order.total,
+    codes: promo.codes || [promo.code],
+    payCurrency: "free",
+  });
 
   await safely("placed order", () =>
     placedOrder({ orderId: reference, customer, items, order, paid: true })

@@ -3,6 +3,8 @@ import nodemailer from "nodemailer";
 import { paidForOrder, decodeCart, safely } from "../../lib/omnisend";
 import { promoFromRequest } from "../../lib/promos";
 import { computeOrder } from "../../lib/pricing";
+import { updateOrder } from "../../lib/orderStore";
+import { shipUrl } from "../../lib/adminAuth";
 
 // NOWPayments sends the raw JSON body plus a header `x-nowpayments-sig`
 // containing an HMAC-SHA512 signature computed over the JSON with keys
@@ -70,6 +72,7 @@ async function sendConfirmationEmails(payment) {
 
   const reference = payment.order_id || payment.payment_id;
   const customerEmail = customerEmailFrom(payment);
+  const shipLink = shipUrl(String(reference), customerEmail);
 
   await transporter.sendMail({
     from: user,
@@ -84,7 +87,13 @@ Payment ID: ${payment.payment_id}
 Customer: ${customerEmail || "n/a"}
 Amount: ${payment.price_amount} ${payment.price_currency}
 Paid in: ${payment.actually_paid || payment.pay_amount} ${payment.pay_currency}
-Status: ${payment.payment_status}`,
+Status: ${payment.payment_status}
+${
+  shipLink
+    ? `\nOnce shipped, notify the customer in one click:\n${shipLink}\n`
+    : ""
+}
+All orders: https://www.cellovateadvancedpeptides.com/admin`,
   });
 
   if (customerEmail) {
@@ -144,6 +153,35 @@ export default async function handler(req, res) {
 
   // Signature verified — safe to trust the payload from here on.
   const status = payload.payment_status;
+
+  // Keep the /admin order list in sync (no-op until Upstash is connected).
+  if (payload.order_id) {
+    const cart = decodeCart(payload.order_description);
+    const cartOrder = cart.items.length
+      ? computeOrder(cart.items, promoFromRequest({ codes: cart.codes }).promo)
+      : null;
+    await updateOrder(String(payload.order_id), (current) => {
+      const fields = {
+        paymentStatus: status,
+        paymentId: payload.payment_id,
+        email: current.email || customerEmailFrom(payload) || undefined,
+        total: current.total ?? payload.price_amount,
+        lines: current.lines || cartOrder?.lines,
+        codes: current.codes || cart.codes,
+      };
+      if (current.status === "shipped") return fields;
+      if (status === "finished") {
+        return { ...fields, status: "paid", paidAt: Date.now() };
+      }
+      if (["expired", "failed", "refunded"].includes(status)) {
+        return { ...fields, status };
+      }
+      if (status === "partially_paid") {
+        return { ...fields, status: "partially_paid" };
+      }
+      return fields;
+    });
+  }
 
   // NOWPayments sends "confirmed" and then "finished" for the same payment;
   // email once, on "finished", so each order produces a single notification.

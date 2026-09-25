@@ -36,13 +36,6 @@ export const PROMOS = {
     freeShipping: false,
     label: "10% off products",
   },
-  // TEMPORARY — card payment test (GHK-Cu 50mg vial ≈ $5.96). Remove after the test.
-  CELTEST87X: {
-    code: "CELTEST87X",
-    percent: 87,
-    freeShipping: true,
-    label: "Test order",
-  },
   // Welcome offer sent by the Omnisend signup automation. Regular code:
   // combines only with an influencer code.
   WELCOME10: {

@@ -5,6 +5,7 @@
 // the order list. Allowed with the admin session cookie, or with the signed
 // token from the owner notification email (no login needed).
 import nodemailer from "nodemailer";
+import { EMAIL_SIGNATURE } from "../../../lib/business";
 import { isAdmin, verifyShipToken, reviewUrl } from "../../../lib/adminAuth";
 import { getOrder, updateOrder } from "../../../lib/orderStore";
 
@@ -67,7 +68,7 @@ export default async function handler(req, res) {
 ${trackingBlock ? `\n${trackingBlock}\n` : ""}${itemsBlock}${reviewBlock}
 Questions about your delivery? Just reply to this email.
 
-Cellovate Advanced Peptides — for research use only, not for human consumption.`;
+${EMAIL_SIGNATURE}`;
 
   try {
     const transporter = nodemailer.createTransport({

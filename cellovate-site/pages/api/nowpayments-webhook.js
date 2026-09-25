@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import nodemailer from "nodemailer";
+import { EMAIL_SIGNATURE } from "../../lib/business";
 import { paidForOrder, decodeCart, safely } from "../../lib/omnisend";
 import { promoFromRequest } from "../../lib/promos";
 import { computeOrder } from "../../lib/pricing";
@@ -106,7 +107,7 @@ All orders: https://www.cellovateadvancedpeptides.com/admin`,
 
 We are now preparing your order and will email you again once it ships.
 
-Cellovate Advanced Peptides — for research use only, not for human consumption.`,
+${EMAIL_SIGNATURE}`,
       });
     } catch (err) {
       console.error("Customer payment confirmation failed", err);

@@ -9,6 +9,7 @@
 // Environment Variables). Never put this key in frontend code.
 
 import nodemailer from "nodemailer";
+import { EMAIL_SIGNATURE } from "../../lib/business";
 import { promoFromRequest } from "../../lib/promos";
 import { placedOrder, safely, encodeCart } from "../../lib/omnisend";
 import { computeOrder, formatTotals } from "../../lib/pricing";
@@ -80,7 +81,7 @@ ${formatAddress(customer)}
 
 Your order ships once the crypto payment is confirmed. You will get another email at that point.
 
-Cellovate Advanced Peptides — for research use only, not for human consumption.`,
+${EMAIL_SIGNATURE}`,
   });
 }
 

@@ -5,6 +5,7 @@
 // never trusted: prices come from lib/products and the discount is recomputed
 // here, so a tampered client cannot turn a paid cart into a free one.
 import nodemailer from "nodemailer";
+import { EMAIL_SIGNATURE } from "../../lib/business";
 import { promoFromRequest } from "../../lib/promos";
 import { placedOrder, paidForOrder, safely } from "../../lib/omnisend";
 import { computeOrder, formatTotals } from "../../lib/pricing";
@@ -126,7 +127,7 @@ ${address}
 
 We will email you again once your order ships.
 
-Cellovate Advanced Peptides — for research use only, not for human consumption.`,
+${EMAIL_SIGNATURE}`,
     });
   } catch (err) {
     console.error("Free order customer confirmation failed", email, err);

@@ -18,6 +18,7 @@ import {
 import { useCart } from "../context/CartContext";
 import CheckoutForm from "../components/CheckoutForm";
 import CryptoPayment from "../components/CryptoPayment";
+import CardPayment from "../components/CardPayment";
 import { identify } from "../lib/omnisendClient";
 import {
   FreeShippingBar,
@@ -367,6 +368,15 @@ export default function CheckoutPage() {
   const [locked, setLocked] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [done, setDone] = useState(null); // snapshot shown after the order
+  // Card payments (SumUp) are offered only when configured on the server.
+  const [cardEnabled, setCardEnabled] = useState(false);
+  const [method, setMethod] = useState("card");
+  useEffect(() => {
+    fetch("/api/card-config")
+      .then((r) => r.json())
+      .then((d) => setCardEnabled(Boolean(d.enabled)))
+      .catch(() => {});
+  }, []);
 
   // Abandoned-checkout links carry the cart: /checkout?cart=<base64url>.
   useEffect(() => {
@@ -568,17 +578,54 @@ export default function CheckoutPage() {
                   onDone={finish}
                 />
               ) : (
-                <CryptoPayment
-                  total={total}
-                  promoCodes={promo?.codes}
-                  orderId={orderId}
-                  customer={customer}
-                  lines={lines}
-                  onInvoice={setLocked}
-                  onPaid={finish}
-                />
+                <>
+                  {cardEnabled && !(locked && method === "crypto") && (
+                    <div className="grid grid-cols-2 gap-2 mb-5">
+                      {[
+                        ["card", "Card", "Visa · Mastercard · Apple Pay"],
+                        ["crypto", "Crypto", "BTC · ETH · USDT"],
+                      ].map(([key, label, sub]) => (
+                        <button
+                          key={key}
+                          type="button"
+                          onClick={() => setMethod(key)}
+                          className={`text-left rounded-xl border px-4 py-3 transition ${
+                            method === key
+                              ? "border-[#0039CC] bg-[#0039CC]/[0.05] ring-1 ring-[#0039CC]"
+                              : "border-black/15 hover:border-black/30"
+                          }`}
+                        >
+                          <span className="block text-[14px] font-semibold">{label}</span>
+                          <span className="block text-[11.5px] text-black/50">{sub}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {cardEnabled && method === "card" ? (
+                    <CardPayment
+                      key="card"
+                      total={total}
+                      promoCodes={promo?.codes}
+                      orderId={orderId}
+                      customer={customer}
+                      lines={lines}
+                      onInvoice={setLocked}
+                      onPaid={finish}
+                    />
+                  ) : (
+                    <CryptoPayment
+                      total={total}
+                      promoCodes={promo?.codes}
+                      orderId={orderId}
+                      customer={customer}
+                      lines={lines}
+                      onInvoice={setLocked}
+                      onPaid={finish}
+                    />
+                  )}
+                </>
               )}
-              {!locked && (
+              {(!locked || method === "card") && (
                 <button
                   type="button"
                   onClick={() => setCustomer(null)}

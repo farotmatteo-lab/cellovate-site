@@ -121,9 +121,14 @@ export default function AdminHome({ mode, orders, storeReady, loadError }) {
     <AdminShell
       title="Commandes"
       right={
-        <button onClick={logout} className="text-[12px] text-white/60 hover:text-white">
-          Déconnexion
-        </button>
+        <div className="flex items-center gap-4">
+          <a href="/admin/reviews" className="text-[12px] text-white/60 hover:text-white">
+            Avis
+          </a>
+          <button onClick={logout} className="text-[12px] text-white/60 hover:text-white">
+            Déconnexion
+          </button>
+        </div>
       }
     >
       <h1 className="text-2xl font-semibold mb-6">Commandes</h1>

@@ -1,7 +1,7 @@
-import Head from "next/head";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { POSTS, getPostByHandle } from "../../lib/blog-posts";
+import Seo, { articleLd, breadcrumbLd } from "../../components/Seo";
 
 export async function getStaticPaths() {
   return {
@@ -19,10 +19,15 @@ export async function getStaticProps({ params }) {
 export default function BlogPost({ post }) {
   return (
     <>
-      <Head>
-        <title>{post.title} | Cellovate Advanced Peptides</title>
-        <meta name="description" content={post.summary.replace(/<[^>]+>/g, "")} />
-      </Head>
+      <Seo
+        title={`${post.title} | Cellovate Advanced Peptides`}
+        description={post.summary.replace(/<[^>]+>/g, "")}
+        type="article"
+        jsonLd={[
+          articleLd(post),
+          breadcrumbLd([["Home", "/"], ["Research Notes", "/blog"], [post.title, `/blog/${post.handle}`]]),
+        ]}
+      />
 
       <main className="min-h-screen bg-[#FAFAFA] text-[#0A0A0A] font-sans pb-20">
         <style>{`

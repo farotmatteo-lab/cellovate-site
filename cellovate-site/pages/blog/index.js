@@ -1,18 +1,16 @@
-import Head from "next/head";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { POSTS } from "../../lib/blog-posts";
+import Seo, { breadcrumbLd } from "../../components/Seo";
 
 export default function BlogIndex() {
   return (
     <>
-      <Head>
-        <title>Research Notes | Cellovate Advanced Peptides</title>
-        <meta
-          name="description"
-          content="Research guides on peptide mechanisms, purity standards, and laboratory methodology."
-        />
-      </Head>
+      <Seo
+        title="Research Notes | Cellovate Advanced Peptides"
+        description="Research guides on peptide mechanisms, purity standards, and laboratory methodology."
+        jsonLd={breadcrumbLd([["Home", "/"], ["Research Notes", "/blog"]])}
+      />
 
       <main className="min-h-screen bg-[#FAFAFA] text-[#0A0A0A] font-sans pb-20">
         <style>{`

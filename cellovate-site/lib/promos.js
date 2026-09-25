@@ -1,10 +1,14 @@
 // Promo codes. `percent` is the discount applied to the products subtotal
-// (never to shipping). `freeShipping: true` waives the flat shipping fee
+// (never to shipping). `freeShipping: true` waives the shipping fee
 // (see lib/pricing.js).
 //
-// Stacking: a `stackable` code (the welcome offer) combines with ONE other
-// code. Two non-stackable codes never combine — the newest replaces the
-// previous one. Percentages add up (10% + 10% = 20%) and are capped at 100%.
+// Stacking rule: codes never combine, with ONE exception — an influencer code
+// (`influencer: true`) can be added on top of one regular code. So at most
+// two codes per order: one regular + one influencer. Adding a second code of
+// the same kind replaces the first. Percentages add up, capped at 100%.
+//
+// Volume tiers (lib/upsell.js) are not codes: the order gets whichever is
+// better, the codes or the volume tier, never both.
 //
 // A combination reaching a $0 total skips the crypto checkout and is placed
 // through /api/free-order instead.
@@ -16,10 +20,12 @@ export const PROMOS = {
     label: "Free order — 100% off, shipping included",
   },
   // 10% off the products only; the shipping fee is still charged.
+  // Influencer code — the only kind that stacks with another code.
   RND10: {
     code: "RND10",
     percent: 10,
     freeShipping: false,
+    influencer: true,
     label: "10% off products",
   },
   // Win-back offer sent by the Omnisend "Customer Reactivation" automation
@@ -30,13 +36,12 @@ export const PROMOS = {
     freeShipping: false,
     label: "10% off products",
   },
-  // Welcome offer sent by the Omnisend signup automation. Stacks with any
-  // other code.
+  // Welcome offer sent by the Omnisend signup automation. Regular code:
+  // combines only with an influencer code.
   WELCOME10: {
     code: "WELCOME10",
     percent: 10,
     freeShipping: false,
-    stackable: true,
     label: "Welcome offer — 10% off products",
   },
 };
@@ -47,16 +52,14 @@ export function getPromo(code) {
 }
 
 // Normalise a list of codes: known codes only, no duplicates, at most one
-// non-stackable code (the last one wins), stackable codes kept.
+// regular code and one influencer code (within each kind, the last one wins).
 export function normaliseCodes(codes) {
   const promos = [];
   for (const raw of codes || []) {
     const p = getPromo(raw);
     if (!p || promos.some((x) => x.code === p.code)) continue;
-    if (!p.stackable) {
-      const i = promos.findIndex((x) => !x.stackable);
-      if (i >= 0) promos.splice(i, 1);
-    }
+    const i = promos.findIndex((x) => Boolean(x.influencer) === Boolean(p.influencer));
+    if (i >= 0) promos.splice(i, 1);
     promos.push(p);
   }
   return promos.map((p) => p.code);

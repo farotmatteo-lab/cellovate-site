@@ -9,7 +9,7 @@ export function AnnouncementBar() {
       Free shipping over ${FREE_SHIPPING_THRESHOLD}
       <span className="mx-2 text-white/40">·</span>
       <Link href="/quality" className="hover:underline">
-        Third-party tested<span className="hidden sm:inline"> (Janoshik)</span>
+        Third-party lab tested
       </Link>
     </div>
   );

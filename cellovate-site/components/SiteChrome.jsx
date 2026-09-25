@@ -1,6 +1,7 @@
 // Site-wide announcement bar and footer (hidden on /admin by _app).
 import Link from "next/link";
 import { FREE_SHIPPING_THRESHOLD } from "../lib/upsell";
+import { BUSINESS } from "../lib/business";
 
 export function AnnouncementBar() {
   return (
@@ -36,8 +37,11 @@ export function SiteFooter() {
           ))}
         </nav>
         <p className="mt-5 text-[11px] text-black/35 font-mono leading-relaxed">
-          © {new Date().getFullYear()} Cellovate Advanced Peptides — All products are
-          intended for laboratory research use only. Not for human or veterinary use.
+          © {new Date().getFullYear()} {BUSINESS.legalName} — {BUSINESS.address}
+        </p>
+        <p className="mt-1 text-[11px] text-black/35 font-mono leading-relaxed">
+          All products are intended for laboratory research use only. Not for human or
+          veterinary use.
         </p>
       </div>
     </footer>

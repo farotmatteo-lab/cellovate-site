@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import Head from "next/head";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -29,6 +28,9 @@ import {
   pricePerMg,
   FREE_SHIPPING_THRESHOLD,
 } from "../../lib/upsell";
+import Seo, { productLd, breadcrumbLd } from "../../components/Seo";
+import ProductReviews, { RatingSummary } from "../../components/ProductReviews";
+import { getProductReviews } from "../../lib/reviews";
 
 export async function getStaticPaths() {
   return {
@@ -40,10 +42,12 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const product = getProductByHandle(params.handle);
   if (!product || product.draft) return { notFound: true };
-  return { props: { product } };
+  const reviews = await getProductReviews(product.handle);
+  // Re-built at most hourly, and right away when a review is approved.
+  return { props: { product, reviews }, revalidate: 3600 };
 }
 
-export default function ProductPage({ product }) {
+export default function ProductPage({ product, reviews }) {
   const { cart, addToCart, removeFromCart, itemCount, setCartOpen } =
     useCart();
   // null = follow the selected variant; a src = the thumbnail the shopper clicked.
@@ -103,16 +107,16 @@ export default function ProductPage({ product }) {
 
   return (
     <>
-      <Head>
-        <title>{product.name} | Cellovate Advanced Peptides</title>
-        <meta name="description" content={product.desc} />
-        {product.images?.[0] && (
-          <meta
-            property="og:image"
-            content={`https://www.cellovateadvancedpeptides.com${product.images[0]}`}
-          />
-        )}
-      </Head>
+      <Seo
+        title={`${product.name} — Research Peptide | Cellovate Advanced Peptides`}
+        description={`${product.name} (${getDoses(product).join(" / ")}) — ${product.desc} HPLC purity and identity verified by Janoshik Analytical. For research use only.`}
+        image={product.images?.[0]}
+        type="product"
+        jsonLd={[
+          productLd(product, reviews),
+          breadcrumbLd([["Home", "/"], ["Shop", "/shop"], [product.name, `/shop/${product.handle}`]]),
+        ]}
+      />
 
       <main className="min-h-screen bg-[#FAFAFA] text-[#0A0A0A] font-sans pb-24">
         <style>{`
@@ -206,10 +210,19 @@ export default function ProductPage({ product }) {
               <h1 className="font-display text-2xl sm:text-3xl leading-tight mb-2">
                 {product.name}
               </h1>
-              <p className="text-[12px] text-black/35 font-mono mb-4">
-                {product.dose} ·{" "}
-                {product.purity ? `${product.purity} purity` : "HPLC verified"}
-              </p>
+              <RatingSummary reviews={reviews} />
+              <div className="flex flex-wrap items-center gap-2 mb-4">
+                <p className="text-[12px] text-black/35 font-mono">
+                  {product.dose} ·{" "}
+                  {product.purity ? `${product.purity} purity` : "HPLC verified"}
+                </p>
+                <Link
+                  href="/quality"
+                  className="inline-flex items-center gap-1 rounded-full bg-[#0039CC]/8 border border-[#0039CC]/20 text-[#0039CC] text-[10.5px] font-semibold px-2.5 py-0.5 hover:bg-[#0039CC]/12 transition"
+                >
+                  <ShieldCheck size={11} /> Janoshik verified
+                </Link>
+              </div>
               <p className="text-black/50 text-[14px] leading-relaxed mb-5">
                 {product.desc}
               </p>
@@ -345,6 +358,11 @@ export default function ProductPage({ product }) {
                     <Link href="/quality" className="text-[#0039CC] hover:underline">
                       quality standards
                     </Link>
+                    . Batch COA available to customers on request —{" "}
+                    <Link href="/contact" className="text-[#0039CC] hover:underline">
+                      contact us
+                    </Link>
+                    .
                   </p>
                 </div>
                 <div className="bg-white border border-black/8 rounded-xl p-4">
@@ -367,6 +385,8 @@ export default function ProductPage({ product }) {
               dangerouslySetInnerHTML={{ __html: product.bodyHtml }}
             />
           </div>
+
+          <ProductReviews reviews={reviews} />
 
           {/* Related products */}
           {related.length > 0 && (

@@ -37,7 +37,7 @@ export default function QualityPage() {
     <>
       <Seo
         title="Quality Standards | Cellovate Advanced Peptides"
-        description="How every Cellovate batch is verified: HPLC purity and mass spectrometry identity, analysed by Janoshik Analytical. For research use only."
+        description="How every Cellovate batch is verified: HPLC purity and mass spectrometry identity, analysed by an independent third-party laboratory. For research use only."
         jsonLd={breadcrumbLd([["Home", "/"], ["Quality", "/quality"]])}
       />
 
@@ -80,11 +80,11 @@ export default function QualityPage() {
             How we verify every Cellovate batch
           </h1>
           <p className="text-black/50 text-[15px] max-w-2xl mt-5 leading-relaxed">
-            Every batch is analysed by{" "}
+            Every batch is analysed by an{" "}
             <span className="text-[#0A0A0A] font-medium">
-              Janoshik Analytical
-            </span>
-            , an independent laboratory, for purity and molecular identity
+              independent third-party laboratory
+            </span>{" "}
+            for purity and molecular identity
             before it leaves the facility. Nothing ships on the strength of a
             supplier&apos;s word alone.
           </p>

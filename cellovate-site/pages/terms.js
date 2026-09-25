@@ -68,7 +68,7 @@ export default function Terms() {
 
       <h2>7. Quality</h2>
       <p>
-        Batches are analysed by an independent laboratory (Janoshik Analytical). Certificates of
+        Batches are analysed by an independent third-party laboratory. Certificates of
         analysis describe the tested batch only. Products must be stored and handled according to
         the product information.
       </p>

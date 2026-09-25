@@ -33,7 +33,7 @@ export default function Home() {
     <>
       <Seo
         title="Cellovate Advanced Peptides — Research-Grade Peptides, Third-Party Tested"
-        description="Research-grade peptides verified by Janoshik Analytical (HPLC purity and identity) on every batch. Crypto and card payment, worldwide shipping. For research use only."
+        description="Research-grade peptides, third-party lab tested (HPLC purity and identity) on every batch. Crypto and card payment, worldwide shipping. For research use only."
         jsonLd={[organizationLd, websiteLd]}
       />
 
@@ -90,7 +90,7 @@ export default function Home() {
               Research-grade peptides, verified before they reach you.
             </h1>
             <p className="text-white/70 text-[15px] max-w-[26rem] mt-5 leading-relaxed">
-              Every batch is analysed by Janoshik Analytical for purity and
+              Every batch is third-party lab tested for purity and
               identity. Supplied strictly for laboratory research — not for
               human consumption.
             </p>
@@ -119,7 +119,7 @@ export default function Home() {
               Third-party tested
             </h3>
             <p className="text-[13px] text-black/40 leading-relaxed">
-              Every batch is analysed by Janoshik Analytical, an independent
+              Every batch is analysed by an independent third-party
               laboratory — purity and identity confirmed by HPLC before it
               ships.{" "}
               <Link href="/quality" className="text-[#0039CC] hover:underline">

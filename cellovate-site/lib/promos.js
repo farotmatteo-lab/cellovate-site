@@ -28,6 +28,14 @@ export const PROMOS = {
     influencer: true,
     label: "10% off products",
   },
+  // Influencer code (Brick).
+  BRICK10: {
+    code: "BRICK10",
+    percent: 10,
+    freeShipping: false,
+    influencer: true,
+    label: "10% off products",
+  },
   // Win-back offer sent by the Omnisend "Customer Reactivation" automation
   // (60 days after a paid order). Same rules as RND10.
   HEALTH10: {

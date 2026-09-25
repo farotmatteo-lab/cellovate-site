@@ -22,6 +22,14 @@ export const PROMOS = {
     freeShipping: false,
     label: "10% off products",
   },
+  // Win-back offer sent by the Omnisend "Customer Reactivation" automation
+  // (60 days after a paid order). Same rules as RND10.
+  HEALTH10: {
+    code: "HEALTH10",
+    percent: 10,
+    freeShipping: false,
+    label: "10% off products",
+  },
   // Welcome offer sent by the Omnisend signup automation. Stacks with any
   // other code.
   WELCOME10: {

@@ -58,7 +58,8 @@ export default async function handler(req, res) {
       reference: `${orderId}.${crypto.randomBytes(4).toString("hex")}`,
       amount,
       currency,
-      description: `Cellovate Advanced Peptides order ${orderId}`,
+      // Shown to the shopper and on the SumUp sale.
+      description: "Cellovate",
     });
 
     await saveOrder({

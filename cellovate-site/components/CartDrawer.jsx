@@ -12,6 +12,13 @@ import {
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { useRouter } from "next/router";
+import {
+  FreeShippingBar,
+  VolumeNudge,
+  LineUpgrade,
+  CartSuggestions,
+  PromoNotice,
+} from "./Upsell";
 
 export default function CartDrawer() {
   const {
@@ -19,6 +26,7 @@ export default function CartDrawer() {
     itemCount,
     subtotal,
     discount,
+    discountLabel,
     shipping,
     total,
     promo,
@@ -99,6 +107,7 @@ export default function CartDrawer() {
                         <p className="text-[11px] text-black/35 font-mono mt-0.5">
                           {l.qty} × ${l.price.toFixed(2)}
                         </p>
+                        <LineUpgrade line={l} />
                       </div>
                       <div className="flex items-center gap-2 bg-black/5 rounded-full px-1 py-1 shrink-0">
                         <button
@@ -119,6 +128,11 @@ export default function CartDrawer() {
                       </div>
                     </div>
                   ))}
+                  <div className="pt-2 space-y-3">
+                    <FreeShippingBar />
+                    <VolumeNudge />
+                    <CartSuggestions />
+                  </div>
                 </div>
 
                 <div className="px-5 py-4 border-t border-black/8 space-y-1.5">
@@ -165,6 +179,7 @@ export default function CartDrawer() {
                   {promoError && (
                     <p className="text-[11.5px] text-red-600">{promoError}</p>
                   )}
+                  <PromoNotice />
 
                   <div className="flex items-center justify-between text-[12px] text-black/45">
                     <span>Subtotal</span>
@@ -172,7 +187,7 @@ export default function CartDrawer() {
                   </div>
                   {discount > 0 && (
                     <div className="flex items-center justify-between text-[12px] text-[#0039CC]">
-                      <span>Discount</span>
+                      <span>Discount{discountLabel ? ` (${discountLabel})` : ""}</span>
                       <span className="font-mono">-${discount.toFixed(2)}</span>
                     </div>
                   )}

@@ -5,7 +5,7 @@
 // the order list. Allowed with the admin session cookie, or with the signed
 // token from the owner notification email (no login needed).
 import nodemailer from "nodemailer";
-import { isAdmin, verifyShipToken } from "../../../lib/adminAuth";
+import { isAdmin, verifyShipToken, reviewUrl } from "../../../lib/adminAuth";
 import { getOrder, updateOrder } from "../../../lib/orderStore";
 
 const clean = (v, max = 300) => String(v || "").trim().slice(0, max);
@@ -58,8 +58,13 @@ export default async function handler(req, res) {
     ? `\nIn this parcel:\n${stored.lines.join("\n")}\n`
     : "";
 
+  const reviewLink = reviewUrl(orderId, email);
+  const reviewBlock = reviewLink
+    ? `\nOnce your parcel has arrived, we'd appreciate a short review of your order:\n${reviewLink}\n`
+    : "";
+
   const text = `Good news: your Cellovate order ${orderId} has shipped.
-${trackingBlock ? `\n${trackingBlock}\n` : ""}${itemsBlock}
+${trackingBlock ? `\n${trackingBlock}\n` : ""}${itemsBlock}${reviewBlock}
 Questions about your delivery? Just reply to this email.
 
 Cellovate Advanced Peptides — for research use only, not for human consumption.`;

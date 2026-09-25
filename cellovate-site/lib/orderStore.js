@@ -102,6 +102,20 @@ export async function updateOrder(id, change) {
   }
 }
 
+// Returns true only for the first caller with this name (24 h), so two
+// notifications for the same payment never send emails twice. Without Redis
+// it always returns true.
+export async function claimOnce(name) {
+  if (!storeEnabled()) return true;
+  try {
+    const res = await command("SET", `once:${name}`, "1", "NX", "EX", 86400);
+    return res === "OK";
+  } catch (err) {
+    console.error("orderStore.claimOnce failed", err.message);
+    return true;
+  }
+}
+
 // Newest first.
 export async function listOrders(limit = 200) {
   if (!storeEnabled()) return [];

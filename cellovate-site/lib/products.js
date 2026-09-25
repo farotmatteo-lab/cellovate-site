@@ -175,8 +175,8 @@ export const PRODUCTS = [
     dose: "5mg / 10mg",
     doses: ["5mg", "10mg"],
     variants: [
-      { key: "5mg-vial", dose: "5mg", format: "Vial", label: "5mg · Vial", price: 102.27 },
-      { key: "5mg-pen", dose: "5mg", format: "Pen", label: "5mg · Pen", price: 122.73 },
+      { key: "5mg-vial", dose: "5mg", format: "Vial", label: "5mg · Vial", price: 119.32 },
+      { key: "5mg-pen", dose: "5mg", format: "Pen", label: "5mg · Pen", price: 139.77 },
       { key: "10mg-vial", dose: "10mg", format: "Vial", label: "10mg · Vial", price: 214.77 },
       { key: "10mg-pen", dose: "10mg", format: "Pen", label: "10mg · Pen", price: 235.23 },
     ],
@@ -264,8 +264,8 @@ export const PRODUCTS = [
     dose: "10mg / 20mg / 40mg",
     doses: ["10mg", "20mg", "40mg"],
     variants: [
-      { key: "10mg-vial", dose: "10mg", format: "Vial", label: "10mg · Vial", price: 72.41 },
-      { key: "10mg-pen", dose: "10mg", format: "Pen", label: "10mg · Pen", price: 92.86 },
+      { key: "10mg-vial", dose: "10mg", format: "Vial", label: "10mg · Vial", price: 82.27 },
+      { key: "10mg-pen", dose: "10mg", format: "Pen", label: "10mg · Pen", price: 102.72 },
       { key: "20mg-vial", dose: "20mg", format: "Vial", label: "20mg · Vial", price: 148.09 },
       { key: "20mg-pen", dose: "20mg", format: "Pen", label: "20mg · Pen", price: 168.55 },
       { key: "40mg-vial", dose: "40mg", format: "Vial", label: "40mg · Vial", price: 250.36 },

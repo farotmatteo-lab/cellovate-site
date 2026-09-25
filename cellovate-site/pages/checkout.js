@@ -19,6 +19,13 @@ import { useCart } from "../context/CartContext";
 import CheckoutForm from "../components/CheckoutForm";
 import CryptoPayment from "../components/CryptoPayment";
 import { identify } from "../lib/omnisendClient";
+import {
+  FreeShippingBar,
+  VolumeNudge,
+  LineUpgrade,
+  CartSuggestions,
+  PromoNotice,
+} from "../components/Upsell";
 
 const money = (n) => `$${Number(n || 0).toFixed(2)}`;
 
@@ -31,6 +38,7 @@ function OrderSummary({ locked }) {
     lines,
     subtotal,
     discount,
+    discountLabel,
     shipping,
     total,
     promo,
@@ -65,6 +73,7 @@ function OrderSummary({ locked }) {
                 {l.name}
               </p>
               <p className="text-[12px] text-black/50">{l.variant.label}</p>
+              <LineUpgrade line={l} disabled={locked} />
               {!locked && (
                 <div className="flex items-center gap-1 mt-1">
                   <button
@@ -92,6 +101,14 @@ function OrderSummary({ locked }) {
           </li>
         ))}
       </ul>
+
+      {!locked && (
+        <div className="mt-5 space-y-3">
+          <FreeShippingBar />
+          <VolumeNudge />
+          <CartSuggestions />
+        </div>
+      )}
 
       {/* Promo code */}
       <div className="mt-6 pt-5 border-t border-black/10">
@@ -149,6 +166,9 @@ function OrderSummary({ locked }) {
         {promoError && (
           <p className="text-[12px] text-red-600 mt-1.5">{promoError}</p>
         )}
+        <div className="mt-1.5">
+          <PromoNotice />
+        </div>
       </div>
 
       {/* Totals */}
@@ -159,7 +179,7 @@ function OrderSummary({ locked }) {
         </div>
         {discount > 0 && (
           <div className="flex justify-between text-[#0039CC] font-medium">
-            <span>Discount ({promo.code})</span>
+            <span>Discount ({discountLabel})</span>
             <span className="font-mono">−{money(discount)}</span>
           </div>
         )}

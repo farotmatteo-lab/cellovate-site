@@ -109,7 +109,7 @@ export default function ProductPage({ product, reviews }) {
     <>
       <Seo
         title={`${product.name} — Research Peptide | Cellovate Advanced Peptides`}
-        description={`${product.name} (${getDoses(product).join(" / ")}) — ${product.desc} HPLC purity and identity verified by Janoshik Analytical. For research use only.`}
+        description={`${product.name} (${getDoses(product).join(" / ")}) — ${product.desc} HPLC purity and identity verified by an independent third-party lab. For research use only.`}
         image={product.images?.[0]}
         type="product"
         jsonLd={[
@@ -220,7 +220,7 @@ export default function ProductPage({ product, reviews }) {
                   href="/quality"
                   className="inline-flex items-center gap-1 rounded-full bg-[#0039CC]/8 border border-[#0039CC]/20 text-[#0039CC] text-[10.5px] font-semibold px-2.5 py-0.5 hover:bg-[#0039CC]/12 transition"
                 >
-                  <ShieldCheck size={11} /> Janoshik verified
+                  <ShieldCheck size={11} /> Third-party tested
                 </Link>
               </div>
               <p className="text-black/50 text-[14px] leading-relaxed mb-5">
@@ -353,7 +353,7 @@ export default function ProductPage({ product, reviews }) {
                 <div className="bg-white border border-black/8 rounded-xl p-4">
                   <ShieldCheck size={16} className="text-[#0039CC] mb-2" />
                   <p className="text-[11.5px] text-black/50 leading-snug">
-                    Purity and identity verified by Janoshik Analytical on
+                    Purity and identity verified by an independent lab on
                     every batch —{" "}
                     <Link href="/quality" className="text-[#0039CC] hover:underline">
                       quality standards

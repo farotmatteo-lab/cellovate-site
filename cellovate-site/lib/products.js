@@ -4,9 +4,15 @@
 // product page covers every dosage instead of one page per milligram.
 import { PRODUCT_IMAGES } from "./productImages";
 
-export const PRODUCTS = [
+// Full catalog, including out-of-stock items. Two switches control what the
+// site shows, without deleting anything:
+//   draft: true          -> the whole product is hidden
+//   hiddenDoses: [...]   -> only those dosages are hidden (both formats)
+// Remove the switch to put the item back on sale.
+export const CATALOG = [
   {
     id: "tirz",
+    hiddenDoses: ["10mg", "40mg"], // out of stock: hidden from the site, kept for later
     handle: "tirzepatide",
     name: "Tirzepatide",
     fullName: "TIRZEPATIDE",
@@ -62,6 +68,7 @@ export const PRODUCTS = [
   },
   {
     id: "bpctb",
+    hiddenDoses: ["10mg (5+5)"], // out of stock: hidden from the site, kept for later
     handle: "bpc-157-tb-500-blend",
     name: "BPC-157 + TB-500",
     fullName: "BPC-157 + TB-500 BLEND",
@@ -81,6 +88,7 @@ export const PRODUCTS = [
   },
   {
     id: "ipa",
+    draft: true, // out of stock: hidden from the site, kept for later
     handle: "ipamorelin-10mg",
     name: "Ipamorelin",
     fullName: "IPAMORELIN 10MG",
@@ -132,6 +140,7 @@ export const PRODUCTS = [
   },
   {
     id: "ss31",
+    hiddenDoses: ["50mg"], // out of stock: hidden from the site, kept for later
     handle: "ss-31",
     name: "SS-31",
     fullName: "SS-31 (ELAMIPRETIDE)",
@@ -151,6 +160,7 @@ export const PRODUCTS = [
   },
   {
     id: "amino5",
+    draft: true, // out of stock: hidden from the site, kept for later
     handle: "5-amino-1mq-50mg",
     name: "5-Amino-1MQ",
     fullName: "5-AMINO-1MQ 50MG",
@@ -168,6 +178,7 @@ export const PRODUCTS = [
   },
   {
     id: "aod",
+    draft: true, // out of stock: hidden from the site, kept for later
     handle: "aod9604",
     name: "AOD9604",
     fullName: "AOD9604",
@@ -204,6 +215,7 @@ export const PRODUCTS = [
   },
   {
     id: "kiss",
+    draft: true, // out of stock: hidden from the site, kept for later
     handle: "kisspeptin-10mg",
     name: "Kisspeptin",
     fullName: "KISSPEPTIN 10MG",
@@ -221,6 +233,7 @@ export const PRODUCTS = [
   },
   {
     id: "pinealon",
+    draft: true, // out of stock: hidden from the site, kept for later
     handle: "pinealon",
     name: "Pinealon",
     fullName: "PINEALON",
@@ -278,6 +291,7 @@ export const PRODUCTS = [
   },
   {
     id: "motsc",
+    hiddenDoses: ["40mg"], // out of stock: hidden from the site, kept for later
     handle: "mots-c-10mg",
     name: "MOTS-c",
     fullName: "MOTS-C",
@@ -365,6 +379,7 @@ export const PRODUCTS = [
   },
   {
     id: "nad",
+    hiddenDoses: ["500mg"], // out of stock: hidden from the site, kept for later
     handle: "nad-1000mg",
     name: "NAD+",
     fullName: "NAD+",
@@ -416,6 +431,24 @@ function resolveImage(product, variant) {
   }
   return null;
 }
+
+// Catalog as the store sees it: hidden dosages removed everywhere (product
+// pages, cart, checkout, feeds), with the dosage summary rebuilt to match.
+export const PRODUCTS = CATALOG.map((p) => {
+  if (!p.hiddenDoses?.length) return p;
+  const variants = p.variants.filter((v) => !p.hiddenDoses.includes(v.dose));
+  const doses = [...new Set(variants.map((v) => v.dose))];
+  return {
+    ...p,
+    variants,
+    doses,
+    dose: doses.join(" / "),
+    bodyHtml: String(p.bodyHtml || "").replace(
+      /(Available dosages:<\/strong> )[^<]*/,
+      `$1${doses.join(" / ")}`
+    ),
+  };
+});
 
 for (const product of PRODUCTS) {
   for (const variant of product.variants) {

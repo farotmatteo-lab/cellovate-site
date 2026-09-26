@@ -264,13 +264,13 @@ export const PRODUCT_IMAGES = {
     }
   },
   "ghk": {
-    "50mg-pen": {
-      "src": "/images/products/ghk-cu-50mg-pen-cellovate-research-peptide.webp",
-      "alt": "GHK-Cu 50mg pre-filled pen — Cellovate research peptide"
+    "100mg-pen": {
+      "src": "/images/products/ghk-cu-100mg-pen-cellovate-research-peptide.webp",
+      "alt": "GHK-Cu 100mg pre-filled pen — Cellovate research peptide"
     },
-    "50mg-vial": {
-      "src": "/images/products/ghk-cu-50mg-vial-cellovate-research-peptide.webp",
-      "alt": "GHK-Cu 50mg vial — Cellovate research peptide"
+    "100mg-vial": {
+      "src": "/images/products/ghk-cu-100mg-vial-cellovate-research-peptide.webp",
+      "alt": "GHK-Cu 100mg vial — Cellovate research peptide"
     }
   },
   "nad": {

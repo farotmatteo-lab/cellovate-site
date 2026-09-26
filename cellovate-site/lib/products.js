@@ -399,6 +399,7 @@ export const CATALOG = [
   },
   {
     id: "epi",
+    draft: true, // out of stock: hidden from the site, kept for later
     handle: "epithalon-10mg",
     name: "Epithalon",
     fullName: "EPITHALON 10MG",

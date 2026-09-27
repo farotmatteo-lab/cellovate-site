@@ -40,11 +40,12 @@ export default function SetPassword() {
   };
 
   return (
-    <main style={ui.wrap}>
+    <div style={ui.page}><main style={ui.wrap}>
       <Head>
         <title>Create your password | Cellovate</title>
         <meta name="robots" content="noindex" />
       </Head>
+      <p style={ui.kicker}>Cellovate partners</p>
       <h1 style={ui.h1}>Create your password</h1>
       <p style={ui.sub}>You will use it with your email to log in to your partner area.</p>
       <form onSubmit={submit} noValidate>
@@ -56,6 +57,6 @@ export default function SetPassword() {
         {expired && <p><Link href="/partner" style={{ color: ui.accent }}>Get a new link</Link></p>}
         <button style={ui.btn} type="submit" disabled={busy || !token}>{busy ? "Saving…" : "Save and open my dashboard"}</button>
       </form>
-    </main>
+    </main></div>
   );
 }

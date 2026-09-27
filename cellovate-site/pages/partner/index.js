@@ -52,11 +52,12 @@ export default function PartnerLogin() {
   };
 
   return (
-    <main style={ui.wrap}>
+    <div style={ui.page}><main style={ui.wrap}>
       <Head>
         <title>Partner area | Cellovate</title>
         <meta name="robots" content="noindex" />
       </Head>
+      <p style={ui.kicker}>Cellovate partners</p>
       <h1 style={ui.h1}>Partner area</h1>
       {mode === "sent" && (
         <>
@@ -88,6 +89,6 @@ export default function PartnerLogin() {
           <button type="button" style={ui.link} onClick={() => { setMode("link"); setErr(""); }}>First time here or forgot your password?</button>
         </form>
       )}
-    </main>
+    </main></div>
   );
 }

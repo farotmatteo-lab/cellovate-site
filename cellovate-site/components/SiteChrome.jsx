@@ -23,6 +23,7 @@ const LINKS = [
   ["Terms of Sale", "/terms"],
   ["Refund Policy", "/refund-policy"],
   ["Privacy Policy", "/privacy"],
+  ["Partner login", "/partner"],
 ];
 
 export function SiteFooter() {

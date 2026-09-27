@@ -53,7 +53,7 @@ export default function SetPassword() {
         <label style={ui.label} htmlFor="np2">Confirm password</label>
         <input id="np2" style={ui.input} type="password" autoComplete="new-password" value={pw2} onChange={(e) => setPw2(e.target.value)} />
         {err && <p style={ui.err} role="alert">{err}</p>}
-        {expired && <p><Link href="/partner" style={{ color: "#22d3ee" }}>Get a new link</Link></p>}
+        {expired && <p><Link href="/partner" style={{ color: ui.accent }}>Get a new link</Link></p>}
         <button style={ui.btn} type="submit" disabled={busy || !token}>{busy ? "Saving…" : "Save and open my dashboard"}</button>
       </form>
     </main>

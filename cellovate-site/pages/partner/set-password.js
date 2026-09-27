@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { ui } from "./index";
+import { ui } from "../../lib/partnerUi";
 
 export default function SetPassword() {
   const router = useRouter();

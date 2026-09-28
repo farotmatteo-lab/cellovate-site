@@ -13,7 +13,7 @@ import { identify } from "../lib/omnisendClient";
 const KEY = "cel_popup";
 const CODE = "WELCOME10";
 const DISMISS_DAYS = 7;
-const HIDDEN_ON = ["/checkout", "/admin", "/review", "/terms", "/privacy", "/refund-policy"];
+const HIDDEN_ON = ["/checkout", "/admin", "/review", "/terms", "/privacy", "/refund-policy", "/wholesale", "/partner"];
 
 function readState() {
   try {

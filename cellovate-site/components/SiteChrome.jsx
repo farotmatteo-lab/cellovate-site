@@ -19,6 +19,7 @@ const LINKS = [
   ["Shop", "/shop"],
   ["Quality", "/quality"],
   ["Blog", "/blog"],
+  ["Wholesale", "/wholesale"],
   ["Contact", "/contact"],
   ["Terms of Sale", "/terms"],
   ["Refund Policy", "/refund-policy"],

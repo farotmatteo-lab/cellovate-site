@@ -9,6 +9,7 @@ export const STATIC_PAGES = [
   ["/shop", "0.9", "weekly"],
   ["/quality", "0.7", "monthly"],
   ["/blog", "0.7", "weekly"],
+  ["/wholesale", "0.6", "monthly"],
   ["/contact", "0.4", "yearly"],
   ["/terms", "0.3", "yearly"],
   ["/refund-policy", "0.3", "yearly"],

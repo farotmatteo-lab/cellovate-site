@@ -122,6 +122,9 @@ export default function AdminHome({ mode, orders, storeReady, loadError }) {
       title="Commandes"
       right={
         <div className="flex items-center gap-4">
+          <a href="/admin/wholesale" className="text-[12px] text-white/60 hover:text-white">
+            Wholesale
+          </a>
           <a href="/admin/reviews" className="text-[12px] text-white/60 hover:text-white">
             Avis
           </a>

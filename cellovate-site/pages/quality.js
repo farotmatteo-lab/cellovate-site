@@ -122,8 +122,8 @@ export default function QualityPage() {
             <p className="text-[13px] text-black/45 leading-relaxed max-w-3xl mt-3">
               If you are evaluating us as a wholesale or private-label partner,
               analytical results are reviewed directly with you.{" "}
-              <Link href="/shop" className="text-[#0039CC] hover:underline">
-                Get in touch through the shop
+              <Link href="/wholesale" className="text-[#0039CC] hover:underline">
+                Request a wholesale quote
               </Link>
               .
             </p>

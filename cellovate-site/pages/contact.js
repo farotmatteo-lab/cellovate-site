@@ -15,7 +15,7 @@ export default function Contact() {
       <ul>
         <li>Order status and tracking</li>
         <li>Certificate of analysis for a specific batch</li>
-        <li>Wholesale and laboratory accounts</li>
+        <li>Wholesale and laboratory accounts — <a href="/wholesale">request a quote here</a></li>
         <li>Damaged or missing items — see our <a href="/refund-policy">Refund Policy</a></li>
       </ul>
     </LegalLayout>

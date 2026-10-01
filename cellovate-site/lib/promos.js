@@ -7,6 +7,10 @@
 // two codes per order: one regular + one influencer. Adding a second code of
 // the same kind replaces the first. Percentages add up, capped at 100%.
 //
+// Exclusive codes (`exclusive: true`) never combine with anything, not even
+// an influencer code or another exclusive code: applying one removes every
+// other code, and applying any code afterwards removes it.
+//
 // Volume tiers (lib/upsell.js) are not codes: the order gets whichever is
 // better, the codes or the volume tier, never both.
 //
@@ -52,6 +56,21 @@ export const PROMOS = {
     freeShipping: false,
     label: "Welcome offer — 10% off products",
   },
+  // Influencer codes (Coursey) — exclusive: never combined with any other code.
+  COURSEY15: {
+    code: "COURSEY15",
+    percent: 15,
+    freeShipping: false,
+    exclusive: true,
+    label: "15% off products",
+  },
+  COACHCOUR60: {
+    code: "COACHCOUR60",
+    percent: 60,
+    freeShipping: false,
+    exclusive: true,
+    label: "60% off products",
+  },
 };
 
 export function getPromo(code) {
@@ -61,11 +80,18 @@ export function getPromo(code) {
 
 // Normalise a list of codes: known codes only, no duplicates, at most one
 // regular code and one influencer code (within each kind, the last one wins).
+// An exclusive code stands alone: it clears the others, and a later code
+// clears it.
 export function normaliseCodes(codes) {
-  const promos = [];
+  let promos = [];
   for (const raw of codes || []) {
     const p = getPromo(raw);
     if (!p || promos.some((x) => x.code === p.code)) continue;
+    if (p.exclusive) {
+      promos = [p];
+      continue;
+    }
+    promos = promos.filter((x) => !x.exclusive);
     const i = promos.findIndex((x) => Boolean(x.influencer) === Boolean(p.influencer));
     if (i >= 0) promos.splice(i, 1);
     promos.push(p);

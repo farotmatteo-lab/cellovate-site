@@ -149,7 +149,11 @@ export function CartProvider({ children }) {
     const dropped = promoCodes.filter((c) => !next.includes(c));
     setPromoNotice(
       dropped.length
-        ? `${promo.code} replaced ${dropped.join(", ")} — discount codes can't be combined (except with one partner code).`
+        ? promo.exclusive || dropped.some((c) => getPromo(c)?.exclusive)
+          ? `${promo.code} replaced ${dropped.join(", ")} — ${
+              promo.exclusive ? promo.code : dropped.find((c) => getPromo(c)?.exclusive)
+            } can't be combined with any other code.`
+          : `${promo.code} replaced ${dropped.join(", ")} — discount codes can't be combined (except with one partner code).`
         : null
     );
     setPromoCodes(next);

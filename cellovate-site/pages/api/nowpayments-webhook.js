@@ -4,7 +4,8 @@ import { EMAIL_SIGNATURE } from "../../lib/business";
 import { paidForOrder, decodeCart, safely } from "../../lib/omnisend";
 import { promoFromRequest } from "../../lib/promos";
 import { computeOrder } from "../../lib/pricing";
-import { updateOrder } from "../../lib/orderStore";
+import { updateOrder, getOrder } from "../../lib/orderStore";
+import { onOrderPaid } from "../../lib/giftCodes";
 import { shipUrl } from "../../lib/adminAuth";
 
 // NOWPayments sends the raw JSON body plus a header `x-nowpayments-sig`
@@ -198,9 +199,21 @@ export default async function handler(req, res) {
     // Omnisend post-purchase automations.
     const email = customerEmailFrom(payload);
     const { items, codes } = decodeCart(payload.order_description);
+    const record = payload.order_id ? await getOrder(String(payload.order_id)) : null;
+    const placedAt = record?.createdAt;
+
+    // Gift codes: mark used, and send the campaign gift when earned.
+    await onOrderPaid({
+      orderId: String(payload.order_id || payload.payment_id),
+      email,
+      codes,
+      items,
+      createdAt: placedAt,
+    });
+
     if (email && items.length) {
       const { promo } = promoFromRequest({ codes });
-      const order = computeOrder(items, promo);
+      const order = computeOrder(items, promo, { now: placedAt });
       await safely("paid for order", () =>
         paidForOrder({
           orderId: payload.order_id || String(payload.payment_id),

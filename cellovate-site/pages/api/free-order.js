@@ -7,6 +7,7 @@
 import nodemailer from "nodemailer";
 import { EMAIL_SIGNATURE } from "../../lib/business";
 import { promoFromRequest } from "../../lib/promos";
+import { checkGiftCodes } from "../../lib/giftCodes";
 import { placedOrder, paidForOrder, safely } from "../../lib/omnisend";
 import { computeOrder, formatTotals } from "../../lib/pricing";
 import { validateCustomer, formatAddress } from "../../lib/countries";
@@ -34,6 +35,9 @@ export default async function handler(req, res) {
 
   const email = String(customer.email).trim();
   const address = formatAddress(customer);
+
+  const giftError = await checkGiftCodes(promo?.codes);
+  if (giftError) return res.status(400).json({ error: giftError });
 
   const order = computeOrder(items, promo);
 

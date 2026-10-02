@@ -1,5 +1,6 @@
 // Upsell blocks used by the cart drawer and the checkout summary.
-import { Truck, Percent, ArrowUpRight, Plus, Check } from "lucide-react";
+import { Truck, Percent, ArrowUpRight, Plus, Check, Gift } from "lucide-react";
+import { CAMPAIGN, campaignActive } from "../lib/campaign";
 import { useCart } from "../context/CartContext";
 import {
   FREE_SHIPPING_THRESHOLD,
@@ -40,10 +41,49 @@ export function FreeShippingBar() {
   );
 }
 
+// "Buy 2, get 1 free" status while the campaign runs.
+function CampaignNudge() {
+  const { itemCount, discountSource, campaignFree, codeDiscount } = useCart();
+  const applied = discountSource === "campaign";
+  const missing = 3 - (itemCount % 3);
+  return (
+    <div className="text-[12px] flex items-start gap-1.5 text-black/70">
+      <Gift size={13} className="text-[#0039CC] shrink-0 mt-[2px]" />
+      <span>
+        {applied && (
+          <>
+            <strong className="text-[#0039CC]">
+              {CAMPAIGN.name}: {campaignFree} item{campaignFree > 1 ? "s" : ""} free
+            </strong>
+            {codeDiscount > 0 && " (better than your code)"}.{" "}
+          </>
+        )}
+        {!applied && discountSource === "code" && campaignFree > 0 && (
+          <>Your code beats the Buy 2, get 1 free offer. </>
+        )}
+        {missing === 1 ? (
+          <>
+            Add <strong>1 more item</strong> — it&apos;s free (cheapest item free).
+          </>
+        ) : applied ? (
+          <>Add {missing} more items to get another one free.</>
+        ) : (
+          <>
+            {CAMPAIGN.name}: add {missing} more item{missing > 1 ? "s" : ""}, the cheapest is free.
+          </>
+        )}{" "}
+        <span className="text-black/45">Ends {CAMPAIGN.endsLabel}.</span>
+      </span>
+    </div>
+  );
+}
+
 // Volume tier status: what is applied, and how close the next tier is.
+// During the campaign, shows the Buy 2, get 1 free status instead.
 export function VolumeNudge() {
   const { lines, tier, nextTier, discountSource, codeDiscount } = useCart();
   if (!lines.length) return null;
+  if (campaignActive()) return <CampaignNudge />;
   const tierWins = discountSource === "volume";
   const codeBeatsTier = tier && !tierWins && codeDiscount > 0;
   if (!tierWins && !codeBeatsTier && !nextTier) return null;

@@ -1,9 +1,27 @@
 // Site-wide announcement bar and footer (hidden on /admin by _app).
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { CAMPAIGN, campaignActive } from "../lib/campaign";
 import { FREE_SHIPPING_THRESHOLD } from "../lib/upsell";
 import { BUSINESS } from "../lib/business";
 
 export function AnnouncementBar() {
+  // Checked in the browser so the bar switches on and off on time, even on
+  // pages built in advance.
+  const [promo, setPromo] = useState(false);
+  useEffect(() => setPromo(campaignActive()), []);
+  if (promo) {
+    return (
+      <Link
+        href="/shop"
+        className="block bg-[#0039CC] text-white text-center text-[11.5px] sm:text-[12.5px] font-semibold px-4 py-2 tracking-wide hover:bg-[#0030AD] transition"
+      >
+        BUY 2, GET 1 FREE — storewide
+        <span className="mx-2 text-white/50">·</span>
+        <span className="font-normal">Ends {CAMPAIGN.endsLabel}, no code needed</span>
+      </Link>
+    );
+  }
   return (
     <div className="bg-[#0A0A0A] text-white text-center text-[11.5px] sm:text-[12px] font-medium px-4 py-2 tracking-wide">
       Free shipping over ${FREE_SHIPPING_THRESHOLD}

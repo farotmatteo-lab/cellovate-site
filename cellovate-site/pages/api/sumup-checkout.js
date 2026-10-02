@@ -4,6 +4,7 @@
 // to the order list and opens a SumUp checkout for the card widget.
 import crypto from "crypto";
 import { promoFromRequest } from "../../lib/promos";
+import { checkGiftCodes } from "../../lib/giftCodes";
 import { computeOrder, formatTotals } from "../../lib/pricing";
 import { validateCustomer, formatAddress } from "../../lib/countries";
 import { saveOrder, getOrder } from "../../lib/orderStore";
@@ -29,6 +30,9 @@ export default async function handler(req, res) {
 
   const { promo, invalid } = promoFromRequest(req.body);
   if (invalid.length) return res.status(400).json({ error: "Invalid promo code." });
+
+  const giftError = await checkGiftCodes(promo?.codes);
+  if (giftError) return res.status(400).json({ error: giftError });
 
   const order = computeOrder(items, promo);
   if (!order.lines.length) return res.status(400).json({ error: "Cart is empty." });

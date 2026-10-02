@@ -42,7 +42,10 @@ export default function Terms() {
         Prices are in US dollars. The total, discounts and shipping are confirmed at checkout
         before payment. We may correct obvious pricing errors and cancel affected orders with a
         full refund. Discount codes cannot be combined, except one partner code with one other
-        code; the best available discount is applied automatically.
+        code; some partner codes and gift codes cannot be combined with any other code or
+        offer. Time-limited offers (such as Buy 2, Get 1 Free, where the cheapest item is free)
+        never add up with codes or volume discounts: the best available discount is applied
+        automatically. Gift codes are single use and valid for 30 days.
       </p>
 
       <h2>4. Payment</h2>

@@ -145,6 +145,19 @@ export function CartProvider({ children }) {
       return false;
     }
     setPromoError(null);
+    // Single-use gift codes are checked with the server first.
+    if (promo.gift) {
+      fetch(`/api/check-code?code=${encodeURIComponent(promo.code)}`)
+        .then((r) => r.json())
+        .then((r) => (r.ok ? addCode(promo) : setPromoError(r.error || "This code is not valid.")))
+        .catch(() => setPromoError("Could not check this code. Please try again."));
+      return true;
+    }
+    addCode(promo);
+    return true;
+  };
+
+  const addCode = (promo) => {
     const next = normaliseCodes([...promoCodes, promo.code]);
     const dropped = promoCodes.filter((c) => !next.includes(c));
     setPromoNotice(
@@ -157,7 +170,6 @@ export function CartProvider({ children }) {
         : null
     );
     setPromoCodes(next);
-    return true;
   };
 
   // Removes one code, or all codes when none is given.
@@ -234,6 +246,7 @@ export function CartProvider({ children }) {
     codeDiscount,
     tier,
     nextTier,
+    campaignFree: order.campaignFree,
     freeShippingRemaining,
     promoNotice,
     promoError,

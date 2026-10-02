@@ -57,11 +57,13 @@ export const PROMOS = {
     label: "Welcome offer — 10% off products",
   },
   // Influencer codes (Coursey) — exclusive: never combined with any other code.
+  // `partner` marks them as influencer codes for attribution and campaign gifts.
   COURSEY15: {
     code: "COURSEY15",
     percent: 15,
     freeShipping: false,
     exclusive: true,
+    partner: true,
     label: "15% off products",
   },
   COACHCOUR60: {
@@ -69,13 +71,38 @@ export const PROMOS = {
     percent: 60,
     freeShipping: false,
     exclusive: true,
+    partner: true,
     label: "60% off products",
   },
 };
 
+// Single-use gift codes (GIFT-XXXXXX), created per order by lib/giftCodes.js.
+// The format is recognised here; whether a code exists and is still unused is
+// checked server-side (lib/giftCodes.js) before any payment.
+export const GIFT_PERCENT = 30;
+export const GIFT_CODE_RE = /^GIFT-[A-Z2-9]{6}$/;
+
 export function getPromo(code) {
   if (!code) return null;
-  return PROMOS[String(code).trim().toUpperCase()] || null;
+  const c = String(code).trim().toUpperCase();
+  if (PROMOS[c]) return PROMOS[c];
+  if (GIFT_CODE_RE.test(c)) {
+    return {
+      code: c,
+      percent: GIFT_PERCENT,
+      freeShipping: false,
+      exclusive: true,
+      gift: true,
+      label: `Gift — ${GIFT_PERCENT}% off products`,
+    };
+  }
+  return null;
+}
+
+// Influencer / partner code (credited to a partner, earns campaign gifts).
+export function isPartnerCode(code) {
+  const p = getPromo(code);
+  return Boolean(p && (p.influencer || p.partner));
 }
 
 // Normalise a list of codes: known codes only, no duplicates, at most one

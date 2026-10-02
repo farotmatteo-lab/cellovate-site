@@ -4,6 +4,7 @@
 import { PRODUCTS, getVariant } from "./products";
 import { getDiscount } from "./promos";
 import { FREE_SHIPPING_THRESHOLD, getVolumeTier } from "./upsell";
+import { CAMPAIGN, campaignActive, buy2Get1 } from "./campaign";
 
 // Flat shipping fee per order, in USD. Waived by promo codes with
 // `freeShipping: true` and when the products total (after discount) reaches
@@ -19,8 +20,11 @@ export function getShipping(promo, itemCount, productsTotal = 0) {
 const round = (n) => Math.round(n * 100) / 100;
 
 // items: [{ id, variantKey, qty }]
-export function computeOrder(items, promo) {
+// opts.now: time used for the campaign (default: now). Pass the order's
+// creation time when recomputing an order after the fact.
+export function computeOrder(items, promo, opts = {}) {
   const lines = [];
+  const unitPrices = [];
   let subtotal = 0;
   let itemCount = 0;
 
@@ -31,6 +35,7 @@ export function computeOrder(items, promo) {
     const qty = Math.max(1, Math.min(50, parseInt(item.qty, 10) || 0));
     subtotal += variant.price * qty;
     itemCount += qty;
+    for (let i = 0; i < qty; i++) unitPrices.push(variant.price);
     lines.push(
       `${qty} × ${product.name} — ${variant.label} (${product.code}) — $${(
         variant.price * qty
@@ -40,15 +45,22 @@ export function computeOrder(items, promo) {
 
   subtotal = round(subtotal);
 
-  // Promo codes and the volume tier never add up: the better one applies
-  // (a tie goes to the code, so influencer codes keep their attribution).
+  // Promo codes, the volume tier and the campaign never add up: the best one
+  // applies (a tie goes to the code). Codes stay on the order either way, so
+  // partner codes keep their attribution.
   const codeDiscount = getDiscount(promo, subtotal);
   const tier = getVolumeTier(itemCount);
   const tierDiscount = tier ? round((subtotal * tier.percent) / 100) : 0;
+  const campaign = campaignActive(opts.now) ? buy2Get1(unitPrices) : null;
+  const campaignDiscount = campaign ? campaign.discount : 0;
   let discount = 0;
   let discountSource = null;
   let discountLabel = null;
-  if (tierDiscount > codeDiscount) {
+  if (campaignDiscount > codeDiscount && campaignDiscount >= tierDiscount) {
+    discount = campaignDiscount;
+    discountSource = "campaign";
+    discountLabel = `${CAMPAIGN.name} (${campaign.free} free)`;
+  } else if (tierDiscount > codeDiscount) {
     discount = tierDiscount;
     discountSource = "volume";
     discountLabel = `Volume discount ${tier.percent}%`;
@@ -72,6 +84,7 @@ export function computeOrder(items, promo) {
     discountLabel,
     codeDiscount,
     tier,
+    campaignFree: campaign ? campaign.free : 0,
     shipping,
     total,
     freeShippingRemaining,

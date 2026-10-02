@@ -16,6 +16,7 @@ import { EMAIL_SIGNATURE } from "./business";
 import { getOrder, updateOrder, claimOnce, storeEnabled } from "./orderStore";
 import { shipUrl } from "./adminAuth";
 import { placedOrder, paidForOrder, safely } from "./omnisend";
+import { onOrderPaid } from "./giftCodes";
 
 const API = `${String(process.env.SUMUP_API_BASE || "https://api.sumup.com").replace(/\/+$/, "")}/v0.1`;
 export const SITE_URL = "https://www.cellovateadvancedpeptides.com";
@@ -206,6 +207,15 @@ ${EMAIL_SIGNATURE}`,
       }
     }
   }
+
+  // Gift codes: mark used, and send the campaign gift when earned.
+  await onOrderPaid({
+    orderId,
+    email: order.email,
+    codes: order.codes,
+    items: order.items,
+    createdAt: order.createdAt,
+  });
 
   if (order.customer && Array.isArray(order.items)) {
     const summary = order.pricing || { total: order.total };

@@ -16,6 +16,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { ApproxLocal } from "../context/CurrencyContext";
 import CheckoutForm from "../components/CheckoutForm";
 import CryptoPayment from "../components/CryptoPayment";
 import CardPayment from "../components/CardPayment";
@@ -199,6 +200,7 @@ function OrderSummary({ locked }) {
               USD
             </span>
             {money(total)}
+            <ApproxLocal usd={total} />
           </span>
         </div>
         {discount > 0 && (

@@ -11,6 +11,7 @@ import {
   Bitcoin,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { Price } from "../context/CurrencyContext";
 import { useRouter } from "next/router";
 import {
   FreeShippingBar,
@@ -63,7 +64,7 @@ export default function CartDrawer() {
             View cart · {itemCount} item{itemCount > 1 ? "s" : ""}
           </span>
           <span className="font-mono text-[14px] font-bold">
-            ${total.toFixed(2)}
+            <Price usd={total} />
           </span>
         </button>
       )}
@@ -105,7 +106,7 @@ export default function CartDrawer() {
                           </span>
                         </p>
                         <p className="text-[11px] text-black/35 font-mono mt-0.5">
-                          {l.qty} × ${l.price.toFixed(2)}
+                          {l.qty} × <Price usd={l.price} />
                         </p>
                         <LineUpgrade line={l} />
                       </div>
@@ -183,24 +184,24 @@ export default function CartDrawer() {
 
                   <div className="flex items-center justify-between text-[12px] text-black/45">
                     <span>Subtotal</span>
-                    <span className="font-mono">${subtotal.toFixed(2)}</span>
+                    <span className="font-mono"><Price usd={subtotal} /></span>
                   </div>
                   {discount > 0 && (
                     <div className="flex items-center justify-between text-[12px] text-[#0039CC]">
                       <span>Discount{discountLabel ? ` (${discountLabel})` : ""}</span>
-                      <span className="font-mono">-${discount.toFixed(2)}</span>
+                      <span className="font-mono">-<Price usd={discount} /></span>
                     </div>
                   )}
                   <div className="flex items-center justify-between text-[12px] text-black/45">
                     <span>Shipping</span>
                     <span className="font-mono">
-                      {shipping > 0 ? `$${shipping.toFixed(2)}` : "Free"}
+                      {shipping > 0 ? <Price usd={shipping} /> : "Free"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between pt-1">
                     <span className="font-display text-[13px]">TOTAL</span>
                     <span className="font-mono text-[16px] font-bold text-[#0039CC]">
-                      ${total.toFixed(2)}
+                      <Price usd={total} />
                     </span>
                   </div>
                   <button

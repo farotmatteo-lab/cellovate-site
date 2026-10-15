@@ -20,6 +20,7 @@ import {
   getLowestPrice,
 } from "../../lib/products";
 import { useCart } from "../../context/CartContext";
+import { Price } from "../../context/CurrencyContext";
 import { viewedProduct } from "../../lib/omnisendClient";
 import {
   getBestValueDose,
@@ -229,14 +230,14 @@ export default function ProductPage({ product, reviews }) {
 
               <div className="flex items-baseline gap-2 mb-4">
                 <span className="font-mono text-3xl font-bold text-[#0039CC]">
-                  ${variant.price.toFixed(2)}
+                  <Price usd={variant.price} />
                 </span>
                 <span className="text-[12px] text-black/30">
                   / {variant.dose} {variant.format.toLowerCase()}
                 </span>
                 {perMg && doses.length > 1 && (
                   <span className="text-[11.5px] text-black/40 font-mono ml-auto">
-                    ${perMg.toFixed(2)}/mg
+                    <Price usd={perMg} />/mg
                   </span>
                 )}
               </div>
@@ -288,7 +289,7 @@ export default function ProductPage({ product, reviews }) {
                     >
                       {v.format}
                       <span className="ml-1.5 font-mono text-[11px] opacity-80">
-                        ${v.price.toFixed(2)}
+                        <Price usd={v.price} />
                       </span>
                     </button>
                   ))}
@@ -301,7 +302,7 @@ export default function ProductPage({ product, reviews }) {
                   className="w-full inline-flex items-center justify-center gap-2.5 bg-[#0039CC] hover:bg-[#002FA8] text-white rounded-2xl py-4 text-[15px] font-semibold shadow-lg shadow-[#0039CC]/30 active:scale-[0.98] transition"
                 >
                   <ShoppingBag size={18} strokeWidth={2.25} />
-                  Add to cart — ${variant.price.toFixed(2)}
+                  Add to cart — <Price usd={variant.price} />
                 </button>
               ) : (
                 <div className="flex flex-col sm:flex-row gap-2.5">
@@ -341,12 +342,12 @@ export default function ProductPage({ product, reviews }) {
                   className="mt-3 w-full inline-flex items-center justify-center gap-1.5 text-[12.5px] font-medium text-[#0039CC] bg-[#0039CC]/[0.07] hover:bg-[#0039CC]/[0.12] rounded-xl py-2.5 transition"
                 >
                   <ArrowUpRight size={14} />
-                  {upgrade.variant.dose} is {upgrade.saving}% cheaper per mg (+$
-                  {upgrade.extra.toFixed(2)})
+                  {upgrade.variant.dose} is {upgrade.saving}% cheaper per mg (+
+                  <Price usd={upgrade.extra} />)
                 </button>
               )}
               <p className="mt-3 text-center text-[11.5px] text-black/40">
-                Free shipping from ${FREE_SHIPPING_THRESHOLD} · 5% off from 3 items · 10% off from 5
+                Free shipping from <Price usd={FREE_SHIPPING_THRESHOLD} /> · 5% off from 3 items · 10% off from 5
               </p>
 
               <div className="grid grid-cols-2 gap-3 mt-8">
@@ -418,7 +419,7 @@ export default function ProductPage({ product, reviews }) {
                           {p.name}
                         </h3>
                         <span className="font-mono text-[12px] text-[#0039CC] font-semibold shrink-0">
-                          from ${getLowestPrice(p).toFixed(2)}
+                          from <Price usd={getLowestPrice(p)} />
                         </span>
                       </div>
                       <p className="text-[11.5px] text-black/40 mt-1 leading-snug">
@@ -436,8 +437,8 @@ export default function ProductPage({ product, reviews }) {
                       ) : (
                         <>
                           <Plus size={13} strokeWidth={2.5} /> Add{" "}
-                          {getDefaultVariant(p).label} · $
-                          {getDefaultVariant(p).price.toFixed(2)}
+                          {getDefaultVariant(p).label} ·{" "}
+                          <Price usd={getDefaultVariant(p).price} />
                         </>
                       )}
                     </button>

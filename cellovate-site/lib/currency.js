@@ -27,15 +27,23 @@ export function currencyForCountry(country) {
 }
 
 // usd: amount in USD. ctx: { currency, rate } where rate = units of
-// "currency" for 1 USD. Large-unit currencies (THB, JPY...) are rounded to
-// whole numbers so prices read cleanly (e.g. 4,290 instead of 4,288.57).
+// "currency" for 1 USD. Converted prices are rounded to "retail" looking
+// amounts (display only, orders are charged in USD):
+//  - EUR, GBP, CHF... -> nearest .99 (76.23 -> 75.99)
+//  - THB, JPY... (no decimals) -> nearest 10 above 100 (4,815 -> 4,820)
+// USD prices are shown exactly as stored.
 export function formatPrice(usd, ctx) {
   const currency = (ctx && ctx.currency) || BASE_CURRENCY;
   const rate = currency === BASE_CURRENCY ? 1 : Number(ctx && ctx.rate) || 1;
   const value = Number(usd || 0) * rate;
   const whole = currency !== BASE_CURRENCY && rate >= 10;
   const digits = whole ? 0 : 2;
-  const amount = whole ? Math.round(value) : value;
+  let amount = value;
+  if (currency !== BASE_CURRENCY) {
+    if (whole) amount = value >= 100 ? Math.round(value / 10) * 10 : Math.round(value);
+    else if (value >= 1) amount = Math.max(0.99, Math.round(value) - 0.01);
+    else amount = Math.round(value * 100) / 100;
+  }
   try {
     const opts = {
       style: "currency",

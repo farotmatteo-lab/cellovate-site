@@ -37,7 +37,8 @@ export function CurrencyProvider({ children }) {
         if (!d || !d.currency) return;
         const next = { currency: d.currency, rate: Number(d.rate) || 1 };
         setState(next);
-        try {
+        // A ?country= test override is not remembered.
+        if (!override) try {
           window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...next, at: Date.now() }));
         } catch (e) {}
       })

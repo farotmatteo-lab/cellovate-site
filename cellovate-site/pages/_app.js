@@ -5,6 +5,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { pageViewed } from "../lib/omnisendClient";
 import { CartProvider } from "../context/CartContext";
+import { CurrencyProvider } from "../context/CurrencyContext";
 import CartDrawer from "../components/CartDrawer";
 import { AnnouncementBar, SiteFooter } from "../components/SiteChrome";
 import EmailPopup from "../components/EmailPopup";
@@ -30,6 +31,7 @@ export default function App({ Component, pageProps }) {
   // Owner pages: no cart, no signup popup, no tracking.
   const isAdminPage = router.pathname.startsWith("/admin");
   return (
+    <CurrencyProvider>
     <CartProvider>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" key="viewport" />
@@ -61,5 +63,6 @@ omnisend.push(["track", "$pageViewed"]);
         </Script>
       )}
     </CartProvider>
+    </CurrencyProvider>
   );
 }

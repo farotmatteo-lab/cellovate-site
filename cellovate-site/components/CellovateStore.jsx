@@ -9,6 +9,7 @@ import {
   getFormats,
 } from "../lib/products";
 import { useCart } from "../context/CartContext";
+import { Price } from "../context/CurrencyContext";
 
 function ProductCard({ p, cart, addToCart, removeFromCart }) {
   const [variantKey, setVariantKey] = useState(getDefaultVariant(p).key);
@@ -61,7 +62,7 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
           </h3>
         </Link>
         <span className="font-mono text-[13px] text-[#0039CC] font-semibold shrink-0">
-          ${variant.price.toFixed(2)}
+          <Price usd={variant.price} />
         </span>
       </div>
       <p className="text-[11px] text-black/35 font-mono mt-1">
@@ -114,7 +115,7 @@ function ProductCard({ p, cart, addToCart, removeFromCart }) {
             className="w-full inline-flex items-center justify-center gap-2 bg-[#0039CC] hover:bg-[#002FA8] text-white rounded-xl py-3 text-[13px] font-semibold shadow-md shadow-[#0039CC]/25 active:scale-[0.98] transition"
           >
             <ShoppingBag size={15} strokeWidth={2.25} />
-            Add to cart · ${variant.price.toFixed(2)}
+            Add to cart · <Price usd={variant.price} />
           </button>
         ) : (
           <div className="flex items-center gap-2">

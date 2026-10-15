@@ -2,13 +2,14 @@
 import { Truck, Percent, ArrowUpRight, Plus, Check, Gift } from "lucide-react";
 import { CAMPAIGN, campaignActive } from "../lib/campaign";
 import { useCart } from "../context/CartContext";
+import { Price } from "../context/CurrencyContext";
 import {
   FREE_SHIPPING_THRESHOLD,
   getSizeUpgrade,
   getCartSuggestions,
 } from "../lib/upsell";
 
-const money = (n) => `$${Number(n || 0).toFixed(2)}`;
+const money = (n) => <Price usd={n} />;
 
 // "Add $X more for free shipping" + progress bar.
 export function FreeShippingBar() {

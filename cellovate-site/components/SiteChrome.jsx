@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CAMPAIGN, campaignActive } from "../lib/campaign";
 import { FREE_SHIPPING_THRESHOLD } from "../lib/upsell";
+import { Price } from "../context/CurrencyContext";
 import { BUSINESS } from "../lib/business";
 
 export function AnnouncementBar() {
@@ -24,7 +25,7 @@ export function AnnouncementBar() {
   }
   return (
     <div className="bg-[#0A0A0A] text-white text-center text-[11.5px] sm:text-[12px] font-medium px-4 py-2 tracking-wide">
-      Free shipping over ${FREE_SHIPPING_THRESHOLD}
+      Free shipping over <Price usd={FREE_SHIPPING_THRESHOLD} />
       <span className="mx-2 text-white/40">·</span>
       <Link href="/quality" className="hover:underline">
         Third-party lab tested

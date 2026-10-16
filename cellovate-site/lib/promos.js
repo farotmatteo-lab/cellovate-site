@@ -17,6 +17,7 @@
 // A combination reaching a $0 total skips the crypto checkout and is placed
 // through /api/free-order instead.
 export const PROMOS = {
+  PIXELPLUG10: { code: "PIXELPLUG10", percent: 10, freeShipping: false, influencer: true, label: "10% off products" }, // Influencer code (Pixelplug).
   ROLALA: {
     code: "ROLALA",
     percent: 100,

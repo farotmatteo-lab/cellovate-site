@@ -4,6 +4,7 @@ import { getPromo, normaliseCodes, combinePromos } from "../lib/promos";
 import { computeOrder } from "../lib/pricing";
 import { getNextVolumeTier } from "../lib/upsell";
 import { addedToCart } from "../lib/omnisendClient";
+import { track } from "../lib/track";
 
 const CartContext = createContext(null);
 
@@ -81,6 +82,7 @@ export function CartProvider({ children }) {
   const addToCart = (id, variantKey) => {
     const key = lineKey(id, variantKey);
     setCart((c) => ({ ...c, [key]: (c[key] || 0) + 1 }));
+    track("cart", id);
     // Omnisend "added product to cart" (abandoned cart automation).
     const next = { ...cart, [key]: (cart[key] || 0) + 1 };
     addedToCart({

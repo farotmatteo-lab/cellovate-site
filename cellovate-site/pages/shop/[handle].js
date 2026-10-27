@@ -22,6 +22,7 @@ import {
 import { useCart } from "../../context/CartContext";
 import { Price } from "../../context/CurrencyContext";
 import { viewedProduct } from "../../lib/omnisendClient";
+import { track } from "../../lib/track";
 import {
   getBestValueDose,
   getSizeUpgrade,
@@ -65,6 +66,7 @@ export default function ProductPage({ product, reviews }) {
   // Omnisend "viewed product" (product abandonment automation), once per product.
   useEffect(() => {
     viewedProduct(product, getDefaultVariant(product));
+    track("product", product.id);
   }, [product.id]); // eslint-disable-line react-hooks/exhaustive-deps
   const mainImage = pickedImage || variant.image;
   const mainAlt =

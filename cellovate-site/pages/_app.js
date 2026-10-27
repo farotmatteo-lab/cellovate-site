@@ -4,6 +4,7 @@ import Script from "next/script";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { pageViewed } from "../lib/omnisendClient";
+import { trackPage } from "../lib/track";
 import { CartProvider } from "../context/CartContext";
 import { CurrencyProvider } from "../context/CurrencyContext";
 import CartDrawer from "../components/CartDrawer";
@@ -25,6 +26,17 @@ export default function App({ Component, pageProps }) {
   // reported here.
   useEffect(() => {
     const onRoute = () => pageViewed();
+    router.events.on("routeChangeComplete", onRoute);
+    return () => router.events.off("routeChangeComplete", onRoute);
+  }, [router.events]);
+  // Site statistics (/admin/stats): visits and page views, not on owner or
+  // partner pages.
+  useEffect(() => {
+    const isPrivate = (path) => /^\/(admin|partner)(\/|$|\?)/.test(path);
+    if (!isPrivate(window.location.pathname)) trackPage();
+    const onRoute = (url) => {
+      if (!isPrivate(url)) trackPage();
+    };
     router.events.on("routeChangeComplete", onRoute);
     return () => router.events.off("routeChangeComplete", onRoute);
   }, [router.events]);

@@ -21,6 +21,7 @@ import CheckoutForm from "../components/CheckoutForm";
 import CryptoPayment from "../components/CryptoPayment";
 import CardPayment from "../components/CardPayment";
 import { identify } from "../lib/omnisendClient";
+import { track } from "../lib/track";
 import {
   FreeShippingBar,
   VolumeNudge,
@@ -373,6 +374,16 @@ export default function CheckoutPage() {
   // Card payments (SumUp) are offered only when configured on the server.
   const [cardEnabled, setCardEnabled] = useState(false);
   const [method, setMethod] = useState("card");
+  // Site statistics: one "checkout started" per cart.
+  useEffect(() => {
+    if (!hydrated || !lines?.length || !orderId) return;
+    try {
+      const k = `cv_co:${orderId}`;
+      if (window.sessionStorage.getItem(k)) return;
+      window.sessionStorage.setItem(k, "1");
+    } catch {}
+    track("checkout");
+  }, [hydrated, lines?.length, orderId]);
   useEffect(() => {
     fetch("/api/card-config")
       .then((r) => r.json())

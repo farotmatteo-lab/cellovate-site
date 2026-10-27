@@ -18,6 +18,7 @@
 // through /api/free-order instead.
 export const PROMOS = {
   PIXELPLUG: { code: "PIXELPLUG", percent: 10, freeShipping: false, influencer: true, label: "10% off products" }, // Influencer code (Pixelplug).
+  THEWIZZ: { code: "THEWIZZ", percent: 10, freeShipping: false, influencer: true, label: "10% off products" }, // Influencer code (TheWizz).
   ROLALA: {
     code: "ROLALA",
     percent: 100,

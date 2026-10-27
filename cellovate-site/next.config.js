@@ -18,10 +18,10 @@ const nextConfig = {
         destination: "https://www.cellovateadvancedpeptides.com/:path*",
         permanent: true,
       },
-      // GHK-Cu is sold in 100mg; the old 50mg URL keeps working.
+      // GHK-Cu is sold in 50mg; the old 100mg URL keeps working.
       {
-        source: "/shop/ghk-cu-50mg",
-        destination: "/shop/ghk-cu-100mg",
+        source: "/shop/ghk-cu-100mg",
+        destination: "/shop/ghk-cu-50mg",
         permanent: true,
       },
     ];

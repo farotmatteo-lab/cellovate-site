@@ -4,6 +4,7 @@
 export const PARTNERS = [
   { code: "RND10", email: "randy2lowe@gmail.com", name: "Randy" },
   { code: "PIXELPLUG", email: "pixelplugproductions@gmail.com", name: "Pixelplug" },
+  { code: "GIBBO", email: "ryangibson21@hotmail.co.uk", name: "Gibbo" },
   // Owner test account (no real code, no sales)
   { code: "TEST", email: "farotmatteo@gmail.com", name: "Matteo" },
 ];

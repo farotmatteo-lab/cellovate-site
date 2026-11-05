@@ -10,7 +10,10 @@ const DEFAULT_IMAGE = `${SITE_URL}/hero-poster.jpg`;
 
 const abs = (src) => (!src ? DEFAULT_IMAGE : src.startsWith("http") ? src : `${SITE_URL}${src}`);
 
-export default function Seo({ title, description, image, type = "website", jsonLd, noindex }) {
+// alternates: [{ hreflang, path }] for pages published in several languages
+// (each version lists all of them, itself included, plus x-default).
+// locale: Open Graph locale, e.g. "th_TH".
+export default function Seo({ title, description, image, type = "website", jsonLd, noindex, alternates, locale }) {
   const { asPath } = useRouter();
   const path = (asPath || "/").split(/[?#]/)[0];
   const url = `${SITE_URL}${path === "/" ? "" : path}`;
@@ -22,6 +25,15 @@ export default function Seo({ title, description, image, type = "website", jsonL
       {description && <meta name="description" content={description} key="description" />}
       <link rel="canonical" href={url} key="canonical" />
       {noindex && <meta name="robots" content="noindex" key="robots" />}
+      {(alternates || []).map((a) => (
+        <link
+          key={`alt-${a.hreflang}`}
+          rel="alternate"
+          hrefLang={a.hreflang}
+          href={`${SITE_URL}${a.path}`}
+        />
+      ))}
+      {locale && <meta property="og:locale" content={locale} key="og:locale" />}
       <meta property="og:site_name" content={SITE_NAME} key="og:site_name" />
       <meta property="og:type" content={type} key="og:type" />
       <meta property="og:title" content={title} key="og:title" />

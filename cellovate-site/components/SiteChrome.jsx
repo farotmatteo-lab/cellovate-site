@@ -39,6 +39,7 @@ const LINKS = [
   ["Quality", "/quality"],
   ["Blog", "/blog"],
   ["Wholesale", "/wholesale"],
+  ["Delivery in Thailand", "/en/peptides/thailand"],
   ["Contact", "/contact"],
   ["Terms of Sale", "/terms"],
   ["Refund Policy", "/refund-policy"],

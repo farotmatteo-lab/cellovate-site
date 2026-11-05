@@ -18,6 +18,12 @@ const nextConfig = {
         destination: "https://www.cellovateadvancedpeptides.com/:path*",
         permanent: true,
       },
+      // A literal "/shop/[handle]" URL leaked into Google's crawl.
+      {
+        source: "/shop/%5Bhandle%5D",
+        destination: "/shop",
+        permanent: true,
+      },
       // GHK-Cu is sold in 50mg; the old 100mg URL keeps working.
       {
         source: "/shop/ghk-cu-100mg",

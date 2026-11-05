@@ -37,13 +37,19 @@ import { getProductReviews } from "../../lib/reviews";
 export async function getStaticPaths() {
   return {
     paths: VISIBLE_PRODUCTS.map((p) => ({ params: { handle: p.handle } })),
-    fallback: false,
+    // Hidden (out-of-stock) products are resolved on demand below, so their
+    // old URLs send visitors to the shop instead of a 404.
+    fallback: "blocking",
   };
 }
 
 export async function getStaticProps({ params }) {
   const product = getProductByHandle(params.handle);
-  if (!product || product.draft) return { notFound: true };
+  if (!product) return { notFound: true };
+  // Temporary redirect: the product page comes back when it is restocked.
+  if (product.draft) {
+    return { redirect: { destination: "/shop", permanent: false }, revalidate: 3600 };
+  }
   const reviews = await getProductReviews(product.handle);
   // Re-built at most hourly, and right away when a review is approved.
   return { props: { product, reviews }, revalidate: 3600 };

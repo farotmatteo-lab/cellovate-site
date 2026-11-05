@@ -43,7 +43,7 @@ async function send(path, body) {
   return data;
 }
 
-async function command(...args) {
+export async function command(...args) {
   const data = await send("", args.map(String));
   if (data?.error) throw new Error(`Redis: ${data.error}`);
   return data?.result;

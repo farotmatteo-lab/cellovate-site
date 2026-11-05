@@ -4,6 +4,7 @@ import { EMAIL_SIGNATURE } from "../../lib/business";
 import { paidForOrder, decodeCart, safely } from "../../lib/omnisend";
 import { promoFromRequest } from "../../lib/promos";
 import { computeOrder } from "../../lib/pricing";
+import { consumeThStock } from "../../lib/stock";
 import { updateOrder, getOrder } from "../../lib/orderStore";
 import { onOrderPaid } from "../../lib/giftCodes";
 import { shipUrl } from "../../lib/adminAuth";
@@ -201,6 +202,7 @@ export default async function handler(req, res) {
     const { items, codes } = decodeCart(payload.order_description);
     const record = payload.order_id ? await getOrder(String(payload.order_id)) : null;
     const placedAt = record?.createdAt;
+    await consumeThStock(record);
 
     // Gift codes: mark used, and send the campaign gift when earned.
     await onOrderPaid({

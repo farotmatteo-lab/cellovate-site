@@ -125,6 +125,9 @@ export default function AdminHome({ mode, orders, storeReady, loadError }) {
           <a href="/admin/stats" className="text-[12px] text-white/60 hover:text-white">
             Stats
           </a>
+          <a href="/admin/stock" className="text-[12px] text-white/60 hover:text-white">
+            Stock TH
+          </a>
           <a href="/admin/wholesale" className="text-[12px] text-white/60 hover:text-white">
             Wholesale
           </a>

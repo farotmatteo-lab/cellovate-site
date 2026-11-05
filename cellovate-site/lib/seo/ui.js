@@ -23,6 +23,7 @@ export const UI = {
     areas: "Delivery areas",
     otherCities: (country) => `Other cities in ${country}`,
     language: "Language",
+    stockNote: "These times and free delivery apply to items in our Thailand stock, shown as “In stock in Thailand” on each product page. Other items ship from our factory in 7–10 business days with standard shipping.",
     ruo: "All Cellovate products are supplied for laboratory research use only. They are not for human or veterinary use, and nothing on this page is medical advice.",
   },
   th: {
@@ -47,6 +48,7 @@ export const UI = {
     areas: "พื้นที่จัดส่ง",
     otherCities: (country) => `เมืองอื่นๆ ใน${country}`,
     language: "ภาษา",
+    stockNote: "ระยะเวลาและการจัดส่งฟรีนี้ใช้กับสินค้าที่มีในสต็อกประเทศไทย ซึ่งแสดงว่า “In stock in Thailand” ในหน้าสินค้า สินค้าอื่นจัดส่งจากโรงงานภายใน 7–10 วันทำการ ตามค่าจัดส่งปกติ",
     ruo: "สินค้าทุกรายการของ Cellovate จำหน่ายเพื่อใช้ในงานวิจัยในห้องปฏิบัติการเท่านั้น ไม่ใช่สำหรับมนุษย์หรือสัตว์ และเนื้อหาในหน้านี้ไม่ใช่คำแนะนำทางการแพทย์",
   },
 };

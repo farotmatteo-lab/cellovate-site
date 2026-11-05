@@ -14,6 +14,7 @@ import { promoFromRequest } from "../../lib/promos";
 import { checkGiftCodes } from "../../lib/giftCodes";
 import { placedOrder, safely, encodeCart } from "../../lib/omnisend";
 import { computeOrder, formatTotals } from "../../lib/pricing";
+import { getThStock } from "../../lib/stock";
 import { validateCustomer, formatAddress } from "../../lib/countries";
 import { saveOrder } from "../../lib/orderStore";
 
@@ -111,7 +112,10 @@ export default async function handler(req, res) {
   const giftError = await checkGiftCodes(promo?.codes);
   if (giftError) return res.status(400).json({ error: giftError });
 
-  const order = computeOrder(items, promo);
+  const order = computeOrder(items, promo, {
+    country: customer?.country,
+    stock: await getThStock(),
+  });
   if (!order.lines.length) {
     return res.status(400).json({ error: "Cart is empty." });
   }
@@ -185,6 +189,12 @@ export default async function handler(req, res) {
       lines: order.lines,
       totals: formatTotals(order),
       total: order.total,
+      fulfillment: order.fulfillment,
+      items: (items || []).map((it) => ({
+        id: it.id,
+        variantKey: it.variantKey,
+        qty: parseInt(it.qty, 10) || 1,
+      })),
       codes: promo?.codes || [],
       paymentId: data.payment_id,
       payCurrency: data.pay_currency,

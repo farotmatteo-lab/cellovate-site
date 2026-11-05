@@ -10,6 +10,7 @@ import { promoFromRequest } from "../../lib/promos";
 import { checkGiftCodes } from "../../lib/giftCodes";
 import { placedOrder, paidForOrder, safely } from "../../lib/omnisend";
 import { computeOrder, formatTotals } from "../../lib/pricing";
+import { getThStock, consumeThStock } from "../../lib/stock";
 import { validateCustomer, formatAddress } from "../../lib/countries";
 import { saveOrder } from "../../lib/orderStore";
 import { shipUrl } from "../../lib/adminAuth";
@@ -39,7 +40,10 @@ export default async function handler(req, res) {
   const giftError = await checkGiftCodes(promo?.codes);
   if (giftError) return res.status(400).json({ error: giftError });
 
-  const order = computeOrder(items, promo);
+  const order = computeOrder(items, promo, {
+    country: customer?.country,
+    stock: await getThStock(),
+  });
 
   if (!order.lines.length) {
     return res.status(400).json({ error: "Cart is empty." });
@@ -137,7 +141,7 @@ ${EMAIL_SIGNATURE}`,
     console.error("Free order customer confirmation failed", email, err);
   }
 
-  await saveOrder({
+  const record = {
     id: reference,
     status: "paid",
     paidAt: Date.now(),
@@ -150,7 +154,15 @@ ${EMAIL_SIGNATURE}`,
     total: order.total,
     codes: promo.codes || [promo.code],
     payCurrency: "free",
-  });
+    fulfillment: order.fulfillment,
+    items: (items || []).map((it) => ({
+      id: it.id,
+      variantKey: it.variantKey,
+      qty: parseInt(it.qty, 10) || 1,
+    })),
+  };
+  await saveOrder(record);
+  await consumeThStock(record);
 
   await safely("placed order", () =>
     placedOrder({ orderId: reference, customer, items, order, paid: true })

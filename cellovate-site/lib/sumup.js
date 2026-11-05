@@ -14,6 +14,7 @@
 import nodemailer from "nodemailer";
 import { EMAIL_SIGNATURE } from "./business";
 import { getOrder, updateOrder, claimOnce, storeEnabled } from "./orderStore";
+import { consumeThStock } from "./stock";
 import { shipUrl } from "./adminAuth";
 import { placedOrder, paidForOrder, safely } from "./omnisend";
 import { onOrderPaid } from "./giftCodes";
@@ -151,6 +152,7 @@ export async function finalizeCheckout(checkoutId) {
     chargeCurrency: checkout.currency,
   }));
   if (!order) return { status: "PAID", orderId };
+  await consumeThStock(order);
 
   const mail = smtp();
   if (mail) {

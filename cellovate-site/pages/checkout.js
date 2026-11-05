@@ -18,6 +18,7 @@ import {
 import { useCart } from "../context/CartContext";
 import { ApproxLocal } from "../context/CurrencyContext";
 import CheckoutForm from "../components/CheckoutForm";
+import { CartFulfillmentNotice } from "../components/StockNotice";
 import CryptoPayment from "../components/CryptoPayment";
 import CardPayment from "../components/CardPayment";
 import { identify } from "../lib/omnisendClient";
@@ -105,6 +106,9 @@ function OrderSummary({ locked }) {
         ))}
       </ul>
 
+      <div className="mt-5">
+        <CartFulfillmentNotice />
+      </div>
       {!locked && (
         <div className="mt-5 space-y-3">
           <FreeShippingBar />
@@ -368,6 +372,11 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [customer, setCustomer] = useState(null);
   const [savedCustomer, setSavedCustomer] = useState(null);
+  // Shipping is priced for the address country once it is entered.
+  const { setShipCountry } = cart;
+  useEffect(() => {
+    setShipCountry(customer?.country || null);
+  }, [customer?.country]); // eslint-disable-line react-hooks/exhaustive-deps
   const [locked, setLocked] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [done, setDone] = useState(null); // snapshot shown after the order

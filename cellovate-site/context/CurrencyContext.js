@@ -8,13 +8,14 @@ const STORAGE_KEY = "cellovate_currency_v1";
 const MAX_AGE_MS = 6 * 60 * 60 * 1000;
 
 const CurrencyContext = createContext({
+  country: "",
   currency: BASE_CURRENCY,
   rate: 1,
   fmt: (usd) => formatPrice(usd),
 });
 
 export function CurrencyProvider({ children }) {
-  const [state, setState] = useState({ currency: BASE_CURRENCY, rate: 1 });
+  const [state, setState] = useState({ country: "", currency: BASE_CURRENCY, rate: 1 });
 
   useEffect(() => {
     let override = null;
@@ -24,8 +25,8 @@ export function CurrencyProvider({ children }) {
     if (!override) {
       try {
         const cached = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "null");
-        if (cached && cached.currency && Date.now() - cached.at < MAX_AGE_MS) {
-          setState({ currency: cached.currency, rate: Number(cached.rate) || 1 });
+        if (cached && cached.currency && cached.country !== undefined && Date.now() - cached.at < MAX_AGE_MS) {
+          setState({ country: cached.country, currency: cached.currency, rate: Number(cached.rate) || 1 });
           return;
         }
       } catch (e) {}
@@ -35,7 +36,7 @@ export function CurrencyProvider({ children }) {
       .then((r) => r.json())
       .then((d) => {
         if (!d || !d.currency) return;
-        const next = { currency: d.currency, rate: Number(d.rate) || 1 };
+        const next = { country: d.country || "", currency: d.currency, rate: Number(d.rate) || 1 };
         setState(next);
         // A ?country= test override is not remembered.
         if (!override) try {

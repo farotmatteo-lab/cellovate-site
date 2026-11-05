@@ -20,6 +20,7 @@ import {
   CartSuggestions,
   PromoNotice,
 } from "./Upsell";
+import { CartFulfillmentNotice } from "./StockNotice";
 
 export default function CartDrawer() {
   const {
@@ -130,6 +131,7 @@ export default function CartDrawer() {
                     </div>
                   ))}
                   <div className="pt-2 space-y-3">
+                    <CartFulfillmentNotice />
                     <FreeShippingBar />
                     <VolumeNudge />
                     <CartSuggestions />

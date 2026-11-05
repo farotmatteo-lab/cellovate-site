@@ -20,6 +20,7 @@ import {
   getLowestPrice,
 } from "../../lib/products";
 import { useCart } from "../../context/CartContext";
+import { ProductAvailability } from "../../components/StockNotice";
 import { Price } from "../../context/CurrencyContext";
 import { viewedProduct } from "../../lib/omnisendClient";
 import { track } from "../../lib/track";
@@ -343,6 +344,10 @@ export default function ProductPage({ product, reviews }) {
                   </Link>
                 </div>
               )}
+
+              <div className="mt-3">
+                <ProductAvailability product={product} variant={variant} />
+              </div>
 
               {upgrade && (
                 <button

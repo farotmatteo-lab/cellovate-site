@@ -5,6 +5,7 @@ import { computeOrder } from "../lib/pricing";
 import { getNextVolumeTier } from "../lib/upsell";
 import { addedToCart } from "../lib/omnisendClient";
 import { track } from "../lib/track";
+import { useCurrency } from "./CurrencyContext";
 
 const CartContext = createContext(null);
 
@@ -37,6 +38,18 @@ export function CartProvider({ children }) {
   const [hydrated, setHydrated] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkout, setCheckout] = useState(false);
+  // Thailand stock and the country used to price shipping: the checkout
+  // address once entered, otherwise the visitor's location.
+  const { country: geoCountry } = useCurrency();
+  const [shipCountry, setShipCountry] = useState(null);
+  const [thStock, setThStock] = useState({});
+  useEffect(() => {
+    fetch("/api/stock")
+      .then((r) => r.json())
+      .then((d) => d && d.stock && setThStock(d.stock))
+      .catch(() => {});
+  }, []);
+  const country = shipCountry || geoCountry;
   const makeOrderId = () =>
     `CEL-${Math.floor(100000 + Math.random() * 900000)}`;
   const [orderId, setOrderId] = useState(makeOrderId);
@@ -209,9 +222,10 @@ export function CartProvider({ children }) {
     () =>
       computeOrder(
         lines.map((l) => ({ id: l.id, variantKey: l.variant.key, qty: l.qty })),
-        promo
+        promo,
+        { country, stock: thStock }
       ),
-    [lines, promo?.code] // eslint-disable-line react-hooks/exhaustive-deps
+    [lines, promo?.code, country, thStock] // eslint-disable-line react-hooks/exhaustive-deps
   );
   const {
     itemCount,
@@ -228,6 +242,11 @@ export function CartProvider({ children }) {
   const nextTier = getNextVolumeTier(itemCount);
 
   const value = {
+    country,
+    setShipCountry,
+    thStock,
+    fulfillment: order.fulfillment,
+    factoryKeys: order.factoryKeys,
     cart,
     addToCart,
     removeFromCart,

@@ -8,6 +8,7 @@ import { checkGiftCodes } from "../../lib/giftCodes";
 import { computeOrder, formatTotals } from "../../lib/pricing";
 import { validateCustomer, formatAddress } from "../../lib/countries";
 import { saveOrder, getOrder } from "../../lib/orderStore";
+import { getThStock } from "../../lib/stock";
 import {
   sumupEnabled,
   sumupConfig,
@@ -34,7 +35,10 @@ export default async function handler(req, res) {
   const giftError = await checkGiftCodes(promo?.codes);
   if (giftError) return res.status(400).json({ error: giftError });
 
-  const order = computeOrder(items, promo);
+  const order = computeOrder(items, promo, {
+    country: customer?.country,
+    stock: await getThStock(),
+  });
   if (!order.lines.length) return res.status(400).json({ error: "Cart is empty." });
   if (order.total <= 0) {
     return res.status(400).json({ error: "This order is free — no payment needed." });
@@ -78,6 +82,7 @@ export default async function handler(req, res) {
       notes: customer.notes || "",
       lines: order.lines,
       totals: formatTotals(order),
+      fulfillment: order.fulfillment,
       total: order.total,
       pricing: {
         total: order.total,

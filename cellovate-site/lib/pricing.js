@@ -5,6 +5,7 @@ import { PRODUCTS, getVariant } from "./products";
 import { getDiscount } from "./promos";
 import { FREE_SHIPPING_THRESHOLD, getVolumeTier } from "./upsell";
 import { CAMPAIGN, campaignActive, buy2Get1 } from "./campaign";
+import { planFulfillment } from "./fulfillment";
 
 // Flat shipping fee per order, in USD. Waived by promo codes with
 // `freeShipping: true` and when the products total (after discount) reaches
@@ -22,6 +23,8 @@ const round = (n) => Math.round(n * 100) / 100;
 // items: [{ id, variantKey, qty }]
 // opts.now: time used for the campaign (default: now). Pass the order's
 // creation time when recomputing an order after the fact.
+// opts.country + opts.stock: shipping country and Thailand stock; an order
+// to Thailand fully covered by that stock ships free (lib/fulfillment.js).
 export function computeOrder(items, promo, opts = {}) {
   const lines = [];
   const unitPrices = [];
@@ -71,11 +74,15 @@ export function computeOrder(items, promo, opts = {}) {
   }
 
   const productsTotal = round(Math.max(0, subtotal - discount));
-  const shipping = getShipping(promo, itemCount, productsTotal);
+  const { fulfillment, factoryKeys } = planFulfillment(items, opts.country, opts.stock);
+  const shipping =
+    fulfillment === "thailand" && itemCount ? 0 : getShipping(promo, itemCount, productsTotal);
   const total = round(productsTotal + shipping);
   const freeShippingRemaining =
     shipping > 0 ? round(FREE_SHIPPING_THRESHOLD - productsTotal) : 0;
   return {
+    fulfillment,
+    factoryKeys,
     lines,
     itemCount,
     subtotal,
@@ -92,8 +99,9 @@ export function computeOrder(items, promo, opts = {}) {
 }
 
 // Text block used in order emails.
-export function formatTotals({ subtotal, discount, discountLabel, shipping, total }) {
+export function formatTotals({ subtotal, discount, discountLabel, shipping, total, fulfillment }) {
   return [
+    fulfillment === "thailand" ? "Ships from: THAILAND STOCK" : null,
     `Subtotal: $${subtotal.toFixed(2)}`,
     discount > 0
       ? `Discount${discountLabel ? ` (${discountLabel})` : ""}: -$${discount.toFixed(2)}`

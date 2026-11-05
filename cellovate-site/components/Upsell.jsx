@@ -13,8 +13,9 @@ const money = (n) => <Price usd={n} />;
 
 // "Add $X more for free shipping" + progress bar.
 export function FreeShippingBar() {
-  const { lines, shipping, freeShippingRemaining, promo } = useCart();
-  if (!lines.length || promo?.freeShipping) return null;
+  const { lines, shipping, freeShippingRemaining, promo, fulfillment } = useCart();
+  // Thailand-stock orders already ship free (see StockNotice).
+  if (!lines.length || promo?.freeShipping || fulfillment === "thailand") return null;
   const unlocked = shipping === 0;
   const pct = unlocked
     ? 100

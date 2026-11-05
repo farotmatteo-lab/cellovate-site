@@ -50,12 +50,13 @@ export async function getStaticProps({ params }) {
       countryName: hub ? hub.name[lang] : place.name[lang],
       siblings,
       featured,
+      thailand: place.country === "thailand",
       c,
     },
   };
 }
 
-export default function PlacePage({ lang, slug, type, name, locales, hub, countryName, siblings, featured, c }) {
+export default function PlacePage({ lang, slug, type, name, locales, hub, countryName, siblings, featured, thailand, c }) {
   const t = UI[lang] || UI[DEFAULT_LOCALE];
   const path = placePath(lang, slug);
 
@@ -183,6 +184,9 @@ export default function PlacePage({ lang, slug, type, name, locales, hub, countr
               <Truck size={20} className="text-[#0039CC] mb-3" />
               <h2 className="font-display text-[15px] mb-1.5">{t.delivery}</h2>
               <p className="text-[13px] text-black/55 leading-relaxed">{c.delivery}</p>
+              {thailand && t.stockNote && (
+                <p className="text-[11.5px] text-black/40 leading-relaxed mt-2">{t.stockNote}</p>
+              )}
             </div>
             <div className="bg-white border border-black/8 rounded-2xl p-6">
               <CreditCard size={20} className="text-[#0039CC] mb-3" />

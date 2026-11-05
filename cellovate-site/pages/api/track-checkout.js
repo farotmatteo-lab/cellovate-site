@@ -7,6 +7,7 @@
 // purchase.
 import { promoFromRequest } from "../../lib/promos";
 import { computeOrder } from "../../lib/pricing";
+import { getThStock } from "../../lib/stock";
 import { validateCustomer } from "../../lib/countries";
 import { upsertContact, startedCheckout, safely } from "../../lib/omnisend";
 
@@ -22,7 +23,10 @@ export default async function handler(req, res) {
     return res.status(200).json({ tracked: false });
   }
 
-  const order = computeOrder(items, promo);
+  const order = computeOrder(items, promo, {
+    country: customer?.country,
+    stock: await getThStock(),
+  });
   if (!order.lines.length) return res.status(200).json({ tracked: false });
 
   await safely("contact", () => upsertContact(customer));

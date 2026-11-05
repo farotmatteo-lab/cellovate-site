@@ -10,6 +10,7 @@ import { CurrencyProvider } from "../context/CurrencyContext";
 import CartDrawer from "../components/CartDrawer";
 import { AnnouncementBar, SiteFooter } from "../components/SiteChrome";
 import EmailPopup from "../components/EmailPopup";
+import WhatsAppButton from "../components/WhatsAppButton";
 
 // Omnisend brand ID (public, not a secret). Set NEXT_PUBLIC_OMNISEND_BRAND_ID
 // in Vercel to override. The snippet loads signup forms and page tracking.
@@ -65,6 +66,7 @@ export default function App({ Component, pageProps }) {
       <Component {...pageProps} />
       {!isAdminPage && <SiteFooter />}
       {!isAdminPage && <CartDrawer />}
+      {!isAdminPage && <WhatsAppButton />}
       {!isAdminPage && <EmailPopup />}
       {OMNISEND_BRAND_ID && !isAdminPage && (
         <Script id="omnisend-snippet" strategy="afterInteractive">

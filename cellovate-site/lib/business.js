@@ -6,6 +6,8 @@ export const BUSINESS = {
   address: "8206 Louisiana Blvd NE, Ste A #5219, Albuquerque, NM 87113, United States",
   email: "info@cellovateadvancedpeptides.com",
   website: "https://www.cellovateadvancedpeptides.com",
+  // Orders and questions by chat (international number, digits only).
+  whatsapp: "66641753699",
   lastUpdated: "September 25, 2026",
 };
 

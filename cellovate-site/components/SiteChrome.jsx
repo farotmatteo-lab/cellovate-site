@@ -38,6 +38,7 @@ const LINKS = [
   ["Shop", "/shop"],
   ["Quality", "/quality"],
   ["Blog", "/blog"],
+  ["Guides", "/en/guides"],
   ["Wholesale", "/wholesale"],
   ["Contact", "/contact"],
   ["Terms of Sale", "/terms"],

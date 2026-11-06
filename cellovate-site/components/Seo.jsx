@@ -133,7 +133,9 @@ export function articleLd(post) {
     "@type": "BlogPosting",
     headline: post.title,
     description: String(post.summary || "").replace(/<[^>]+>/g, ""),
-    mainEntityOfPage: `${SITE_URL}/blog/${post.handle}`,
+    mainEntityOfPage: `${SITE_URL}${post.path || `/blog/${post.handle}`}`,
+    ...(post.lang ? { inLanguage: post.lang } : {}),
+    ...(post.updated ? { dateModified: post.updated, datePublished: post.published || post.updated } : {}),
     image: DEFAULT_IMAGE,
     author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
     publisher: {

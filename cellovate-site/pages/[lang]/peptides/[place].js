@@ -9,6 +9,16 @@ import { BUSINESS } from "../../../lib/business";
 import { LOCALES, DEFAULT_LOCALE, placePath } from "../../../lib/seo/locales";
 import { UI } from "../../../lib/seo/ui";
 import { PLACES, getPlace, placesInCountry, countryHub } from "../../../lib/seo/places";
+import { articlesIn, guidePath } from "../../../lib/seo/articles";
+import { GUIDES_UI } from "../../../lib/seo/guides-ui";
+
+// Buying guide that matches each country, shown first on its pages.
+const REGION_GUIDE = {
+  thailand: "buy-research-peptides-thailand",
+  "united-states": "buy-research-peptides-usa-canada",
+  canada: "buy-research-peptides-usa-canada",
+};
+const regionGuide = (country) => REGION_GUIDE[country] || "buy-research-peptides-europe";
 
 export async function getStaticPaths() {
   const paths = [];
@@ -51,12 +61,16 @@ export async function getStaticProps({ params }) {
       siblings,
       featured,
       thailand: place.country === "thailand",
+      guides: articlesIn(lang)
+        .sort((a, b) => (b.slug === regionGuide(place.country)) - (a.slug === regionGuide(place.country)))
+        .slice(0, 4)
+        .map((a) => ({ slug: a.slug, title: a.content[lang].h1 })),
       c,
     },
   };
 }
 
-export default function PlacePage({ lang, slug, type, name, locales, hub, countryName, siblings, featured, thailand, c }) {
+export default function PlacePage({ lang, slug, type, name, locales, hub, countryName, siblings, featured, thailand, guides = [], c }) {
   const t = UI[lang] || UI[DEFAULT_LOCALE];
   const path = placePath(lang, slug);
 
@@ -265,6 +279,19 @@ export default function PlacePage({ lang, slug, type, name, locales, hub, countr
               ))}
             </div>
           </section>
+
+          {guides.length > 0 && (
+            <section className="mt-14">
+              <h2 className="font-display text-xl sm:text-2xl mb-5">{(GUIDES_UI[lang] || GUIDES_UI.en).guides}</h2>
+              <div className="grid sm:grid-cols-2 gap-2">
+                {guides.map((g) => (
+                  <Link key={g.slug} href={guidePath(lang, g.slug)} className="bg-white border border-black/8 rounded-xl px-4 py-3 text-[13.5px] hover:border-[#0039CC] transition">
+                    {g.title}
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
 
           {(siblings.length > 0 || hub) && (
             <section className="mt-14">

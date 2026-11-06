@@ -3,6 +3,7 @@ import { VISIBLE_PRODUCTS } from "../lib/products";
 import { POSTS } from "../lib/blog-posts";
 import { PLACES } from "../lib/seo/places";
 import { LOCALES, DEFAULT_LOCALE, placePath } from "../lib/seo/locales";
+import { ARTICLES, guideLocales, guidePath, UPDATED } from "../lib/seo/articles";
 
 const SITE_URL = "https://www.cellovateadvancedpeptides.com";
 
@@ -42,6 +43,30 @@ function placeUrls() {
   return out;
 }
 
+// One <url> per language version, each listing all versions (hreflang).
+function altUrls(locales, pathFor, priority, lastmod) {
+  const links = locales
+    .map((l) => `<xhtml:link rel="alternate" hreflang="${LOCALES[l].hreflang}" href="${SITE_URL}${pathFor(l)}"/>`)
+    .concat(
+      `<xhtml:link rel="alternate" hreflang="x-default" href="${SITE_URL}${pathFor(
+        locales.includes(DEFAULT_LOCALE) ? DEFAULT_LOCALE : locales[0]
+      )}"/>`
+    )
+    .join("");
+  return locales.map(
+    (l) =>
+      `  <url><loc>${SITE_URL}${pathFor(l)}</loc>${links}${lastmod ? `<lastmod>${lastmod}</lastmod>` : ""}<changefreq>monthly</changefreq><priority>${priority}</priority></url>`
+  );
+}
+
+function guideUrls() {
+  const out = [];
+  const langs = guideLocales();
+  if (langs.length) out.push(...altUrls(langs, (l) => guidePath(l), "0.6", UPDATED));
+  for (const a of ARTICLES) out.push(...altUrls(a.locales, (l) => guidePath(l, a.slug), "0.6", UPDATED));
+  return out;
+}
+
 function build() {
   const urls = [
     ...STATIC_PAGES,
@@ -56,6 +81,7 @@ ${urls
       `  <url><loc>${SITE_URL}${path === "/" ? "" : path}</loc><changefreq>${freq}</changefreq><priority>${priority}</priority></url>`
   )
   .concat(placeUrls())
+  .concat(guideUrls())
   .join("\n")}
 </urlset>`;
 }

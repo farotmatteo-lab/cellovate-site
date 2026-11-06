@@ -39,12 +39,21 @@ const LINKS = [
   ["Quality", "/quality"],
   ["Blog", "/blog"],
   ["Wholesale", "/wholesale"],
-  ["Delivery in Thailand", "/en/peptides/thailand"],
   ["Contact", "/contact"],
   ["Terms of Sale", "/terms"],
   ["Refund Policy", "/refund-policy"],
   ["Privacy Policy", "/privacy"],
   ["Partner login", "/partner"],
+];
+
+// Country delivery pages, each in the visitor-facing local language.
+const DELIVERY = [
+  ["Thailand", "/en/peptides/thailand"],
+  ["France", "/fr/peptides/france"],
+  ["Deutschland", "/de/peptides/germany"],
+  ["España", "/es/peptides/spain"],
+  ["Italia", "/it/peptides/italy"],
+  ["United Kingdom", "/en/peptides/united-kingdom"],
 ];
 
 export function SiteFooter() {
@@ -53,6 +62,14 @@ export function SiteFooter() {
       <div className="max-w-5xl mx-auto px-5 py-8">
         <nav className="flex flex-wrap gap-x-5 gap-y-2 text-[12px] text-black/55">
           {LINKS.map(([label, href]) => (
+            <Link key={href} href={href} className="hover:text-[#0039CC] transition">
+              {label}
+            </Link>
+          ))}
+        </nav>
+        <nav aria-label="Delivery" className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-[11.5px] text-black/40">
+          <span className="text-black/30">Delivery:</span>
+          {DELIVERY.map(([label, href]) => (
             <Link key={href} href={href} className="hover:text-[#0039CC] transition">
               {label}
             </Link>

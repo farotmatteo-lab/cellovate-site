@@ -1,3 +1,9 @@
+import { FRANCE_PLACES } from "./places-europe/france";
+import { GERMANY_PLACES } from "./places-europe/germany";
+import { SPAIN_PLACES } from "./places-europe/spain";
+import { ITALY_PLACES } from "./places-europe/italy";
+import { UK_PLACES } from "./places-europe/united-kingdom";
+
 // Country and city pages served at /{lang}/peptides/{slug}.
 // Each page carries its own local content (delivery, districts, practical
 // notes) in every language it is published in, so no two pages are the same
@@ -33,7 +39,7 @@ const TH_LONGEVITY_FIRST = [
   "ghk-cu-50mg",
 ];
 
-export const PLACES = [
+const THAILAND_PLACES = [
   // ───────────────────────────── THAILAND (country hub) ─────────────────────────────
   {
     slug: "thailand",
@@ -677,6 +683,15 @@ export const PLACES = [
       },
     },
   },
+];
+
+export const PLACES = [
+  ...THAILAND_PLACES,
+  ...FRANCE_PLACES,
+  ...GERMANY_PLACES,
+  ...SPAIN_PLACES,
+  ...ITALY_PLACES,
+  ...UK_PLACES,
 ];
 
 export function getPlace(slug) {

@@ -99,7 +99,7 @@ export const GERMANY_PLACES = [
         faq: [
           ["How long does delivery to Germany take?", "7 to 10 business days by tracked international shipping, to any address in Germany."],
           ["Can customs open my parcel?", "Like any international parcel, it can be inspected by customs. The 7–10 business day window allows for that."],
-          ["Can I order by WhatsApp?", "Yes. Send the product, size and format on WhatsApp and we confirm availability and delivery before you pay."],
+          ["Can I order by WhatsApp?", "Yes. Send the product, size and format on WhatsApp and we confirm stock and delivery before you pay."],
           ["How do I pay, and what does shipping cost?", "By card or crypto at checkout, with prices in euros. Shipping is shown at checkout and is free above a basket threshold."],
         ],
       },
@@ -188,7 +188,7 @@ export const GERMANY_PLACES = [
           ["How long does delivery to Berlin take?", "7 to 10 business days by tracked international shipping, to any Berlin district and to Potsdam."],
           ["What happens if I am not home?", "Parcels in Germany usually go to a neighbour, a parcel shop or a Packstation, and you get a note with where to collect it. Tracking helps you plan to be in."],
           ["Is there a shop in Berlin?", "No. We work by delivery only, straight to your flat or office."],
-          ["Can I order by WhatsApp?", "Yes. Send the product, size and format and we confirm availability and delivery before you pay by card or crypto."],
+          ["Can I order by WhatsApp?", "Yes. Send the product, size and format and we confirm stock and delivery before you pay by card or crypto."],
         ],
       },
       de: {
@@ -361,7 +361,7 @@ export const GERMANY_PLACES = [
         faq: [
           ["How long does delivery to Hamburg take?", "7 to 10 business days by tracked international shipping, anywhere in Hamburg and the surrounding towns."],
           ["What if the courier cannot reach me?", "In Germany a parcel usually goes to a neighbour, a parcel shop or a Packstation, and you are told where to collect it."],
-          ["Can I order by WhatsApp?", "Yes. Send the product, size and format, and we confirm availability and delivery before you pay by card or crypto."],
+          ["Can I order by WhatsApp?", "Yes. Send the product, size and format, and we confirm stock and delivery before you pay by card or crypto."],
         ],
       },
       de: {
@@ -504,7 +504,7 @@ export const GERMANY_PLACES = [
       en: {
         title: "Research Peptides Cologne | Tracked Delivery in 7–10 Days",
         description:
-          "Research peptides delivered to Cologne in 7–10 business days: Ehrenfeld, Belgisches Viertel, Südstadt, Nippes, Sülz, Deutz and the surrounding towns. Vials and pens.",
+          "Research peptides delivered to Cologne in 7–10 business days: Ehrenfeld, Belgisches Viertel, Südstadt, Nippes, Sülz, Deutz and nearby towns. Vials and pens.",
         h1: "Research peptides delivered to Cologne",
         intro:
           "Cologne orders arrive as tracked parcels within 7 to 10 business days, in every Veedel on both banks of the Rhine. Every compound comes as a lyophilized vial or a pre-filled pen, with prices in euros. There is no shop and no pick-up, only delivery to your door.",
@@ -535,7 +535,7 @@ export const GERMANY_PLACES = [
         faq: [
           ["How long does delivery to Cologne take?", "7 to 10 business days by tracked international shipping, on both banks of the Rhine and in the surrounding towns."],
           ["What if I am out when the parcel comes?", "It usually goes to a neighbour, a parcel shop or a Packstation, and you get a note telling you where to collect it."],
-          ["Can I order by WhatsApp?", "Yes. Send the product, size and format, and we confirm availability and delivery before you pay by card or crypto."],
+          ["Can I order by WhatsApp?", "Yes. Send the product, size and format, and we confirm stock and delivery before you pay by card or crypto."],
         ],
       },
       de: {

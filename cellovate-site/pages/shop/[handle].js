@@ -56,7 +56,11 @@ export async function getStaticProps({ params }) {
   // Re-built at most hourly, and right away when a review is approved.
   // English guides that feature this product (internal links for SEO).
   const guides = ARTICLES.filter((a) => a.locales.includes("en") && (a.products || []).includes(product.handle))
-    .sort((a, b) => a.products.indexOf(product.handle) - b.products.indexOf(product.handle))
+    // Guides centred on this product first: early in the list, few products.
+    .sort((a, b) => {
+      const score = (x) => x.products.indexOf(product.handle) * 10 + x.products.length;
+      return score(a) - score(b);
+    })
     .slice(0, 4)
     .map((a) => ({ slug: a.slug, title: a.content.en.h1 }));
   return { props: { product, reviews, guides }, revalidate: 3600 };

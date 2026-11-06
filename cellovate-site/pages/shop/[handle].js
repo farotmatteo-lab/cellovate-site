@@ -34,6 +34,7 @@ import {
 import Seo, { productLd, breadcrumbLd } from "../../components/Seo";
 import ProductReviews, { RatingSummary } from "../../components/ProductReviews";
 import { getProductReviews } from "../../lib/reviews";
+import { ARTICLES, guidePath } from "../../lib/seo/articles";
 
 export async function getStaticPaths() {
   return {
@@ -53,10 +54,15 @@ export async function getStaticProps({ params }) {
   }
   const reviews = await getProductReviews(product.handle);
   // Re-built at most hourly, and right away when a review is approved.
-  return { props: { product, reviews }, revalidate: 3600 };
+  // English guides that feature this product (internal links for SEO).
+  const guides = ARTICLES.filter((a) => a.locales.includes("en") && (a.products || []).includes(product.handle))
+    .sort((a, b) => a.products.indexOf(product.handle) - b.products.indexOf(product.handle))
+    .slice(0, 4)
+    .map((a) => ({ slug: a.slug, title: a.content.en.h1 }));
+  return { props: { product, reviews, guides }, revalidate: 3600 };
 }
 
-export default function ProductPage({ product, reviews }) {
+export default function ProductPage({ product, reviews, guides = [] }) {
   const { cart, addToCart, removeFromCart, itemCount, setCartOpen } =
     useCart();
   // null = follow the selected variant; a src = the thumbnail the shopper clicked.
@@ -401,6 +407,25 @@ export default function ProductPage({ product, reviews }) {
           </div>
 
           <ProductReviews reviews={reviews} />
+
+          {guides.length > 0 && (
+            <section className="mt-12">
+              <h2 className="text-[11px] uppercase tracking-[0.2em] text-black/40 font-mono mb-4">
+                Research guides
+              </h2>
+              <div className="grid sm:grid-cols-2 gap-2">
+                {guides.map((g) => (
+                  <Link
+                    key={g.slug}
+                    href={guidePath("en", g.slug)}
+                    className="bg-white border border-black/8 rounded-xl px-4 py-3 text-[13.5px] hover:border-[#0039CC] transition"
+                  >
+                    {g.title}
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Related products */}
           {related.length > 0 && (

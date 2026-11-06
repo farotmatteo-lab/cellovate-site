@@ -27,7 +27,7 @@ export const CANADA_PLACES = [
           "Research peptides delivered across Canada, from Victoria to St. John's. Tracked shipping in 7–10 business days, discreet packaging, card or crypto in CAD.",
         h1: "Research peptides delivered across Canada",
         intro:
-          "Cellovate delivers research peptides to addresses in every province and territory, from a Toronto condo to a house on the Prairies. Every parcel is tracked, arrives in plain packaging and typically reaches you within 7 to 10 business days. Each compound comes as a lyophilized vial or a pre-filled multi-dose pen, with prices shown in Canadian dollars.",
+          "Cellovate delivers research peptides across Canada, from a Toronto condo to a house on the Prairies. Every parcel is tracked, arrives in plain packaging and typically reaches you within 7 to 10 business days. Each compound comes as a lyophilized vial or a pre-filled multi-dose pen, with prices shown in Canadian dollars.",
         delivery: CA_DELIVERY_EN,
         sections: [
           {
@@ -54,7 +54,7 @@ export const CANADA_PLACES = [
         ],
         faq: [
           ["How long does delivery to Canada take?", "Typically 7 to 10 business days with full tracking. That window allows for international parcels being inspected by customs like any import."],
-          ["Do you deliver to every province and territory?", "Yes. We deliver to residential addresses across Canada, including the territories and rural areas."],
+          ["Do you deliver outside the big cities?", "Yes. We deliver to residential addresses across Canada. For the territories or a remote address, message us on WhatsApp and we confirm the delivery time before you pay."],
           ["How do I pay, and in which currency?", "By card or crypto at checkout. Visitors in Canada see prices in Canadian dollars, and the shipping cost is shown before you pay."],
           ["Can I order on WhatsApp?", "Yes. Message us the product and format you want, and we confirm stock and delivery before you pay."],
         ],
@@ -65,7 +65,7 @@ export const CANADA_PLACES = [
           "Peptides de recherche livrés partout au Canada, de Victoria à St. John’s. Livraison suivie en 7 à 10 jours ouvrables, emballage discret, carte ou crypto.",
         h1: "Des peptides de recherche livrés partout au Canada",
         intro:
-          "Cellovate livre des peptides de recherche dans toutes les provinces et tous les territoires, d’un condo à Toronto à une maison en pleine campagne. Chaque colis est suivi, arrive dans un emballage neutre et vous parvient généralement en 7 à 10 jours ouvrables. Chaque composé est offert en fiole lyophilisée ou en stylo multidose prérempli, avec les prix affichés en dollars canadiens.",
+          "Cellovate livre des peptides de recherche partout au Canada, d’un condo à Toronto à une maison en pleine campagne. Chaque colis est suivi, arrive dans un emballage neutre et vous parvient généralement en 7 à 10 jours ouvrables. Chaque composé est offert en fiole lyophilisée ou en stylo multidose prérempli, avec les prix affichés en dollars canadiens.",
         delivery: CA_DELIVERY_FR,
         sections: [
           {
@@ -92,7 +92,7 @@ export const CANADA_PLACES = [
         ],
         faq: [
           ["Combien de temps prend la livraison au Canada?", "Généralement 7 à 10 jours ouvrables, avec suivi complet. Ce délai tient compte des inspections douanières possibles, comme pour toute importation."],
-          ["Livrez-vous dans toutes les provinces et tous les territoires?", "Oui. Nous livrons aux adresses résidentielles partout au Canada, y compris dans les territoires et en région."],
+          ["Livrez-vous en dehors des grandes villes?", "Oui. Nous livrons aux adresses résidentielles partout au Canada. Pour les territoires ou une adresse éloignée, écrivez-nous sur WhatsApp et nous confirmons le délai avant le paiement."],
           ["Comment payer, et dans quelle devise?", "Par carte ou en crypto au moment de payer. Les prix sont affichés en dollars canadiens, et les frais de livraison apparaissent avant le paiement."],
           ["Puis-je commander par WhatsApp?", "Oui. Écrivez-nous le produit et le format voulus : nous confirmons le stock et la livraison avant que vous payiez."],
         ],
@@ -156,7 +156,7 @@ export const CANADA_PLACES = [
       fr: {
         title: "Peptides de recherche Toronto | Livraison suivie dans la RGT",
         description:
-          "Peptides de recherche livrés au centre-ville de Toronto, à King West, Leslieville et North York, ainsi qu’à Mississauga et Markham. Suivi, 7 à 10 jours ouvrables.",
+          "Peptides de recherche livrés au centre-ville de Toronto, à King West, Leslieville et North York, ainsi qu’à Mississauga et Markham. Suivi, 7 à 10 jours.",
         h1: "Des peptides de recherche livrés à Toronto et dans la RGT",
         intro:
           "Cellovate livre des peptides de recherche partout à Toronto et dans la région du Grand Toronto, d’un condo de CityPlace à une maison jumelée de Leslieville. Chaque colis est suivi, arrive dans un emballage neutre et vous parvient généralement en 7 à 10 jours ouvrables.",
@@ -210,7 +210,7 @@ export const CANADA_PLACES = [
     name: { en: "Vancouver", fr: "Vancouver" },
     content: {
       en: {
-        title: "Research Peptides Vancouver | Tracked Metro Vancouver Delivery",
+        title: "Research Peptides Vancouver | Tracked Delivery, Metro Area",
         description:
           "Research peptides delivered to Yaletown, the West End, Kitsilano and Mount Pleasant, plus Burnaby, Richmond and North Vancouver. Tracked, 7–10 business days.",
         h1: "Research peptides delivered across Vancouver",
@@ -303,7 +303,7 @@ export const CANADA_PLACES = [
     name: { en: "Montreal", fr: "Montréal" },
     content: {
       en: {
-        title: "Research Peptides Montreal | Tracked Delivery, Greater Montreal",
+        title: "Research Peptides Montreal | Tracked Delivery, Metro Area",
         description:
           "Research peptides delivered to the Plateau, Mile End, Griffintown, Rosemont and NDG, plus Laval, Longueuil and the West Island. Tracked, 7–10 business days.",
         h1: "Research peptides delivered across Montreal",
@@ -396,7 +396,7 @@ export const CANADA_PLACES = [
     name: { en: "Calgary", fr: "Calgary" },
     content: {
       en: {
-        title: "Research Peptides Calgary | Tracked Delivery, Southern Alberta",
+        title: "Research Peptides Calgary | Tracked Delivery, Calgary Region",
         description:
           "Research peptides delivered to the Beltline, Kensington, Inglewood and Marda Loop, plus Airdrie, Cochrane, Okotoks and Canmore. Tracked, 7–10 business days.",
         h1: "Research peptides delivered across Calgary",
@@ -415,7 +415,7 @@ export const CANADA_PLACES = [
             h: "Front-door delivery and chinook swings",
             p: [
               "Most Calgarians live in detached homes or townhouses, where parcels are left at the front door or in a community mailbox area. Inner-city condos usually have a concierge or a parcel room. Track the delivery and bring it in promptly.",
-              "Calgary winters are cold and dry, and chinook winds can swing the temperature by 20 degrees in a day. Sealed lyophilized vials handle a cold doorstep better than summer heat, but store them somewhere cool and dark indoors, and keep reconstituted material in the fridge at 2–8°C.",
+              "Calgary winters are cold and dry, and chinook winds can swing the temperature sharply within a day. Sealed lyophilized vials handle a cold doorstep better than summer heat, but store them somewhere cool and dark indoors, and keep reconstituted material in the fridge at 2–8°C.",
             ],
           },
           {
@@ -452,7 +452,7 @@ export const CANADA_PLACES = [
             h: "Livraison à la porte et effet chinook",
             p: [
               "La plupart des Calgariens vivent en maison unifamiliale ou en maison de ville, où le colis est laissé à la porte ou à la boîte postale communautaire. Les condos du centre ont généralement un concierge ou une salle à colis. Suivez la livraison et rentrez le colis sans tarder.",
-              "L’hiver est froid et sec, et le chinook peut faire varier la température de 20 degrés en une journée. Les fioles lyophilisées scellées supportent mieux le froid que la chaleur estivale, mais rangez-les dans un endroit frais et sombre, à l’intérieur, et gardez le produit reconstitué au frigo, entre 2 et 8 °C.",
+              "L’hiver est froid et sec, et le chinook peut faire varier brusquement la température en une journée. Les fioles lyophilisées scellées supportent mieux le froid que la chaleur estivale, mais rangez-les dans un endroit frais et sombre, à l’intérieur, et gardez le produit reconstitué au frigo, entre 2 et 8 °C.",
             ],
           },
           {
@@ -514,7 +514,7 @@ export const CANADA_PLACES = [
           {
             h: "A bilingual capital that stays active",
             p: [
-              "Ottawa skates on the Rideau Canal in winter, cross-country skis in Gatineau Park, and runs every May during Race Weekend. For a city of policy analysts, engineers and long desk days, this page leads with cognitive and longevity research (NAD+, Semax and Selank), followed by Retatrutide, BPC-157 with TB-500 and SS-31.",
+              "Ottawa skates on the Rideau Canal in winter, cross-country skis in Gatineau Park, and runs every May during Race Weekend. For a city of public servants, engineers and long desk days, this page leads with cognitive and longevity research (NAD+, Semax and Selank), followed by Retatrutide, BPC-157 with TB-500 and SS-31.",
             ],
           },
         ],

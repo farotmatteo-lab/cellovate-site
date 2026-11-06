@@ -23,10 +23,10 @@ export const US_PLACES = [
       en: {
         title: "Research Peptides USA | Tracked Delivery in 7–10 Days",
         description:
-          "Research peptides delivered to all 50 states, coast to coast. Tracked shipping in 7–10 business days, discreet plain packaging, card or crypto in US dollars.",
+          "Research peptides delivered across the US, coast to coast. Tracked shipping in 7–10 business days, discreet plain packaging, card or crypto in US dollars.",
         h1: "Research peptides delivered across the United States",
         intro:
-          "Cellovate delivers research peptides to addresses in all 50 states, from a Manhattan high-rise to a ranch house outside Austin. Every parcel is tracked, arrives in plain packaging and typically reaches you within 7 to 10 business days. Each compound comes as a lyophilized vial or a pre-filled multi-dose pen, with prices shown in US dollars.",
+          "Cellovate delivers research peptides across the United States, from a Manhattan high-rise to a ranch house outside Austin. Every parcel is tracked, arrives in plain packaging and typically reaches you within 7 to 10 business days. Each compound comes as a lyophilized vial or a pre-filled multi-dose pen, with prices shown in US dollars.",
         delivery: US_DELIVERY_EN,
         sections: [
           {
@@ -53,7 +53,7 @@ export const US_PLACES = [
         ],
         faq: [
           ["How long does delivery to the US take?", "Typically 7 to 10 business days with full tracking. That window allows for international parcels being inspected by customs like any import."],
-          ["Do you ship to every state, including Alaska and Hawaii?", "Yes. We deliver to residential addresses in all 50 states."],
+          ["Do you ship outside the big cities?", "Yes. We deliver to residential addresses across the country. For Alaska, Hawaii or a remote address, message us on WhatsApp and we confirm the delivery time before you pay."],
           ["How do I pay, and in which currency?", "By card or crypto at checkout. Visitors in the US see prices in US dollars, and the shipping cost is shown before you pay."],
           ["Can I order on WhatsApp?", "Yes. Message us the product and format you want, and we confirm stock and delivery before you pay."],
         ],
@@ -302,7 +302,7 @@ export const US_PLACES = [
     name: { en: "Houston" },
     content: {
       en: {
-        title: "Research Peptides Houston | Tracked Delivery, Greater Houston",
+        title: "Research Peptides Houston | Tracked Delivery, Metro Area",
         description:
           "Research peptides delivered to Montrose, the Heights, Midtown and the Galleria, plus Katy, Sugar Land, The Woodlands and Pearland. Tracked, 7–10 business days.",
         h1: "Research peptides delivered across Houston",

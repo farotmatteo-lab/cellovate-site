@@ -3,6 +3,8 @@ import { GERMANY_PLACES } from "./places-europe/germany";
 import { SPAIN_PLACES } from "./places-europe/spain";
 import { ITALY_PLACES } from "./places-europe/italy";
 import { UK_PLACES } from "./places-europe/united-kingdom";
+import { US_PLACES } from "./places-europe/united-states";
+import { CANADA_PLACES } from "./places-europe/canada";
 
 // Country and city pages served at /{lang}/peptides/{slug}.
 // Each page carries its own local content (delivery, districts, practical
@@ -692,6 +694,8 @@ export const PLACES = [
   ...SPAIN_PLACES,
   ...ITALY_PLACES,
   ...UK_PLACES,
+  ...US_PLACES,
+  ...CANADA_PLACES,
 ];
 
 export function getPlace(slug) {

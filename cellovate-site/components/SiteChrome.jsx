@@ -55,6 +55,8 @@ const DELIVERY = [
   ["España", "/es/peptides/spain"],
   ["Italia", "/it/peptides/italy"],
   ["United Kingdom", "/en/peptides/united-kingdom"],
+  ["United States", "/en/peptides/united-states"],
+  ["Canada", "/en/peptides/canada"],
 ];
 
 export function SiteFooter() {

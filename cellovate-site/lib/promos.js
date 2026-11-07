@@ -21,6 +21,7 @@ export const PROMOS = {
   THEWIZZ: { code: "THEWIZZ", percent: 10, freeShipping: false, influencer: true, label: "10% off products" }, // Influencer code (TheWizz).
   GIBBO: { code: "GIBBO", percent: 10, freeShipping: false, influencer: true, label: "10% off products" }, // Influencer code (Gibbo).
   DARY10: { code: "DARY10", percent: 10, freeShipping: false, influencer: true, label: "10% off products" }, // Influencer code (Dary).
+  MIKEY10: { code: "MIKEY10", percent: 10, freeShipping: false, influencer: true, label: "10% off products" }, // Influencer code (Mikey).
   ROLALA: {
     code: "ROLALA",
     percent: 100,

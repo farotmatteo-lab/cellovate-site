@@ -20,7 +20,8 @@ import { ApproxLocal } from "../context/CurrencyContext";
 import CheckoutForm from "../components/CheckoutForm";
 import { CartFulfillmentNotice } from "../components/StockNotice";
 import CryptoPayment from "../components/CryptoPayment";
-import CardPayment from "../components/CardPayment";
+import { BUSINESS } from "../lib/business";
+import { formatAddress } from "../lib/countries";
 import { identify } from "../lib/omnisendClient";
 import { track } from "../lib/track";
 import {
@@ -365,6 +366,67 @@ function Recap({ customer, onEdit }) {
 }
 
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Card payments: no card processor for now. The shopper sends the order on
+// WhatsApp (prefilled message) and we reply with a card payment link for the
+// exact total.
+// ---------------------------------------------------------------------------
+function WhatsAppCardPayment({ orderId, customer, lines, promoCodes }) {
+  const { subtotal, discount, discountLabel, shipping, total } = useCart();
+  const [sent, setSent] = useState(false);
+  const message = [
+    `Hi Cellovate, I'd like to pay by card for my order${orderId ? ` ${orderId}` : ""}.`,
+    "",
+    ...lines.map(
+      (l) => `${l.qty} × ${l.name} — ${l.variant.label} — ${money(l.price * l.qty)}`
+    ),
+    "",
+    `Subtotal: ${money(subtotal)}`,
+    discount > 0
+      ? `Discount${discountLabel ? ` (${discountLabel})` : ""}: -${money(discount)}`
+      : null,
+    promoCodes?.length ? `Codes: ${promoCodes.join(", ")}` : null,
+    `Shipping: ${shipping > 0 ? money(shipping) : "Free"}`,
+    `TOTAL: ${money(total)}`,
+    "",
+    "Ship to:",
+    formatAddress(customer),
+    `Email: ${customer.email}`,
+    customer.notes ? `Notes: ${customer.notes}` : null,
+    "",
+    "Please send me the card payment link.",
+  ]
+    .filter((x) => x !== null)
+    .join("\n");
+  const href = `https://wa.me/${BUSINESS.whatsapp}?text=${encodeURIComponent(message)}`;
+
+  return (
+    <div className="rounded-2xl border border-black/10 bg-[#F4F5F8] p-5">
+      <p className="text-[14px] font-semibold mb-1">Pay by card with a secure payment link</p>
+      <p className="text-[13px] text-black/60 leading-relaxed">
+        Send us your order on WhatsApp in one tap. We reply with a secure card
+        payment link for your exact total ({money(total)}), usually within
+        minutes. Your order ships as soon as the payment is received.
+      </p>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => setSent(true)}
+        className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:brightness-95 text-white text-[14px] font-semibold py-3.5 transition"
+      >
+        Send my order on WhatsApp
+      </a>
+      {sent && (
+        <p className="mt-3 text-[12.5px] text-black/55 leading-relaxed">
+          Your order is ready in WhatsApp: just press send. Prefer to pay now?
+          Choose Crypto above.
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function CheckoutPage() {
   const cart = useCart();
   const { lines, total, promo, orderId, hydrated, clearCart, restoreCart } =
@@ -382,7 +444,7 @@ export default function CheckoutPage() {
   const [done, setDone] = useState(null); // snapshot shown after the order
   // Card payments (SumUp) are offered only when configured on the server.
   const [cardEnabled, setCardEnabled] = useState(false);
-  const [method, setMethod] = useState("card");
+  const [method, setMethod] = useState("crypto");
   // Site statistics: one "checkout started" per cart.
   useEffect(() => {
     if (!hydrated || !lines?.length || !orderId) return;
@@ -601,10 +663,10 @@ export default function CheckoutPage() {
                 />
               ) : (
                 <>
-                  {cardEnabled && !(locked && method === "crypto") && (
+                  {!(locked && method === "crypto") && (
                     <div className="grid grid-cols-2 gap-2 mb-5">
                       {[
-                        ["card", "Card", "Visa · Mastercard · Apple Pay"],
+                        ["card", "Card", "Payment link via WhatsApp"],
                         ["crypto", "Crypto", "BTC · ETH · USDT"],
                       ].map(([key, label, sub]) => (
                         <button
@@ -623,16 +685,12 @@ export default function CheckoutPage() {
                       ))}
                     </div>
                   )}
-                  {cardEnabled && method === "card" ? (
-                    <CardPayment
-                      key="card"
-                      total={total}
-                      promoCodes={promo?.codes}
+                  {method === "card" ? (
+                    <WhatsAppCardPayment
                       orderId={orderId}
                       customer={customer}
                       lines={lines}
-                      onInvoice={setLocked}
-                      onPaid={finish}
+                      promoCodes={promo?.codes}
                     />
                   ) : (
                     <CryptoPayment

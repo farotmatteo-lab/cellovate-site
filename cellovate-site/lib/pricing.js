@@ -75,8 +75,12 @@ export function computeOrder(items, promo, opts = {}) {
 
   const productsTotal = round(Math.max(0, subtotal - discount));
   const { fulfillment, factoryKeys } = planFulfillment(items, opts.country, opts.stock);
+  // Orders made only of no-shipping items (the hidden payment-test product) ship free.
+  const noShipOnly =
+    itemCount > 0 &&
+    (items || []).every((it) => PRODUCTS.find((p) => p.id === it.id)?.noShipping);
   const shipping =
-    fulfillment === "thailand" && itemCount ? 0 : getShipping(promo, itemCount, productsTotal);
+    noShipOnly || (fulfillment === "thailand" && itemCount) ? 0 : getShipping(promo, itemCount, productsTotal);
   const total = round(productsTotal + shipping);
   const freeShippingRemaining =
     shipping > 0 ? round(FREE_SHIPPING_THRESHOLD - productsTotal) : 0;

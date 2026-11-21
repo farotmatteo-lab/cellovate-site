@@ -17,6 +17,28 @@
 // A combination reaching a $0 total skips the crypto checkout and is placed
 // through /api/free-order instead.
 export const PROMOS = {
+  // Black Friday 2026. EARLY30: Discord members early access (posted only in
+  // #drops-and-promos), 30% off products, Nov 24 to Cyber Monday. BLACK20:
+  // public Black Friday to Cyber Monday, 20% off products. Shipping is never
+  // discounted. Both stand alone (no stacking, not even with influencer codes).
+  EARLY30: {
+    code: "EARLY30",
+    percent: 30,
+    freeShipping: false,
+    exclusive: true,
+    startsAt: "2026-11-23T17:00:00Z",
+    endsAt: "2026-12-01T08:00:00Z",
+    label: "Black Friday early access — 30% off products",
+  },
+  BLACK20: {
+    code: "BLACK20",
+    percent: 20,
+    freeShipping: false,
+    exclusive: true,
+    startsAt: "2026-11-26T17:00:00Z",
+    endsAt: "2026-12-01T08:00:00Z",
+    label: "Black Friday — 20% off products",
+  },
   // Members-only code, posted only in the Discord #drops-and-promos channel
   // and announced by the 4th email of the Discord welcome series. Regular code:
   // combines only with an influencer code.
@@ -93,7 +115,14 @@ export const GIFT_CODE_RE = /^GIFT-[A-Z2-9]{6}$/;
 export function getPromo(code) {
   if (!code) return null;
   const c = String(code).trim().toUpperCase();
-  if (PROMOS[c]) return PROMOS[c];
+  if (PROMOS[c]) {
+    const p = PROMOS[c];
+    // Time-limited codes (e.g. Black Friday): only valid between startsAt and endsAt.
+    const now = Date.now();
+    if (p.startsAt && now < Date.parse(p.startsAt)) return null;
+    if (p.endsAt && now > Date.parse(p.endsAt)) return null;
+    return p;
+  }
   if (GIFT_CODE_RE.test(c)) {
     return {
       code: c,

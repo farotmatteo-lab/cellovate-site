@@ -17,6 +17,15 @@
 // A combination reaching a $0 total skips the crypto checkout and is placed
 // through /api/free-order instead.
 export const PROMOS = {
+  // Members-only code, posted only in the Discord #drops-and-promos channel
+  // and announced by the 4th email of the Discord welcome series. Regular code:
+  // combines only with an influencer code.
+  INSIDER15: {
+    code: "INSIDER15",
+    percent: 15,
+    freeShipping: false,
+    label: "Members-only — 15% off products",
+  },
   PIXELPLUG: { code: "PIXELPLUG", percent: 10, freeShipping: false, influencer: true, label: "10% off products" }, // Influencer code (Pixelplug).
   THEWIZZ: { code: "THEWIZZ", percent: 10, freeShipping: false, influencer: true, label: "10% off products" }, // Influencer code (TheWizz).
   GIBBO: { code: "GIBBO", percent: 10, freeShipping: false, influencer: true, label: "10% off products" }, // Influencer code (Gibbo).

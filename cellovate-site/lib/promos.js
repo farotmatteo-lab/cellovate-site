@@ -31,12 +31,6 @@ export const PROMOS = {
   GIBBO: { code: "GIBBO", percent: 10, freeShipping: false, influencer: true, label: "10% off products" }, // Influencer code (Gibbo).
   DARY10: { code: "DARY10", percent: 10, freeShipping: false, influencer: true, label: "10% off products" }, // Influencer code (Dary).
   MIKEY10: { code: "MIKEY10", percent: 10, freeShipping: false, influencer: true, label: "10% off products" }, // Influencer code (Mikey).
-  ROLALA: {
-    code: "ROLALA",
-    percent: 100,
-    freeShipping: true,
-    label: "Free order — 100% off, shipping included",
-  },
   // 10% off the products only; the shipping fee is still charged.
   // Influencer code — the only kind that stacks with another code.
   RND10: {

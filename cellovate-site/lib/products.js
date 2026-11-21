@@ -11,6 +11,26 @@ import { PRODUCT_IMAGES } from "./productImages";
 // Remove the switch to put the item back on sale.
 export const CATALOG = [
   {
+    // TEMPORARY: hidden $2 product used to test card payments (SumUp).
+    // Not listed anywhere (unlisted), no shipping fee. Delete after the test.
+    id: "paytest",
+    unlisted: true,
+    noShipping: true,
+    handle: "payment-test",
+    name: "Payment test",
+    fullName: "PAYMENT TEST",
+    code: "TEST",
+    dose: "Test",
+    doses: ["Test"],
+    variants: [
+      { key: "test-vial", dose: "Test", format: "Vial", label: "Payment test", price: 2 },
+    ],
+    purity: null,
+    desc: "Internal payment test.",
+    images: [],
+    bodyHtml: "<p>Internal payment test. Not a product.</p>",
+  },
+  {
     id: "tirz",
     hiddenDoses: ["10mg", "40mg"], // out of stock: hidden from the site, kept for later
     handle: "tirzepatide",
@@ -465,7 +485,7 @@ for (const product of PRODUCTS) {
 
 // Products visible on the storefront (shop grid, product pages, related products).
 // Draft products are excluded from browsing but keep their data for later reactivation.
-export const VISIBLE_PRODUCTS = PRODUCTS.filter((p) => !p.draft);
+export const VISIBLE_PRODUCTS = PRODUCTS.filter((p) => !p.draft && !p.unlisted);
 
 export function getProductByHandle(handle) {
   return PRODUCTS.find((p) => p.handle === handle);
